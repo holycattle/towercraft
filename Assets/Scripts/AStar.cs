@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class AStar {
-	public static List<Vector2> PathFind(Vector2 start, Vector2 end, GridController[] map, int width, int height) {
+	public static List<Vector2> PathFind(Vector2 start, Vector2 end, Grid[] map, int width, int height) {
 		int[] xoffs = {-1, 0, 1, 0, -1, 1, 1, -1};
 		int[] yoffs = {0, -1, 0, 1, 1, 1, -1, -1};
 		

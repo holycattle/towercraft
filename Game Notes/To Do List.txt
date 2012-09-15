@@ -1,0 +1,44 @@
+~~TODO LIST~~
+** Done.
+* In Progress.
+
+==[TOWERS]==
+**-Make Tower Base Classes
+
+-Create a pathable tower (tower that does not obstruct path)
+-Figure out best way to react to missile target = null
+	-ie. When the target of the missile dies midflight.
+	-Current: Explode after target dies.
+	-Solution:
+		-Retarget to another enemy.
+			-What properties must the enemy satisfy? What if the next enemy is a million miles away?
+		-Continue following current trajectory until it hits the ground then explode.
+-Make them cost money.
+-Prevent user from adding a tower when there is an entity there.
+-Subtract life from the life bar when they enter the portal.
+
+==[ENEMIES]==
+**-Randomize enemy movement
+
+-Make Enemy Base Classes
+-Make a test enemy Slime
+-Use only one path and then enemies move based off of that
+-Add different monster types (?)
+-Make them smaller
+-Come up with an algorithm for determining spawn scheme
+	-List GameObjects = (GameObject, Time)
+		-Monster to Spawn (how do we choose which monster to spawn?)
+		-Time Since last Spawn (how long do we wait till we spawn the next one?)
+
+==[GUI]==
+-Tower Chooser
+
+==[GAMEPLAY]==
+-Currency System
+-Waves
+
+==[WAVE CONTROLLER]==
+-Add a way to detect whether or not all monsters have been killed
+
+==[OTHER]==
+-Change to First Person perspective.

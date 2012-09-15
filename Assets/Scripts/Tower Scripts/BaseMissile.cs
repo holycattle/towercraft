@@ -55,12 +55,10 @@ public class BaseMissile : MonoBehaviour {
 	
 	void OnCollisionEnter(Collision collision) {
 		if (collision.gameObject.tag == "Enemy") {
-			collision.transform.root.gameObject.GetComponent<MovementController>().AddLife(-damage);
+			collision.transform.root.gameObject.GetComponent<BaseEnemy>().SubLife(damage);
 			
 			// Add Particle Effects
 			Instantiate(explosionEffect, this.transform.position, Quaternion.identity);
-		} else {
-			Debug.Log("Broken: " + collision.gameObject.name);
 		}
 		Destroy(this.gameObject);
 	}

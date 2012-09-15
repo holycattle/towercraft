@@ -1,11 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Tower Scripts\BaseMissile.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Wave Scripts\SpawnScheme.cs">
     <Files>
-      <File FileName="Assets\Scripts\Tower Scripts\BaseMissile.cs" Line="44" Column="28" />
-      <File FileName="Assets\Scripts\Tower Scripts\TowerScript.cs" Line="43" Column="18" />
-      <File FileName="Assets\Scripts\GridController.cs" Line="38" Column="22" />
-      <File FileName="Assets\Scripts\GameController.cs" Line="37" Column="5" />
+      <File FileName="Assets\Scripts\Wave Scripts\SpawnScheme.cs" Line="18" Column="19" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

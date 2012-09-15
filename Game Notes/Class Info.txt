@@ -1,0 +1,37 @@
+== Controller Classes ==
+Game Controller
+Wave Controller
+	-Start Waves
+		-By user input or by a time.
+	-End Waves
+		-Detecting when all entities have died.
+		- TODO: Do we allow early waves?
+	-Spawning of Monsters
+	-Determining spawning order of monsters in a wave
+Input Handler
+HUD Script
+
+== Base Classes ==
+
+BaseEnemy
+	-Wave Cost
+	-Flying ?
+	-Money / Prize Range
+	-Life
+	-Defense
+	-Type
+	-Move Speed
+	-Damage
+	
+BaseTower
+	-Attack Speed
+	-Sell Cost
+	-Range
+	-Solid ?
+	-Attack Scheme
+	
+BaseMissile
+	-Move Speed
+	-Damage
+	-Explosion Range
+	-Dissipation Factor

@@ -45,15 +45,17 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\AStar.cs" />
-     <Compile Include="Assets\Scripts\CameraController.cs" />
-     <Compile Include="Assets\Scripts\EndPortal.cs" />
-     <Compile Include="Assets\Scripts\Enemy Scripts\MovementController.cs" />
-     <Compile Include="Assets\Scripts\GameController.cs" />
-     <Compile Include="Assets\Scripts\GridController.cs" />
+     <Compile Include="Assets\Scripts\Controller Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\Controller Scripts\ClickDetector.cs" />
+     <Compile Include="Assets\Scripts\Controller Scripts\GameController.cs" />
+     <Compile Include="Assets\Scripts\Controller Scripts\WaveController.cs" />
+     <Compile Include="Assets\Scripts\Enemy Scripts\BaseEnemy.cs" />
+     <Compile Include="Assets\Scripts\Environment Scripts\EndPortal.cs" />
      <Compile Include="Assets\Scripts\HUD Scripts\HUDScript.cs" />
-     <Compile Include="Assets\Scripts\Pre-Made Scripts\ClickDetector.cs" />
      <Compile Include="Assets\Scripts\Tower Scripts\BaseMissile.cs" />
-     <Compile Include="Assets\Scripts\Tower Scripts\TowerScript.cs" />
+     <Compile Include="Assets\Scripts\Tower Scripts\BaseTower.cs" />
+     <Compile Include="Assets\Scripts\Tower Scripts\Grid.cs" />
+     <Compile Include="Assets\Scripts\Wave Scripts\SpawnScheme.cs" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
@@ -71,5 +73,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  
+  <ProjectExtensions xmlns="http://schemas.microsoft.com/developer/msbuild/2003"><MonoDevelop><Properties><Policies><TextStylePolicy inheritsSet="Mono" inheritsScope="text/plain" scope="text/plain" /><VersionControlPolicy inheritsSet="Mono" /><ChangeLogPolicy inheritsSet="Mono" /><CSharpFormattingPolicy NamespaceBraceStyle="EndOfLine" ClassBraceStyle="EndOfLine" InterfaceBraceStyle="EndOfLine" StructBraceStyle="EndOfLine" EnumBraceStyle="EndOfLine" MethodBraceStyle="EndOfLine" ConstructorBraceStyle="EndOfLine" DestructorBraceStyle="EndOfLine" BeforeMethodDeclarationParentheses="False" BeforeMethodCallParentheses="False" NewParentheses="False" SpacesBeforeBrackets="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" /><TextStylePolicy TabWidth="4" RemoveTrailingWhitespace="True" inheritsSet="Mono" inheritsScope="text/plain" scope="text/x-csharp" /></Policies></Properties></MonoDevelop></ProjectExtensions>
+
 </Project>
