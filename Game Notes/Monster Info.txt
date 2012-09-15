@@ -1,0 +1,29 @@
+Monster Types
+
+Boss
+	-High Life
+	-Slow Moving
+
+Healer
+	-Heals other units
+	-Cannot move when healing.
+	-Avg Life
+	-Slightly Above Avg move speed
+		-to catch up with other units, because it gets left behind when healing
+
+Speedster (Placeholder name)
+	-Fast move speed
+	-Avg Life
+	
+Tank
+	-High Life
+	-Avg Speed
+	
+Creepling (Placeholder name)
+	-Very Low Life
+	-Avg Speed
+	-Very low wave cost
+
+Basic (These will probably used for wave fillers)
+	-Avg Life
+	-Avg Speed
