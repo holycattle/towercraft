@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections;
  
-public class ClickDetector : MonoBehaviour {
+public class InputHandler : MonoBehaviour {
 	public bool HandleLeftClick = true;
 	public bool HandleRightClick = true;
 	public bool HandleMiddleClick = false;
@@ -10,11 +10,23 @@ public class ClickDetector : MonoBehaviour {
 	public string OnRightClickMethodName = "OnRightClick";
 	public string OnMiddleClickMethodName = "OnMiddleClick";
 	public LayerMask layerMask;
- 
+
+	// Mouse Locking
+	public static bool lockCursor = true;
+
 	void Update() {
+//		if (Screen.lockCursor != lockCursor) {
+//			if (lockCursor && Input.GetMouseButton(0)) {
+//				Screen.lockCursor = true;
+//			} else if (!lockCursor) {
+//				Screen.lockCursor = false;
+//			}
+//		}
+
+		/* Mouse Clicks */
 		GameObject clickedGmObj = null;
 		bool clickedGmObjAcquired = false;
- 
+
 		// Left click
 		if (HandleLeftClick && Input.GetMouseButtonDown(0)) {
 			/*if (!clickedGmObjAcquired)

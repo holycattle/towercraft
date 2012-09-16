@@ -15,8 +15,8 @@ public class BaseTower : MonoBehaviour {
 	private GameObject _target;
 	private Transform _missileSource;
 
-	void Start () {
-		_enemiesInRange = new List<GameObject> ();
+	void Start() {
+		_enemiesInRange = new List<GameObject>();
 
 		_timeSinceFired = 0;
 
@@ -26,12 +26,12 @@ public class BaseTower : MonoBehaviour {
 		_missileSource = transform.Find("MissileSource").transform;
 	}
 
-	void Update () {
+	void Update() {
 		// Make the Cannon face the Enemy
 		if (_target != null) {
 			float distance = Vector2.Distance(new Vector2(_target.transform.position.x, _target.transform.position.z), new Vector2(transform.position.x, transform.position.z));
 			if (distance < towerRange)
-			_missileSource.rotation =
+				_missileSource.rotation =
 				Quaternion.Slerp(_missileSource.rotation,
 					Quaternion.LookRotation(_missileSource.position - _target.transform.position), 90 * Time.deltaTime);
 		}
@@ -39,11 +39,11 @@ public class BaseTower : MonoBehaviour {
 		// Try to Fire
 		if (_timeSinceFired <= 0) {
 			if (_enemiesInRange.Count > 0) {
-				_target = _enemiesInRange [0];
+				_target = _enemiesInRange[0];
 				while (!(_target != null)) { // If the target has already been destroyed
 					_enemiesInRange.RemoveAt(0);
 					if (_enemiesInRange.Count > 0) {
-						_target = _enemiesInRange [0];
+						_target = _enemiesInRange[0];
 					} else {
 						_target = null;
 						break;
@@ -55,7 +55,7 @@ public class BaseTower : MonoBehaviour {
 					GameObject g = Instantiate(missile, transform.FindChild("MissileSource").position, Quaternion.identity) as GameObject;
 
 					// Set target
-					g.GetComponent<BaseMissile>().Target = _enemiesInRange [0];
+					g.GetComponent<BaseMissile>().Target = _enemiesInRange[0];
 
 					_timeSinceFired += firingInterval;
 				}
@@ -67,12 +67,13 @@ public class BaseTower : MonoBehaviour {
 			_timeSinceFired -= Time.deltaTime;
 	}
 	
-	void OnTriggerEnter (Collider other) {
-		if (other.gameObject.tag == "Enemy")
+	void OnTriggerEnter(Collider other) {
+		if (other.gameObject.tag == "Enemy") {
 			_enemiesInRange.Add(other.transform.root.gameObject);
+		}
 	}
 	
-	void OnTriggerExit (Collider other) {
+	void OnTriggerExit(Collider other) {
 		if (other.gameObject.tag == "Enemy")
 			_enemiesInRange.Remove(other.transform.root.gameObject);
 	}

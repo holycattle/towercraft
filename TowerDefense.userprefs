@@ -1,8 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Wave Scripts\SpawnScheme.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Controller Scripts\InputHandler.cs">
     <Files>
-      <File FileName="Assets\Scripts\Wave Scripts\SpawnScheme.cs" Line="18" Column="19" />
+      <File FileName="Assets\Scripts\Controller Scripts\InputHandler.cs" Line="11" Column="58" />
+      <File FileName="Assets\Scripts\Controller Scripts\GameController.cs" Line="19" Column="29" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

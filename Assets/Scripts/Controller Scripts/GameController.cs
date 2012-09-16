@@ -60,7 +60,15 @@ public class GameController : MonoBehaviour {
 					new Vector3(_path[i + 1].x, 1, _path[i + 1].y));
 			}
 		}
-		
+
+		if (Input.GetKeyDown(KeyCode.F4)) {
+			// KILL ALL BUTTON
+			GameObject[] e = GameObject.FindGameObjectsWithTag("Enemy");
+			foreach (GameObject go in e) {
+				Destroy(go);
+			}
+		}
+
 		if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter)) {
 			GameObject g = Instantiate(enemyPrefab,
 				new Vector3(startXPosition + 2 + Random.Range(-1f, 1f), 2, startYPosition - 2 + Random.Range(-1f, 1f)),

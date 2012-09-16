@@ -19,17 +19,22 @@
 
 ==[ENEMIES]==
 **-Randomize enemy movement
+**-Add different monster types
 
 -Make Enemy Base Classes
 -Make a test enemy Slime
 -Use only one path and then enemies move based off of that
--Add different monster types (?)
 -Make them smaller
 -Come up with an algorithm for determining spawn scheme
 	-List GameObjects = (GameObject, Time)
 		-Monster to Spawn (how do we choose which monster to spawn?)
 		-Time Since last Spawn (how long do we wait till we spawn the next one?)
-
+-When they are moving, they can collide with each other.
+	-Is this okay?
+	-Ex. Speedsters push slow moving ones.
+-Clean up pathing to remove interpolation
+	-Also including diagonals without corner towers.
+		
 ==[GUI]==
 -Tower Chooser
 
@@ -38,7 +43,7 @@
 -Waves
 
 ==[WAVE CONTROLLER]==
--Add a way to detect whether or not all monsters have been killed
+**-Add a way to detect whether or not all monsters have been killed
 
 ==[OTHER]==
 -Change to First Person perspective.

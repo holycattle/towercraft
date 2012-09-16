@@ -44,19 +44,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\GUI\CollectGuiInfo.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_Base.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_Box.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_Button.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_Image.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_Label.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_PasswordField.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_SelectionGrid.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_TextArea.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_TextField.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_Toggle.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_ToolBar.js" />
-     <Compile Include="Assets\Scripts\GUI\GUI_Window.js" />
+     <Compile Include="Assets\CharacterMotor.js" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>

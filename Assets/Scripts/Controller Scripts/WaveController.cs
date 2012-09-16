@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour {
 
-	private const int WAVESTART_COST = 10;
+	private const int WAVESTART_COST = 64;
 	private const float WAVE_INCREASE = 1.5f;
 	private const int WAVE_INTERVAL = 10; // In seconds
 
@@ -45,14 +45,14 @@ public class WaveController : MonoBehaviour {
 
 	private void NextWave() {
 		// Create the Spawn Scheme
-		_spawnScheme = new SpawnScheme(_gameController, mobs, _nextWaveCost);
+		_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost);
 
 		_waveNumber++;
 		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
 		_waveActive = true;
 	}
 
-	public int TimeTillNextWave {
-		get { return (int)(_timeTillNextWave); }
+	public int TimeTillNextWavex100 {
+		get { return (int)(_timeTillNextWave * 100); }
 	}
 }

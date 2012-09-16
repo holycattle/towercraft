@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class BaseEnemy : MonoBehaviour {
 	public const float MOV_OFFSET = 0.5f;
+	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
 	public float turnSpeed = 3 * Mathf.PI / 4;
@@ -11,6 +12,7 @@ public class BaseEnemy : MonoBehaviour {
 	public int maxLife;
 	public int moneyReward;
 	public int waveCost;
+	public MobType type;
 
 	// Private Variables
 	private List<Vector2> _path;
@@ -95,6 +97,11 @@ public class BaseEnemy : MonoBehaviour {
 		}
 	}
 
+	void OnGUI() {
+		Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + LIFE_OFFSET);
+		GUI.Box(new Rect(pos.x, Screen.height - pos.y, 30, 20), _life + "/" + maxLife);
+	}
+
 	#region Life Management
 	public void AddLife(int amt) {
 		_life += amt;
@@ -134,4 +141,13 @@ public class BaseEnemy : MonoBehaviour {
 		set { _path = value; }
 	}
 
+}
+
+public enum MobType {
+	Basic,
+	Creepling,
+	Tank,
+	Speedster
+//	Healer,
+//	Boss
 }

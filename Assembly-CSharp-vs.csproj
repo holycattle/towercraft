@@ -44,10 +44,9 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\AStar.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\CameraController.cs" />
-     <Compile Include="Assets\Scripts\Controller Scripts\ClickDetector.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\GameController.cs" />
+     <Compile Include="Assets\Scripts\Controller Scripts\InputHandler.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\WaveController.cs" />
      <Compile Include="Assets\Scripts\Enemy Scripts\BaseEnemy.cs" />
      <Compile Include="Assets\Scripts\Environment Scripts\EndPortal.cs" />
@@ -55,7 +54,10 @@
      <Compile Include="Assets\Scripts\Tower Scripts\BaseMissile.cs" />
      <Compile Include="Assets\Scripts\Tower Scripts\BaseTower.cs" />
      <Compile Include="Assets\Scripts\Tower Scripts\Grid.cs" />
+     <Compile Include="Assets\Scripts\Util\AStar.cs" />
+     <Compile Include="Assets\Scripts\Wave Scripts\Creepling.cs" />
      <Compile Include="Assets\Scripts\Wave Scripts\SpawnScheme.cs" />
+     <Compile Include="Assets\Scripts\Wave Scripts\Speedster.cs" />
      <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
  <Reference Include="Assembly-UnityScript-firstpass">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
