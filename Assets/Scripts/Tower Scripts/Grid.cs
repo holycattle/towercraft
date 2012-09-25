@@ -5,52 +5,46 @@ public class Grid : MonoBehaviour {
 	
 	// Tower
 	public GameObject towerPrefab;
+	private LevelController _levelController;
 	private GameController _gameController;
 	private BaseTower _ts;
-	
-	void Start () {
+
+	void Start() {
 		_ts = null;
+		_levelController = GameObject.Find(" GameController").GetComponent<LevelController>();
 		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();
 	}
-	
-	void Update () {
-	
-	}
-	
-	void OnMouseEnter () {
+
+	void InputMouseEnter() {
 		GetComponent<MeshRenderer>().enabled = true;
 		GetComponent<Renderer>().material.color = Color.red;
 	}
-	
-	void OnMouseExit () {
+
+	void InputMouseExit() {
 		GetComponent<MeshRenderer>().enabled = false;
 		GetComponent<Renderer>().material.color = Color.white;
 	}
-	
-	void OnMouseOver () {
-		
-	}
-	
-	void OnLeftClick () {
+
+	public void TEMP_toggleTower() {
 		if (_ts == null)
 			AddTower();
 		else
 			RemoveTower();
 	}
-	
-	void OnRightClick () {
+
+	void OnRightClick() {
 		Debug.Log("Right Clicked");
 	}
 	
-	private void RemoveTower () {
+	private void RemoveTower() {
 		Destroy(_ts.gameObject);
 		_ts = null;
 		
 		// Update Path
-		_gameController.UpdatePath();
+		_levelController.UpdatePath();
 	}
 	
-	private void AddTower () {
+	private void AddTower() {
 		if (!_gameController.SubMoney(2))
 			return;
 
@@ -60,10 +54,12 @@ public class Grid : MonoBehaviour {
 		_ts = t.GetComponent<BaseTower>();
 		
 		// Update Path
-		_gameController.UpdatePath();
+		_levelController.UpdatePath();
 	}
 	
 	#region Setter/Getter Functions
+
+	// Used for path generation
 	public BaseTower Tower {
 		get { return _ts; }
 		set { _ts = value; }

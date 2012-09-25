@@ -360,11 +360,12 @@ private function ApplyInputVelocityChange (velocity : Vector3) {
 		desiredVelocity.y = 0;
 	}
 	
+	// Changes the velocity vector to point perpendicular to the ground normal
 	if (grounded)
 		desiredVelocity = AdjustGroundVelocityToNormal(desiredVelocity, groundNormal);
 	else
 		velocity.y = 0;
-	
+		
 	// Enforce max velocity change
 	var maxVelocityChange : float = GetMaxAcceleration(grounded) * Time.deltaTime;
 	var velocityChangeVector : Vector3 = (desiredVelocity - velocity);

@@ -57,50 +57,16 @@ public class BaseEnemy : MonoBehaviour {
 			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 		}
 
-//		float forwardMoveAmount = 0;
-//		float zDiff = _path[_activePoint].y - transform.position.z;
-//		float sideMoveAmount = 0;
-//		float xDiff = _path[_activePoint].x - transform.position.x;
-//
-//		// Determine how much the entity moves in either direction.
-//		forwardMoveAmount = CalculateDirection(zDiff) * MOVESPEED * Time.deltaTime;
-//		sideMoveAmount = CalculateDirection(xDiff) * MOVESPEED * Time.deltaTime;
-//
-//		if (forwardMoveAmount > Mathf.Abs(zDiff)) {
-//			forwardMoveAmount = zDiff;
-//			_activePoint++;
-//
-//			if (_activePoint != _path.Count) {
-//				zDiff = _path[_activePoint].y - (transform.position.z + forwardMoveAmount);
-//				xDiff = _path[_activePoint].x - (transform.position.x + sideMoveAmount);
-//				forwardMoveAmount += CalculateDirection(zDiff) * MOVESPEED * Time.deltaTime;
-//				sideMoveAmount += CalculateDirection(xDiff) * MOVESPEED * Time.deltaTime;
-//			}
-//		} else if (sideMoveAmount > Mathf.Abs(xDiff)) {
-//			sideMoveAmount = xDiff;
-//			_activePoint++;
-//
-//			if (_activePoint != _path.Count) {
-//				zDiff = _path[_activePoint].y - (transform.position.z + forwardMoveAmount);
-//				xDiff = _path[_activePoint].x - (transform.position.x + sideMoveAmount);
-//				forwardMoveAmount += CalculateDirection(zDiff) * MOVESPEED * Time.deltaTime;
-//				sideMoveAmount += CalculateDirection(xDiff) * MOVESPEED * Time.deltaTime;
-//			}
-//		}
-
-
-//		transform.Translate(sideMoveAmount, 0, forwardMoveAmount, Space.World);
-
 		// LIVING
 		if (_life <= 0) {
 			Destroy(this.transform.root.gameObject);
 		}
 	}
 
-	void OnGUI() {
-		Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + LIFE_OFFSET);
-		GUI.Box(new Rect(pos.x, Screen.height - pos.y, 30, 20), _life + "/" + maxLife);
-	}
+//	void OnGUI() {
+//		Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + LIFE_OFFSET);
+//		GUI.Box(new Rect(pos.x, Screen.height - pos.y, 30, 20), _life + "/" + maxLife);
+//	}
 
 	#region Life Management
 	public void AddLife(int amt) {
@@ -111,6 +77,10 @@ public class BaseEnemy : MonoBehaviour {
 
 	public void SubLife(int amt) {
 		_life -= amt;
+
+		float x = _life / (float)maxLife;
+		transform.FindChild("EnemyModel").gameObject.GetComponent<Renderer>().material.color = new Color(x, x, x);
+
 		if (_life <= 0)
 			kill();
 	}

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Creepling : SpawnScheme {
 
-	public Creepling (GameController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
+	public Creepling (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
 		// Create the Scheme
 		while (cost > 0) {
 			// Choose which mob to spawn.
@@ -14,7 +14,7 @@ public class Creepling : SpawnScheme {
 					break;
 				}
 			}
-			float interval = 0.25f;
+			float interval = 0.3f;
 
 			_spawnScheme.Add(new MobSpawn(g, interval));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;

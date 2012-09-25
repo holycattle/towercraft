@@ -10,6 +10,7 @@ public class HUDScript : MonoBehaviour {
 	private Rect _crosshairPos;
 	private GameController _game;
 	private WaveController _wave;
+//	private InputHandler _input;
 
 	// Skin
 	public GUIStyle style;
@@ -17,7 +18,9 @@ public class HUDScript : MonoBehaviour {
 	void Start() {
 		_game = GetComponent<GameController>();
 		_wave = GetComponent<WaveController>();
+//		_input = GetComponent<InputHandler>();
 
+		Screen.showCursor = true;
 		_crosshairPos = new Rect((Screen.width - crosshair.width) / 2, (Screen.height - crosshair.height) / 2,
 			crosshair.width, crosshair.height);
 	}
@@ -28,6 +31,8 @@ public class HUDScript : MonoBehaviour {
 		GUI.Box(new Rect(0, TEXT_HEIGHT, LIVES_WIDTH, LIVES_HEIGHT), "Money: " + _game.Money, style);
 		GUI.Box(new Rect(0, TEXT_HEIGHT * 2, LIVES_WIDTH, LIVES_HEIGHT),
 			"Next Wave: " + (_wave.TimeTillNextWavex100 / 100f).ToString("F2"), style);
+//		GUI.Box(new Rect(0, TEXT_HEIGHT * 3, LIVES_WIDTH * 2, LIVES_HEIGHT), "Mode: " + LayerMask.LayerToName(_input.layerMask), style);
+
 		GUI.DrawTexture(_crosshairPos, crosshair);
 	}
 }

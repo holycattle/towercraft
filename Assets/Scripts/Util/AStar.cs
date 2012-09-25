@@ -28,6 +28,7 @@ public class AStar {
 
 			if (current.pos == end) {
 				return CleanPath(ReconstructPath(closedSet, end), map, width, height);
+//				return CleanPathNew(ReconstructPath(closedSet, end), map, width, height);
 //				return ReconstructPath(closedSet, end);
 			}
 			
@@ -105,6 +106,58 @@ public class AStar {
 		solution.Insert(0, current.pos);
 				
 		return solution;
+	}
+
+	private static List<Vector2> CleanPathNew(List<Vector2> list, Grid[] map, int width, int height) {
+		for (int i = 0; i < list.Count - 2; i++) {
+			Vector2 p1 = list[i];
+			p1.x = p1.x + 0.5f;
+			p1.y = p1.y + 0.5f;
+			Vector2 p3 = list[i + 2];
+			p3.x = p3.x + 0.5f;
+			p3.y = p3.y + 0.5f;
+
+			bool noTowersInPath = true;
+
+			// Get slope
+			Vector2 slope = p3 - p1;
+			slope.Normalize();
+			Vector2 negSlope = new Vector2(-slope.y, slope.x);
+			negSlope.Normalize();
+			negSlope = Vector2.Scale(negSlope, new Vector2(0.2f, 0.2f));
+			slope = Vector2.Scale(slope, new Vector2(0.1f, 0.1f));
+
+			Vector2 leftLine = p1 - negSlope;
+			Vector2 rightLine = p1 + negSlope;
+
+			float dist = Vector2.Distance(p1, p3);
+			for (; dist >= 0; dist -= 0.1f) {
+				if ((int)leftLine.y < height && (int)leftLine.y >= 0 &&
+					(int)leftLine.x < width && (int)leftLine.x >= 0 &&
+					map[(int)leftLine.y * height + (int)leftLine.x].Tower != null) {
+					noTowersInPath = false;
+					break;
+				}
+				if ((int)rightLine.y < height && (int)rightLine.y >= 0 &&
+					(int)rightLine.x < width && (int)rightLine.x >= 0 &&
+					map[(int)rightLine.y * height + (int)rightLine.x].Tower != null) {
+					noTowersInPath = false;
+					break;
+				}
+
+				leftLine += slope;
+				rightLine += slope;
+			}
+
+			if (noTowersInPath) {
+				// Remove p2
+				list.RemoveAt(i + 1);
+				i--;
+			} else {
+//				Debug.Log("No path!");
+			}
+		}
+		return list;
 	}
 
 	private static List<Vector2> CleanPath(List<Vector2> list, Grid[] map, int width, int height) {

@@ -5,11 +5,11 @@ public class EndPortal : MonoBehaviour {
 
 	private GameController _gameController;
 
-	void Start () {
+	void Start() {
 		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();
 	}
 
-	void OnTriggerEnter (Collider other) {
+	void OnTriggerEnter(Collider other) {
 		// Destroys the entity that enters it.
 		Destroy(other.transform.root.gameObject);
 

@@ -5,11 +5,11 @@ using System;
 
 public class SpawnScheme {
 
-	private GameController _gameController;
+	private LevelController _gameController;
 	protected List<MobSpawn> _spawnScheme;
 	private float _timeSinceLastSpawn;
 
-	public SpawnScheme (GameController gameController, GameObject[] mobs, int cost) {
+	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost) {
 		_gameController = gameController;
 		_spawnScheme = new List<MobSpawn>();
 
@@ -40,8 +40,8 @@ public class SpawnScheme {
 		if (_spawnScheme.Count > 0) {
 			while (_spawnScheme.Count > 0 && _spawnScheme[0].WaitTime <= _timeSinceLastSpawn) {
 				GameObject g = _spawnScheme[0].Spawn(
-					new Vector3(_gameController.startXPosition + 2 + UnityEngine.Random.Range(-1f, 1f),
-					2, _gameController.startYPosition - 2 + UnityEngine.Random.Range(-1f, 1f)),
+					new Vector3(_gameController.startXPosition + LevelController.HTILE_SIZE + UnityEngine.Random.Range(-1f, 1f),
+					2, _gameController.startYPosition - LevelController.HTILE_SIZE + UnityEngine.Random.Range(-1f, 1f)),
 					Quaternion.identity);
 
 				BaseEnemy m = g.GetComponent<BaseEnemy>();

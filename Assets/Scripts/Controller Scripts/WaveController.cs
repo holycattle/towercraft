@@ -10,7 +10,7 @@ public class WaveController : MonoBehaviour {
 
 	public GameObject[] mobs; // Mobs to choose from.
 
-	private GameController _gameController;
+	private LevelController _gameController;
 	private SpawnScheme _spawnScheme;		// Current Wave Scheme
 	private int _waveNumber;
 	private int _nextWaveCost;
@@ -18,7 +18,7 @@ public class WaveController : MonoBehaviour {
 	private bool _waveActive;
 
 	void Start() {
-		_gameController = GetComponent<GameController>();
+		_gameController = GetComponent<LevelController>();
 		_nextWaveCost = WAVESTART_COST;
 		_waveNumber = 0;
 		_timeTillNextWave = 5;

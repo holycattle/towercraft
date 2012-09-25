@@ -1,0 +1,30 @@
+[Game Title] is a First-Person Tower Defense game where the player defends their [Village? City?] from Hordes of [Bandits? Monsters? Spiders? Robots?]. You play a scavenger in a desolate wastelands where you have to collect materials to build up your [Village]'s defenses. The player can choose to keep on upgrading their tower's strengths so they [referring to the towers] can take care of those nasty [Bandits?] while you can gather resources (I really dont like the phrasing of this sentence. I basically wanna say something like "Towers do the killing, you go out and scavenge.") OR you can take a more hands-on approach and upgrade your own gear so <emphasis>you</emphasis> can deal with those [Bandits?] yourself!
+
+Description:
+<game_title> is a First-Person Tower Defense game where the player can opt to defend their colony by using scrap material to either build towers or build weapons that the player can use to destroy the invaders. 
+
+Obtaining materials as loot from enemies 
+
+Rather than obtaining materials just as loot from enemies, the player has to scavenge for materials throughout the map. Scavenging for resources is not without its dangers, however, because there may also be enemies lurking around the area.
+
+It is a First-Person Tower Defense game where the player builds towers to protect themselves against the hordes of enemies. Rather than simply getting resources from killing enemies, the player has to scavenge the surrounding areas for scrap material. Scavenging for resources is not without its dangers, because there may also be enemies lurking around the area. Players can also opt to build up their towers while they go and scavenge materials or ...?
+
+Interaction:
+The player uses the keyboard and mouse with the standard FPS control scheme. (I dont really know what else to add here)
+
+Player's/Players' Goal:
+The player tries to build up their defenses so that it can stand up to the punishment of the incoming waves of enemies. Eventually, the player has to leave their village and attack the enemy's base directly, making sure that the village will still remain safe in their absence. Destroying the enemy's main base will grant a win to the player.
+
+Win/Lose Condition:
+To win the game, the player must destroy the enemy's base. The player loses the game when they are unable to protect their colony from the incoming hordes of enemies.
+
+Theme/Motif:
+The game is set in a post-apocalyptic era, where no big civilizations remain.
+
+
+
+
+
+
+
+
