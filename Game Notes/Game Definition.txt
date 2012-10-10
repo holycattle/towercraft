@@ -9,6 +9,9 @@ Rather than obtaining materials just as loot from enemies, the player has to sca
 
 It is a First-Person Tower Defense game where the player builds towers to protect themselves against the hordes of enemies. Rather than simply getting resources from killing enemies, the player has to scavenge the surrounding areas for scrap material. Scavenging for resources is not without its dangers, because there may also be enemies lurking around the area. Players can also opt to build up their towers while they go and scavenge materials or ...?
 
+Game Description:
+GAME is a First - Person Tower Defense game where the player has to defend their colony by using scrap material to build towers and weapons to destroy the incoming invaders. Killing enemies gives the player some loot, but that's not enough to sustain them for long. They have to go out and explore the map for materials, making the path safe as they go along so that the colonists can eventually aid in the gathering of resources. 
+
 Interaction:
 The player uses the keyboard and mouse with the standard FPS control scheme. (I dont really know what else to add here)
 

@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class BaseEnemy : MonoBehaviour {
-	public const float MOV_OFFSET = 0.5f;
+	public const float MOV_OFFSET = 0.0f;
 	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
+	public const float OFFSETABLE = 0.5f;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
-	public float turnSpeed = 3 * Mathf.PI / 4;
+	private float turnSpeed;
+	public float totalTurn;
+	private Quaternion originalRot;
 	public int moveSpeed;
 	public int maxLife;
 	public int moneyReward;
@@ -21,9 +24,14 @@ public class BaseEnemy : MonoBehaviour {
 	private int _life;
 
 	void Start() {
-		_activePoint = 0;
+		_activePoint = 1;
 		_offset = new Vector2(Random.Range(-MOV_OFFSET, MOV_OFFSET), Random.Range(-MOV_OFFSET, MOV_OFFSET));
 		_life = maxLife;
+
+		// Set Turn Speed
+		turnSpeed = moveSpeed;
+
+		originalRot = transform.rotation;
 	}
 
 	void Update() {
@@ -36,26 +44,34 @@ public class BaseEnemy : MonoBehaviour {
 		Vector3 targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
 		float dist = Vector3.Distance(targetPos, transform.position);
 
-		//TODO!: Make the look rotation smoother
-		// -Do this by making them start to turn as they APPROACH their target
 		if (dist < moveSpeed * Time.deltaTime) {
-			transform.rotation = Quaternion.Slerp(transform.rotation,
-				Quaternion.LookRotation(targetPos - transform.position), turnSpeed * Time.deltaTime);
+			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
 			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 
 			// Move the extra
 			_activePoint++;
 			_offset = new Vector2(Random.Range(-MOV_OFFSET, MOV_OFFSET), Random.Range(-MOV_OFFSET, MOV_OFFSET));
 			if (_activePoint != _path.Count) {
-				transform.rotation = Quaternion.Slerp(transform.rotation,
-					Quaternion.LookRotation(targetPos - transform.position), turnSpeed * Time.deltaTime);
-				transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
+				// Set turn speed
+				if (_activePoint >= 2 && _activePoint < _path.Count - 1) {
+					Vector2 v1 = _path[_activePoint - 2] - _path[_activePoint - 1];
+					Vector2 v2 = _path[_activePoint + 1] - _path[_activePoint];
+					v1.Normalize();
+					v2.Normalize();
+
+					targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
+					turnSpeed = moveSpeed / Vector2.Distance(_path[_activePoint - 1], _path[_activePoint]);
+
+					originalRot = transform.rotation;
+				}
 			}
+
+			totalTurn = 0;
 		} else {
-			transform.rotation = Quaternion.Slerp(transform.rotation,
-				Quaternion.LookRotation(targetPos - transform.position), turnSpeed * Time.deltaTime);
+			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
 			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 		}
+		totalTurn += turnSpeed * Time.deltaTime;
 
 		// LIVING
 		if (_life <= 0) {
@@ -63,10 +79,6 @@ public class BaseEnemy : MonoBehaviour {
 		}
 	}
 
-//	void OnGUI() {
-//		Vector3 pos = Camera.main.WorldToScreenPoint(transform.position + LIFE_OFFSET);
-//		GUI.Box(new Rect(pos.x, Screen.height - pos.y, 30, 20), _life + "/" + maxLife);
-//	}
 
 	#region Life Management
 	public void AddLife(int amt) {

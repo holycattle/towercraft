@@ -5,10 +5,12 @@ using System.Collections.Generic;
 public class BaseTower : MonoBehaviour {
 
 	// Tower Properties
+	public string towerName;
 	public float towerRange;
 	public float firingInterval;
 	public GameObject missile;
-	
+	public bool isFiring;
+
 	// Tower Logic
 	private List<GameObject> _enemiesInRange;	// List of enemies in range
 	private float _timeSinceFired;				// # of seconds since you last fired
@@ -37,7 +39,7 @@ public class BaseTower : MonoBehaviour {
 		}
 		
 		// Try to Fire
-		if (_timeSinceFired <= 0) {
+		if (_timeSinceFired <= 0 && isFiring) {
 			if (_enemiesInRange.Count > 0) {
 				_target = _enemiesInRange[0];
 				while (!(_target != null)) { // If the target has already been destroyed

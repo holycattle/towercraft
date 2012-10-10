@@ -10,15 +10,13 @@ public class HUDScript : MonoBehaviour {
 	private Rect _crosshairPos;
 	private GameController _game;
 	private WaveController _wave;
-//	private InputHandler _input;
 
 	// Skin
 	public GUIStyle style;
 
 	void Start() {
-		_game = GetComponent<GameController>();
-		_wave = GetComponent<WaveController>();
-//		_input = GetComponent<InputHandler>();
+		_game = GameObject.Find(" GameController").GetComponent<GameController>();
+		_wave = GameObject.Find(" GameController").GetComponent<WaveController>();
 
 		Screen.showCursor = true;
 		_crosshairPos = new Rect((Screen.width - crosshair.width) / 2, (Screen.height - crosshair.height) / 2,

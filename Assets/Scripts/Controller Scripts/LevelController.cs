@@ -58,8 +58,10 @@ public class LevelController : MonoBehaviour {
 		// Draw the Path
 		if (_path != null) {
 			for (int i = 0; i < _path.Count - 1; i++) {
-				Debug.DrawLine(new Vector3(_path[i].x, 1, _path[i].y),
-					new Vector3(_path[i + 1].x, 1, _path[i + 1].y));
+				Vector3 p = new Vector3(_path[i].x, 1, _path[i].y);
+
+				Debug.DrawLine(p, new Vector3(_path[i + 1].x, 1, _path[i + 1].y));
+				Debug.DrawLine(p, p + Vector3.up * 5);
 			}
 		}
 
@@ -88,13 +90,13 @@ public class LevelController : MonoBehaviour {
 			// Convert Path to real coordinates.
 			List<Vector2> act = new List<Vector2>();
 			while (_path.Count > 0) {
-				act.Add(new Vector2(startXPosition + _path[0].x * TILE_SIZE + HTILE_SIZE, startYPosition + _path[0].y * TILE_SIZE + HTILE_SIZE));
+				act.Add(new Vector2(startXPosition + _path[0].x * TILE_SIZE, startYPosition + _path[0].y * TILE_SIZE));
 				_path.RemoveAt(0);
 			}
 			_path = act;
 			
 			// Append Coords of the End Portal
-			_path.Add(new Vector2(startXPosition + (mapWidth - 1) * TILE_SIZE + HTILE_SIZE, startYPosition + mapHeight * TILE_SIZE + HTILE_SIZE));
+//			_path.Add(new Vector2(startXPosition + (mapWidth - 1) * TILE_SIZE + HTILE_SIZE, startYPosition + mapHeight * TILE_SIZE + HTILE_SIZE));
 		}
 	}
 	

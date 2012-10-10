@@ -27,8 +27,8 @@ public class AStar {
 			closedSet.Add(current);
 
 			if (current.pos == end) {
-				return CleanPath(ReconstructPath(closedSet, end), map, width, height);
-//				return CleanPathNew(ReconstructPath(closedSet, end), map, width, height);
+//				return CleanPath(ReconstructPath(closedSet, end), map, width, height);
+				return CleanPathNew(ReconstructPath(closedSet, end), map, width, height);
 //				return ReconstructPath(closedSet, end);
 			}
 			
@@ -104,8 +104,27 @@ public class AStar {
 			current = current.parent;
 		}
 		solution.Insert(0, current.pos);
-				
+
 		return solution;
+	}
+
+	public const int TILE_SIZE = 8;
+	public const int HTILE_SIZE = TILE_SIZE / 2;
+	public static int startXPosition = -(16 / 2) * TILE_SIZE;
+	public static int startYPosition = -(16 / 2) * TILE_SIZE;
+
+	private static void DRAW(List<Vector2> list) {
+		// Draw Smoothed Path
+		List<Vector2> act = new List<Vector2>();
+		for (int i = 0; i < list.Count; i++) {
+			act.Add(new Vector2(startXPosition + list[i].x * TILE_SIZE + HTILE_SIZE, startYPosition + list[i].y * TILE_SIZE + HTILE_SIZE));
+		}
+		for (int i = 0; i < act.Count - 1; i++) {
+			Vector3 p = new Vector3(act[i].x, 1, act[i].y);
+
+			Debug.DrawLine(p, new Vector3(act[i + 1].x, 1, act[i + 1].y), Color.red);
+			Debug.DrawLine(p, p + Vector3.up * 5, Color.red);
+		}
 	}
 
 	private static List<Vector2> CleanPathNew(List<Vector2> list, Grid[] map, int width, int height) {
@@ -124,8 +143,8 @@ public class AStar {
 			slope.Normalize();
 			Vector2 negSlope = new Vector2(-slope.y, slope.x);
 			negSlope.Normalize();
-			negSlope = Vector2.Scale(negSlope, new Vector2(0.2f, 0.2f));
-			slope = Vector2.Scale(slope, new Vector2(0.1f, 0.1f));
+			negSlope = negSlope * 0.2f;
+			slope = slope * 0.1f;
 
 			Vector2 leftLine = p1 - negSlope;
 			Vector2 rightLine = p1 + negSlope;
@@ -157,7 +176,55 @@ public class AStar {
 //				Debug.Log("No path!");
 			}
 		}
-		return list;
+
+		List<Vector2> act = new List<Vector2>();
+		if (list.Count == 2) {
+			act.Add(new Vector2(0.5f, -0.5f));
+			act.Add(list[0] + new Vector2(0.5f, 0.5f));
+			act.Add(list[1] + new Vector2(0.5f, 0.5f));
+		} else {
+			list.Insert(0, new Vector2(0f, -1f));
+			list.Add(new Vector2(width - 1, height));
+			for (int i = 1; i < list.Count - 1; i++) {
+				Vector2 p1 = list[i - 1];
+				p1.x = p1.x + 0.5f;
+				p1.y = p1.y + 0.5f;
+				Vector2 p2 = list[i];
+				p2.x = p2.x + 0.5f;
+				p2.y = p2.y + 0.5f;
+				Vector2 p3 = list[i + 1];
+				p3.x = p3.x + 0.5f;
+				p3.y = p3.y + 0.5f;
+
+				Vector2 np1, np2;
+				Vector2 temp = p1 - p2;
+				if (Mathf.Abs(temp.x) < Mathf.Abs(temp.y)) {
+					// Hits the Y-Axis
+					np1 = p2 + new Vector2((0.5f * temp.x * Mathf.Sign(temp.y)) / temp.y, Mathf.Sign(temp.y) * 0.5f);
+				} else {
+					// Hits the X-Axis
+					np1 = p2 + new Vector2(Mathf.Sign(temp.x) * 0.5f, (0.5f * temp.y * Mathf.Sign(temp.x)) / temp.x);
+				}
+
+				temp = p3 - p2;
+//				Debug.Log("Temp2: " + temp.x + ", " + temp.y);
+				if (Mathf.Abs(temp.x) < Mathf.Abs(temp.y)) {
+					// Hits the Y-Axis
+					np2 = p2 + new Vector2((0.5f * temp.x * Mathf.Sign(temp.y)) / temp.y, Mathf.Sign(temp.y) * 0.5f);
+				} else {
+					// Hits the X-Axis
+					np2 = p2 + new Vector2(Mathf.Sign(temp.x) * 0.5f, (0.5f * temp.y * Mathf.Sign(temp.x)) / temp.x);
+				}
+
+				if (i == 1)
+					act.Add(p1);
+				act.Add(np1);
+				act.Add(np2);
+				if (i == list.Count - 2)
+					act.Add(p3);
+			}
+		}
+		return act;
 	}
 
 	private static List<Vector2> CleanPath(List<Vector2> list, Grid[] map, int width, int height) {

@@ -1,18 +1,19 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameTool {
+public class GameTool : MonoBehaviour {
 	protected GameController _game;
-	protected GameObject _particles;
-	protected InputHandler _input;
+	public WeaponController _input;
 	public int bullets;
 
-	public GameTool () {
-		_input = GameObject.Find("Player").GetComponent<InputHandler>();
-		_particles = GameObject.Find("Player").transform.FindChild("Main Camera/GunshotParticle").gameObject;
+	protected virtual void Awake() {
+		_input = GameObject.Find("Player").GetComponentInChildren<WeaponController>();
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 
 		bullets = 0;
+	}
+
+	protected void Init() {
 	}
 
 	public virtual void WhenEquipped() {
@@ -28,8 +29,5 @@ public class GameTool {
 	}
 
 	public virtual void MouseUpOn(GameObject g) {
-	}
-
-	public virtual void Update() {
 	}
 }

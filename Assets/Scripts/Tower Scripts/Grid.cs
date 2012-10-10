@@ -2,9 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class Grid : MonoBehaviour {
-	
-	// Tower
-	public GameObject towerPrefab;
 	private LevelController _levelController;
 	private GameController _gameController;
 	private BaseTower _ts;
@@ -25,44 +22,41 @@ public class Grid : MonoBehaviour {
 		GetComponent<Renderer>().material.color = Color.white;
 	}
 
-	public void TEMP_toggleTower() {
-		if (_ts == null)
-			AddTower();
-		else
-			RemoveTower();
-	}
+//	public void TEMP_toggleTower() {
+//		if (_ts == null)
+//			AddTower();
+//		else
+//			RemoveTower();
+//	}
 
 	void OnRightClick() {
 		Debug.Log("Right Clicked");
 	}
 	
-	private void RemoveTower() {
+	public void RemoveTower() {
 		Destroy(_ts.gameObject);
 		_ts = null;
-		
+
 		// Update Path
 		_levelController.UpdatePath();
 	}
-	
-	private void AddTower() {
+
+	public void AddTower(GameObject tower) {
 		if (!_gameController.SubMoney(2))
 			return;
 
-		GameObject t = Instantiate(towerPrefab, transform.position, Quaternion.identity) as GameObject;
+		GameObject t = Instantiate(tower, transform.position, Quaternion.identity) as GameObject;
 		t.name = "Tower: " + name;
 		t.transform.parent = transform;
 		_ts = t.GetComponent<BaseTower>();
-		
+
 		// Update Path
 		_levelController.UpdatePath();
 	}
-	
-	#region Setter/Getter Functions
 
 	// Used for path generation
 	public BaseTower Tower {
 		get { return _ts; }
 		set { _ts = value; }
 	}
-	#endregion
 }
