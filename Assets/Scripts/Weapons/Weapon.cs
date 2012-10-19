@@ -2,9 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class Weapon : GameTool {
+	private Vector3 SCREEN_CENTER = new Vector3(Screen.width / 2, Screen.height / 2, 0);
 	//
-	public Rigidbody bulletPrefab;
-	public float bulletSpeed = 256;
+	public GameObject sparks;
 
 	//
 	private float _fireInterval;
@@ -21,41 +21,42 @@ public class Weapon : GameTool {
 		_timeTillFire = 0;
 		bullets = 30;
 		isFiring = false;
-
-//		_particles.particleEmitter.maxEnergy = _fireInterval;
 	}
 
 	public override void WhenEquipped() {
 		_input.RaycastLayer = LayerMask.NameToLayer("Mob");
-//		_particles.particleEmitter.emit = false;
 	}
 
-	public override void MouseClickedOn(GameObject g) {
-//		_particles.particleEmitter.emit = true;
+	public override void MouseClickOn(GameObject g) {
 		isFiring = true;
 		TryToFire(g);
 	}
 
 	public override void MouseDownOn(GameObject g) {
-//		_particles.particleEmitter.emit = true;
 		isFiring = true;
 		TryToFire(g);
 	}
 
 	public override void MouseUpOn(GameObject g) {
-//		_particles.particleEmitter.emit = false;
 		isFiring = false;
 	}
 
 	private void TryToFire(GameObject g) {
 		if (_timeTillFire <= 0) {
-			Rigidbody r = Instantiate(bulletPrefab, transform.position, transform.rotation) as Rigidbody;
-			r.velocity = transform.TransformDirection(Vector3.forward * bulletSpeed);
-			Physics.IgnoreCollision(r.collider, transform.root.collider);
+			// Raycast
+			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER);
+			RaycastHit hit;
 
-			if (g != null) {
+			// Casts the ray and get the first game object hit
+			if (Physics.Raycast(ray, out hit, Mathf.Infinity, _input.RaycastLayer)) {
 				// Damage Game Object
-//				g.GetComponent<BaseEnemy>().SubLife(damage);
+				if (hit.transform.gameObject.GetComponent<BaseEnemy>() != null)
+					g.GetComponent<BaseEnemy>().SubLife(damage);	// Collided with enemy, otherwise collided with terrain
+
+				// Calculate Rotation Vector
+				Vector3 path = transform.position - hit.point;
+				Vector3 bounced = 2 * hit.normal * Vector3.Dot(hit.normal, path) - path;
+				Instantiate(sparks, hit.point, Quaternion.LookRotation(bounced));
 			}
 			_timeTillFire = _fireInterval;
 			bullets--;

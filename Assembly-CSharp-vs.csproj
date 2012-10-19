@@ -54,9 +54,16 @@
      <Compile Include="Assets\Scripts\Enemy Scripts\BaseEnemy.cs" />
      <Compile Include="Assets\Scripts\Environment Scripts\EndPortal.cs" />
      <Compile Include="Assets\Scripts\HUD Scripts\HUDScript.cs" />
+     <Compile Include="Assets\Scripts\Items\Item.cs" />
+     <Compile Include="Assets\Scripts\Items\ItemCollector.cs" />
+     <Compile Include="Assets\Scripts\Items\ItemScript.cs" />
      <Compile Include="Assets\Scripts\Tower Scripts\BaseMissile.cs" />
      <Compile Include="Assets\Scripts\Tower Scripts\BaseTower.cs" />
      <Compile Include="Assets\Scripts\Tower Scripts\Grid.cs" />
+     <Compile Include="Assets\Scripts\Tower Scripts\TowerBase.cs" />
+     <Compile Include="Assets\Scripts\Tower Scripts\TowerComponent.cs" />
+     <Compile Include="Assets\Scripts\Tower Scripts\TowerStem.cs" />
+     <Compile Include="Assets\Scripts\Tower Scripts\TowerTurret.cs" />
      <Compile Include="Assets\Scripts\Util\AStar.cs" />
      <Compile Include="Assets\Scripts\Wave Scripts\Creepling.cs" />
      <Compile Include="Assets\Scripts\Wave Scripts\SpawnScheme.cs" />

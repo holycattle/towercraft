@@ -4,12 +4,19 @@ using System.Collections;
 public class Grid : MonoBehaviour {
 	private LevelController _levelController;
 	private GameController _gameController;
-	private BaseTower _ts;
+
+	// Towers
+	public GameObject tower;
+	private BaseTower _ts; // Tower on this grid.
+	private GameObject _selectionGrid;
 
 	void Start() {
 		_ts = null;
 		_levelController = GameObject.Find(" GameController").GetComponent<LevelController>();
 		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();
+
+		_selectionGrid = transform.FindChild("GridSelection").gameObject;
+		_selectionGrid.SetActiveRecursively(false);
 	}
 
 	void InputMouseEnter() {
@@ -20,17 +27,6 @@ public class Grid : MonoBehaviour {
 	void InputMouseExit() {
 		GetComponent<MeshRenderer>().enabled = false;
 		GetComponent<Renderer>().material.color = Color.white;
-	}
-
-//	public void TEMP_toggleTower() {
-//		if (_ts == null)
-//			AddTower();
-//		else
-//			RemoveTower();
-//	}
-
-	void OnRightClick() {
-		Debug.Log("Right Clicked");
 	}
 	
 	public void RemoveTower() {
@@ -52,6 +48,24 @@ public class Grid : MonoBehaviour {
 
 		// Update Path
 		_levelController.UpdatePath();
+	}
+
+	public BaseTower GenerateBaseTower() {
+		// Create the tower
+		GameObject t = Instantiate(tower, transform.position, Quaternion.identity) as GameObject;
+		t.name = "Tower: " + name;
+		t.transform.parent = transform;
+		_ts = t.GetComponent<BaseTower>();
+
+		// Update Path
+		_levelController.UpdatePath();
+
+		Debug.Log("Instantiated Base Tower");
+		return t.GetComponent<BaseTower>();
+	}
+
+	public void SetSelected(bool sel) {
+		_selectionGrid.SetActiveRecursively(sel);
 	}
 
 	// Used for path generation

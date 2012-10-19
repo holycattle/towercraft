@@ -22,7 +22,7 @@ public class GameTool : MonoBehaviour {
 	public virtual void WhenUnequipped() {
 	}
 
-	public virtual void MouseClickedOn(GameObject g) {
+	public virtual void MouseClickOn(GameObject g) {
 	}
 
 	public virtual void MouseDownOn(GameObject g) {

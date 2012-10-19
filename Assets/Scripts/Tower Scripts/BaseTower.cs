@@ -3,8 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class BaseTower : MonoBehaviour {
+	// Tower Part Constants
+	public const int TOWER_BASE = 0;
+	public const int TOWER_STEM = 1;
+	public const int TOWER_TURRET = 2;
+	public const int TOWER_COMPLETE = 3;	// Also acts as the max # of components per tower
 
-	// Tower Properties
+	// Tower Parts
+	private TowerComponent[] _towerComponents;
+
+	// Tower Properties (Derived from Parts)
 	public string towerName;
 	public float towerRange;
 	public float firingInterval;
@@ -17,15 +25,18 @@ public class BaseTower : MonoBehaviour {
 	private GameObject _target;
 	private Transform _missileSource;
 
+	void Awake() {
+		_towerComponents = new TowerComponent[TOWER_COMPLETE];
+	}
+
 	void Start() {
 		_enemiesInRange = new List<GameObject>();
-
 		_timeSinceFired = 0;
 
 		// Update the Radius of the Capsule Collider (Range)
-		GetComponent<CapsuleCollider>().radius = towerRange;
+//		GetComponent<CapsuleCollider>().radius = towerRange;
 
-		_missileSource = transform.Find("MissileSource").transform;
+//		_missileSource = transform.Find("MissileSource").transform;
 	}
 
 	void Update() {
@@ -74,9 +85,46 @@ public class BaseTower : MonoBehaviour {
 			_enemiesInRange.Add(other.transform.root.gameObject);
 		}
 	}
-	
+
 	void OnTriggerExit(Collider other) {
 		if (other.gameObject.tag == "Enemy")
 			_enemiesInRange.Remove(other.transform.root.gameObject);
+	}
+
+	public void addNextComponent(GameObject g) {
+		int next = getNextComponent();
+		TowerComponent comp = null;
+		switch (next) {
+			case TOWER_BASE:
+				comp = g.GetComponent<TowerBase>();
+				break;
+			case TOWER_STEM:
+				comp = g.GetComponent<TowerStem>();
+				break;
+			case TOWER_TURRET:
+				comp = g.GetComponent<TowerTurret>();
+				break;
+		}
+
+		// Proper Component is not Attached.
+		if (comp == null)
+			return;
+
+		// Instantiate the Game Object
+		GameObject t = Instantiate(g, transform.position, Quaternion.identity) as GameObject;
+		t.transform.parent = transform;
+		_towerComponents[next] = comp;
+	}
+
+	public int getNextComponent() {
+		if (_towerComponents[TOWER_BASE] == null) {
+			return TOWER_BASE;
+		} else if (_towerComponents[TOWER_STEM] == null) {
+			return TOWER_STEM;
+		} else if (_towerComponents[TOWER_TURRET] == null) {
+			return TOWER_TURRET;
+		} else {
+			return TOWER_COMPLETE;
+		}
 	}
 }

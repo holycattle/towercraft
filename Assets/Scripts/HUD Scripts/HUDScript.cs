@@ -10,6 +10,8 @@ public class HUDScript : MonoBehaviour {
 	private Rect _crosshairPos;
 	private GameController _game;
 	private WaveController _wave;
+	public Texture2D menu;
+	public Texture2D item;
 
 	// Skin
 	public GUIStyle style;
@@ -31,6 +33,8 @@ public class HUDScript : MonoBehaviour {
 			"Next Wave: " + (_wave.TimeTillNextWavex100 / 100f).ToString("F2"), style);
 //		GUI.Box(new Rect(0, TEXT_HEIGHT * 3, LIVES_WIDTH * 2, LIVES_HEIGHT), "Mode: " + LayerMask.LayerToName(_input.layerMask), style);
 
+//		GUI.DrawTexture(new Rect(10, 10, menu.width, menu.height), menu);
+//		GUI.DrawTexture(new Rect(74, 74, item.width, item.height), item);
 		GUI.DrawTexture(_crosshairPos, crosshair);
 	}
 }

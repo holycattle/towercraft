@@ -76,7 +76,8 @@ public class WeaponController : MonoBehaviour {
 		 * ----Mouse Clicks-----
 		 */
 		// Firing of Gun
-		GameObject rayCastedObject = GetClickedGameObject();
+		GameObject rayCastedObject = RaycastGameObject();
+
 		if (_activeTarget == rayCastedObject) {
 			// Do Nothing
 		} else {
@@ -90,7 +91,7 @@ public class WeaponController : MonoBehaviour {
 		}
 
 		if (Input.GetMouseButtonDown(0)) {
-			ActiveTool.MouseClickedOn(rayCastedObject);
+			ActiveTool.MouseClickOn(rayCastedObject);
 		} else if (Input.GetMouseButton(0)) {
 			ActiveTool.MouseDownOn(rayCastedObject);
 		} else if (Input.GetMouseButtonUp(0)) {
@@ -127,7 +128,7 @@ public class WeaponController : MonoBehaviour {
 		}
 	}
 
-	GameObject GetClickedGameObject() {
+	private GameObject RaycastGameObject() {
 		// Builds a ray from camera point of view to the mouse position
 		Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER);
 		RaycastHit hit;
@@ -141,6 +142,7 @@ public class WeaponController : MonoBehaviour {
 
 	public int RaycastLayer {
 		set { layerMask = 1 << value; }
+		get { return layerMask; }
 	}
 
 	public void SetActiveWeapon(int i) {
