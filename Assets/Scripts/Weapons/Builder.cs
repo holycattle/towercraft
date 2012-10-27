@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class Builder : GameTool {
+
 	// Tower Data
 	public GameObject[] towerBases;
 	public GameObject[] towerStems;
@@ -14,8 +15,10 @@ public class Builder : GameTool {
 	private const int BUTTON_PADDING = 50;
 	private Rect[] buttonRects;
 	private int _activeMenu;
-	private bool _isMenuActive;
 	private Grid targettedGrid;
+
+	// Laser Sight
+	private LineRenderer laserSight;
 
 	protected override void Awake() {
 		base.Awake();
@@ -24,21 +27,23 @@ public class Builder : GameTool {
 		towerPrefabs[BaseTower.TOWER_BASE] = towerBases;
 		towerPrefabs[BaseTower.TOWER_STEM] = towerStems;
 		towerPrefabs[BaseTower.TOWER_TURRET] = towerTurrets;
+
+//		laserSight = GetComponent<LineRenderer>();
+//		laserSight.SetVertexCount(2);
 	}
 
 	void OnGUI() {
-		if (_isMenuActive) {
+		if (_game.ActiveMenu == Menu.Builder) {
 			for (int i = 0; i < towerPrefabs[_activeMenu].Length; i++) {
 				if (GUI.Button(buttonRects[i], towerPrefabs[_activeMenu][i].GetComponent<TowerComponent>().componentName)) {
-					_game.Active = true;
-					_isMenuActive = false;
+					_game.ActiveMenu = Menu.Game;
 
 					BaseTower currentTower = targettedGrid.Tower;
 					if (currentTower == null) {
 						currentTower = targettedGrid.GenerateBaseTower();
 					}
 					currentTower.addNextComponent(towerPrefabs[_activeMenu][i]);
-					targettedGrid.SetSelected(false);
+//					targettedGrid.SetSelected(false);
 					targettedGrid = null;
 				}
 			}
@@ -50,10 +55,10 @@ public class Builder : GameTool {
 	}
 
 	public override void MouseClickOn(GameObject g) {
-		if (!_isMenuActive && g != null) {
-			_isMenuActive = true;
-			_game.Active = false;
+		if (_game.ActiveMenu == Menu.Game && g != null) {
+			_game.ActiveMenu = Menu.Builder;
 			targettedGrid = g.GetComponent<Grid>();
+			Debug.Log("G Name: " + g.name);
 
 			BaseTower currentTower = targettedGrid.Tower;
 			if (currentTower == null) {
@@ -64,13 +69,12 @@ public class Builder : GameTool {
 				_activeMenu = BaseTower.TOWER_TURRET;
 			} else {
 				// Tower is complete.
-				_isMenuActive = false;
-				_game.Active = true;
+				_game.ActiveMenu = Menu.Game;
 				targettedGrid = null;
 				return;
 			}
 
-			targettedGrid.SetSelected(true);
+//			targettedGrid.SetSelected(true);
 
 			// Generate Rectangles
 			Vector2 center = new Vector2(Screen.width / 2, Screen.height / 2);

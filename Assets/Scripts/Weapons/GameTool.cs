@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameTool : MonoBehaviour {
 	protected GameController _game;
-	public WeaponController _input;
+	protected WeaponController _input;
 	public int bullets;
 
 	protected virtual void Awake() {

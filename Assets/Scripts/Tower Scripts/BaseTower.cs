@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,8 +15,9 @@ public class BaseTower : MonoBehaviour {
 
 	// Tower Properties (Derived from Parts)
 	public string towerName;
-	public float towerRange;
-	public float firingInterval;
+	private ModifiedStat[] stats;
+	public float towerRange;		// (meters)
+	public float firingInterval;	// (seconds wait per shot)
 	public GameObject missile;
 	public bool isFiring;
 
@@ -23,10 +25,12 @@ public class BaseTower : MonoBehaviour {
 	private List<GameObject> _enemiesInRange;	// List of enemies in range
 	private float _timeSinceFired;				// # of seconds since you last fired
 	private GameObject _target;
-	private Transform _missileSource;
+	public Transform _missileSource;
 
 	void Awake() {
 		_towerComponents = new TowerComponent[TOWER_COMPLETE];
+
+		stats = new ModifiedStat[Enum.GetValues(typeof(Stat)).Length];
 	}
 
 	void Start() {
@@ -65,7 +69,7 @@ public class BaseTower : MonoBehaviour {
 
 				// Missile Firing
 				if (_target != null && _timeSinceFired <= 0) {
-					GameObject g = Instantiate(missile, transform.FindChild("MissileSource").position, Quaternion.identity) as GameObject;
+					GameObject g = Instantiate(missile, _missileSource.position, Quaternion.identity) as GameObject;
 
 					// Set target
 					g.GetComponent<BaseMissile>().Target = _enemiesInRange[0];
@@ -79,7 +83,7 @@ public class BaseTower : MonoBehaviour {
 		if (_timeSinceFired > 0)
 			_timeSinceFired -= Time.deltaTime;
 	}
-	
+
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Enemy") {
 			_enemiesInRange.Add(other.transform.root.gameObject);
@@ -91,19 +95,32 @@ public class BaseTower : MonoBehaviour {
 			_enemiesInRange.Remove(other.transform.root.gameObject);
 	}
 
+	private void UpdateStats() {
+		_missileSource = _towerComponents[TOWER_TURRET].transform.FindChild("MissileSource");
+
+		// Set Firing Interval
+		firingInterval = 1f;
+
+		// Set Collider Range
+//		GetComponent<SphereCollider>().radius = stats[Stat.Range].AdjustedBaseValue;
+		GetComponent<SphereCollider>().radius = 4 * LevelController.TILE_SIZE;
+
+		isFiring = true;
+	}
+
 	public void addNextComponent(GameObject g) {
 		int next = getNextComponent();
 		TowerComponent comp = null;
 		switch (next) {
-			case TOWER_BASE:
-				comp = g.GetComponent<TowerBase>();
-				break;
-			case TOWER_STEM:
-				comp = g.GetComponent<TowerStem>();
-				break;
-			case TOWER_TURRET:
-				comp = g.GetComponent<TowerTurret>();
-				break;
+		case TOWER_BASE:
+			comp = g.GetComponent<TowerBase>();
+			break;
+		case TOWER_STEM:
+			comp = g.GetComponent<TowerStem>();
+			break;
+		case TOWER_TURRET:
+			comp = g.GetComponent<TowerTurret>();
+			break;
 		}
 
 		// Proper Component is not Attached.
@@ -113,7 +130,11 @@ public class BaseTower : MonoBehaviour {
 		// Instantiate the Game Object
 		GameObject t = Instantiate(g, transform.position, Quaternion.identity) as GameObject;
 		t.transform.parent = transform;
-		_towerComponents[next] = comp;
+		_towerComponents[next] = t.GetComponent<TowerComponent>();	// Note: You can't use comp here because it is the component of the prefab.
+
+		if (next == TOWER_TURRET) {
+			UpdateStats();
+		}
 	}
 
 	public int getNextComponent() {
@@ -127,4 +148,11 @@ public class BaseTower : MonoBehaviour {
 			return TOWER_COMPLETE;
 		}
 	}
+}
+
+public enum Stat {
+	Range,
+	Damage,
+	FiringRate,
+	SplashRange
 }

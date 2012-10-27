@@ -36,14 +36,15 @@
 	-Also including diagonals without corner towers.
 		
 ==[GUI]==
--Tower Chooser
+**-Tower Chooser
 
 ==[GAMEPLAY]==
 -Currency System
--Waves
 
 ==[WAVE CONTROLLER]==
 **-Add a way to detect whether or not all monsters have been killed
 
+-Make the wave generation algorithm.
+
 ==[OTHER]==
--Change to First Person perspective.
+**-Change to First Person perspective.

@@ -90,8 +90,8 @@ public class BaseEnemy : MonoBehaviour {
 	public void SubLife(int amt) {
 		_life -= amt;
 
-		float x = _life / (float)maxLife;
-		transform.FindChild("EnemyModel").gameObject.GetComponent<Renderer>().material.color = new Color(x, x, x);
+//		float x = _life / (float)maxLife;
+//		transform.FindChild("EnemyModel").gameObject.GetComponent<Renderer>().material.color = new Color(x, x, x);
 
 		if (_life <= 0)
 			kill();

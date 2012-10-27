@@ -1,0 +1,66 @@
+#
+# changeling_complete.mtl
+#
+
+newmtl Eyes_tex
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd ..\Neuer Ordner (2)\pony_model_changeling\changeling_eyes.png
+
+newmtl Tongue_tex
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd ..\Neuer Ordner (2)\pony_model_changeling\changeling_tongue.png
+
+newmtl Body_tex
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd ..\Neuer Ordner (2)\pony_model_changeling\changeling_body.png
+
+newmtl Tail_tex
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd ..\Neuer Ordner (2)\pony_model_changeling\changeling_tail.png
+
+newmtl Hair_tex
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd ..\Neuer Ordner (2)\pony_model_changeling\changeling_hair.png
+
+newmtl Wings_tex
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd ..\Neuer Ordner (2)\pony_model_changeling\changeling_wings.png
+
+newmtl Shell_tex
+illum 2
+Kd 0.800000 0.800000 0.800000
+Ka 0.200000 0.200000 0.200000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ns 0.000000
+map_Kd ..\Neuer Ordner (2)\pony_model_changeling\changeling_shell.png

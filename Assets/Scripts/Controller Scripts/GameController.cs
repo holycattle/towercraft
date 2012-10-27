@@ -2,11 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-
+	// TOCHANGE
+	public const int MENU_GAME = 0;
+	public const int MENU_INVENTORY = 1;
+	public const int MENU_WEAPON = 2;
 	public const int MAX_LIVES = 10;
 
 	// Game Active
-	private bool _gameActive;
+	private Menu _activeMenu;
 
 	// Game Variables
 	private int _livesLeft;
@@ -16,13 +19,28 @@ public class GameController : MonoBehaviour {
 		// Init Player Variables
 		_livesLeft = MAX_LIVES;
 		_money = 100;
-		_gameActive = true;
+	}
+
+	void Update() {
+		if (Screen.lockCursor) {
+			if (ActiveMenu == Menu.Game) {
+				Time.timeScale = 1;			// (Locked) AND (Active) = Playable
+			} else {
+				Screen.lockCursor = false;	// (Locked) AND (Not Active) = Not Playable (unlock cursor)
+				Time.timeScale = 0.0f;
+			}
+		} else {
+			// (Not Locked) AND (Active) = To Lock Game.
+			// (Not Locked) AND (Not Active) = Unlock Game.
+			Screen.lockCursor = ActiveMenu == Menu.Game;
+			Time.timeScale = Screen.lockCursor ? 1.0f : 0.0f;
+		}
 	}
 
 	#region Setter Getters
-	public bool Active {
-		get { return _gameActive; }
-		set { _gameActive = value; }
+	public Menu ActiveMenu {
+		get { return _activeMenu;}
+		set { _activeMenu = value;}
 	}
 
 	public int Lives {
@@ -67,4 +85,10 @@ public class GameController : MonoBehaviour {
 		return true;
 	}
 	#endregion
+}
+
+public enum Menu {
+	Game,
+	Inventory,
+	Builder
 }

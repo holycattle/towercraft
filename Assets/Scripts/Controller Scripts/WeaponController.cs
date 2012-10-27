@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class WeaponController : MonoBehaviour {
-	private Vector3 SCREEN_CENTER = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+	private Vector3 SCREEN_CENTER;
 	private string OnMouseEnter = "InputMouseEnter";
 	private string OnMouseExit = "InputMouseExit";
 
@@ -17,15 +17,22 @@ public class WeaponController : MonoBehaviour {
 	public GameObject[] weapons;
 	private int _activeTool;
 
-	// Gun Bobbing
-	private float timer = 0;
-	private float actualBobbingAmount;
-	public float bobbingSpeed = 12f;
-	public float bobbingAmount = 0.05f;
-	public float bobbingMidpoint;
+	// Gun Movement (User Defined)
+	private float backRecoil = 0.5f; // World Space moved (World Units)
+//	private float upwardRecoil = 10f; // World Space rotated (Degrees)
 
-	// Recoil
+	private float weaponRotAmount = 0.4f; // 0 = No Movement, 1 = Instant Movement. Domain: [0, 1]
+	private float recoilRecovery = 0.95f; // 0 = Instant Recovery, 1 = No Recovery. Domain: [0, 1]
+	private float recoilAmount = 0.3f; // 0 = No Recoil, 1 = Instant Max Recoil. Domain: [0, 1]
+
+	// Gun Movement (Non-User Defined)
+	private float currentRecoil = 0; // 0 = No Recoil, 1 = Max Recoil Range: [0, 1]
+	private Vector3 baseRotation;
+	private Vector3 basePosition;
+
 	void Start() {
+		SCREEN_CENTER = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+
 		_activeTarget = null;
 		layerMask = 1 << 8;
 
@@ -39,9 +46,9 @@ public class WeaponController : MonoBehaviour {
 		_activeTool = 0;
 		SetActiveWeapon(_activeTool);
 
-		// Gun Bobbing
-		bobbingMidpoint = transform.localPosition.y;
-		actualBobbingAmount = bobbingAmount;
+		// Gun Movement
+		baseRotation = transform.rotation.eulerAngles;
+		basePosition = transform.localPosition;
 	}
 
 	void OnGUI() {
@@ -49,83 +56,72 @@ public class WeaponController : MonoBehaviour {
 		GUI.Box(new Rect(0, 120, 128, 30), "Bullets: " + ActiveTool.bullets);
 	}
 
-	void Update() {
-		if (Screen.lockCursor) {
-			if (_game.Active) {
-				Time.timeScale = 1;
+	void FixedUpdate() {
+		if (_game.ActiveMenu == Menu.Game) {
+			/*
+			 * -----Keyboard Presses-----
+			 */
+			// Changing of Active Weapon
+			if (Input.GetKeyDown(KeyCode.Alpha1)) {
+				SetActiveWeapon(0);
+			} else if (Input.GetKeyDown(KeyCode.Alpha2)) {
+				SetActiveWeapon(1);
+			}
+
+			/*
+			 * ----Mouse Clicks-----
+			 */
+			// Firing of Gun
+			GameObject rayCastedObject = RaycastGameObject();
+
+			if (_activeTarget == rayCastedObject) {
+				// Do Nothing
 			} else {
-				Screen.lockCursor = false;	// (Locked) AND (Not Active) = UNlock Cursor
-				Time.timeScale = 0.6f;
+				if (_activeTarget != null) {
+					_activeTarget.SendMessage(OnMouseExit, null, SendMessageOptions.DontRequireReceiver);
+				}
+				if (rayCastedObject != null) {
+					rayCastedObject.SendMessage(OnMouseEnter, null, SendMessageOptions.DontRequireReceiver);
+				} else {
+				}
+				_activeTarget = rayCastedObject;
 			}
-		} else {
-			Time.timeScale = 1;
-			Screen.lockCursor = _game.Active;
-		}
 
-		/*
-		 * -----Keyboard Presses-----
-		 */
-		// Changing of Active Weapon
-		if (Input.GetKeyDown(KeyCode.Alpha1)) {
-			SetActiveWeapon(0);
-		} else if (Input.GetKeyDown(KeyCode.Alpha2)) {
-			SetActiveWeapon(1);
-		}
-
-		/*
-		 * ----Mouse Clicks-----
-		 */
-		// Firing of Gun
-		GameObject rayCastedObject = RaycastGameObject();
-
-		if (_activeTarget == rayCastedObject) {
-			// Do Nothing
-		} else {
-			if (_activeTarget != null) {
-				_activeTarget.SendMessage(OnMouseExit, null, SendMessageOptions.DontRequireReceiver);
+			if (Input.GetMouseButtonDown(0)) {
+				ActiveTool.MouseClickOn(rayCastedObject);
+			} else if (Input.GetMouseButton(0)) {
+				ActiveTool.MouseDownOn(rayCastedObject);
+			} else if (Input.GetMouseButtonUp(0)) {
+				ActiveTool.MouseUpOn(rayCastedObject);
 			}
-			if (rayCastedObject != null) {
-				rayCastedObject.SendMessage(OnMouseEnter, null, SendMessageOptions.DontRequireReceiver);
-			}
-			_activeTarget = rayCastedObject;
-		}
 
-		if (Input.GetMouseButtonDown(0)) {
-			ActiveTool.MouseClickOn(rayCastedObject);
-		} else if (Input.GetMouseButton(0)) {
-			ActiveTool.MouseDownOn(rayCastedObject);
-		} else if (Input.GetMouseButtonUp(0)) {
-			ActiveTool.MouseUpOn(rayCastedObject);
+			RecoilUpdate();		// Affects localPosition (should affect localRotation eventually)
+			WeaponRotation();	// Affects localRotation
 		}
-
-		BobWeapon();
 	}
 
-	private void BobWeapon() {
-		float waveslice = 0.0f;
-		float horizontal = Input.GetAxis("Horizontal");
-		float vertical = Input.GetAxis("Vertical");
+	public void Recoil() {
+		currentRecoil += (1 - currentRecoil) * recoilAmount;
+	}
 
-		if (Mathf.Abs(horizontal) == 0 && Mathf.Abs(vertical) == 0) {
-			timer = 0;
-		} else {
-			waveslice = Mathf.Sin(timer); // Range: [-1, 1]
-			timer += bobbingSpeed * Time.deltaTime;
-			if (timer > Mathf.PI * 2) {
-				timer -= (Mathf.PI * 2);
-			}
-		}
+	private void RecoilUpdate() {
+		currentRecoil *= recoilRecovery;
+		transform.localPosition = new Vector3(basePosition.x, basePosition.y, basePosition.z - currentRecoil * backRecoil);
+//		transform.localRotation = Quaternion.Euler(transform.localRotation.x - currentRecoil * upwardRecoil, transform.localRotation.y, transform.localRotation.z);
+	}
 
-		if (waveslice != 0) {
-			float translateChange = waveslice * actualBobbingAmount;
-			float totalAxes = Mathf.Abs(horizontal) + Mathf.Abs(vertical);
-			totalAxes = Mathf.Clamp(totalAxes, 0, 1);
-			translateChange = totalAxes * translateChange;
+	private void WeaponRotation() {
+		int mouseClamp = 10;
+		float mHoriz = Input.GetAxis("Mouse X") * mouseClamp;
+		float mVert = -Input.GetAxis("Mouse Y") * mouseClamp;
 
-			transform.localPosition = new Vector3(transform.localPosition.x, bobbingMidpoint + translateChange, transform.localPosition.z);
-		} else {
-			transform.localPosition = new Vector3(transform.localPosition.x, bobbingMidpoint, transform.localPosition.z);
-		}
+		int keyClamp = 6; // Measured in degrees
+		float kHoriz = Input.GetAxis("Horizontal") * keyClamp;
+		float kRot = -Input.GetAxis("Horizontal") * keyClamp;
+		float kVert = -Input.GetAxis("Vertical") * keyClamp;
+
+		transform.localRotation = Quaternion.Slerp(transform.localRotation,
+			Quaternion.Euler(baseRotation.x + kVert + mVert, baseRotation.y + kHoriz + mHoriz, baseRotation.z + kRot), weaponRotAmount);
 	}
 
 	private GameObject RaycastGameObject() {
@@ -164,12 +160,5 @@ public class WeaponController : MonoBehaviour {
 
 	public GameTool ActiveTool {
 		get { return weapons[_activeTool].GetComponent<GameTool>(); }
-	}
-
-	public void setBobbing(bool b) {
-		if (b)
-			actualBobbingAmount = bobbingAmount;
-		else
-			actualBobbingAmount = 0;
 	}
 }

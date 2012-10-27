@@ -8,25 +8,27 @@ public class Grid : MonoBehaviour {
 	// Towers
 	public GameObject tower;
 	private BaseTower _ts; // Tower on this grid.
-	private GameObject _selectionGrid;
+	private MeshRenderer _selectionGrid;
 
 	void Start() {
 		_ts = null;
 		_levelController = GameObject.Find(" GameController").GetComponent<LevelController>();
 		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();
 
-		_selectionGrid = transform.FindChild("GridSelection").gameObject;
-		_selectionGrid.SetActiveRecursively(false);
+		_selectionGrid = transform.FindChild("GridSelection").GetComponent<MeshRenderer>();
+		SetSelected(false);
 	}
 
 	void InputMouseEnter() {
-		GetComponent<MeshRenderer>().enabled = true;
-		GetComponent<Renderer>().material.color = Color.red;
+//		GetComponent<MeshRenderer>().enabled = true;
+//		GetComponent<Renderer>().material.color = Color.red;
+		SetSelected(true);
 	}
 
 	void InputMouseExit() {
-		GetComponent<MeshRenderer>().enabled = false;
-		GetComponent<Renderer>().material.color = Color.white;
+//		GetComponent<MeshRenderer>().enabled = false;
+//		GetComponent<Renderer>().material.color = Color.white;
+		SetSelected(false);
 	}
 	
 	public void RemoveTower() {
@@ -64,8 +66,8 @@ public class Grid : MonoBehaviour {
 		return t.GetComponent<BaseTower>();
 	}
 
-	public void SetSelected(bool sel) {
-		_selectionGrid.SetActiveRecursively(sel);
+	private void SetSelected(bool sel) {
+		_selectionGrid.enabled = sel;
 	}
 
 	// Used for path generation
