@@ -31,6 +31,9 @@ public class BaseTower : MonoBehaviour {
 		_towerComponents = new TowerComponent[TOWER_COMPLETE];
 
 		stats = new ModifiedStat[Enum.GetValues(typeof(Stat)).Length];
+		for (int i = 0; i < Enum.GetValues(typeof(Stat)).Length; i++) {
+			stats[i] = new ModifiedStat();
+		}
 	}
 
 	void Start() {
@@ -98,14 +101,25 @@ public class BaseTower : MonoBehaviour {
 	private void UpdateStats() {
 		_missileSource = _towerComponents[TOWER_TURRET].transform.FindChild("MissileSource");
 
+		foreach (TowerComponent c in _towerComponents) {
+			foreach (ModifyingAttribute m in c.attributes) {
+				stats[(int)m.stat].AddModifier(m);
+			}
+		}
+
 		// Set Firing Interval
 		firingInterval = 1f;
 
 		// Set Collider Range
-//		GetComponent<SphereCollider>().radius = stats[Stat.Range].AdjustedBaseValue;
-		GetComponent<SphereCollider>().radius = 4 * LevelController.TILE_SIZE;
+		GetComponent<SphereCollider>().radius = stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE;
+//		GetComponent<SphereCollider>().radius = 4 * LevelController.TILE_SIZE;
 
 		isFiring = true;
+
+		// Debug Out all Stats
+		for (int i = 0; i < Enum.GetValues(typeof(Stat)).Length; i++) {
+			Debug.Log(((Stat)i).ToString() + ": " + stats[i].AdjustedBaseValue);
+		}
 	}
 
 	public void addNextComponent(GameObject g) {
@@ -128,7 +142,7 @@ public class BaseTower : MonoBehaviour {
 			return;
 
 		// Instantiate the Game Object
-		GameObject t = Instantiate(g, transform.position, Quaternion.identity) as GameObject;
+		GameObject t = Instantiate(g, transform.position + getNextComponentPosition(), Quaternion.identity) as GameObject;
 		t.transform.parent = transform;
 		_towerComponents[next] = t.GetComponent<TowerComponent>();	// Note: You can't use comp here because it is the component of the prefab.
 
@@ -147,6 +161,24 @@ public class BaseTower : MonoBehaviour {
 		} else {
 			return TOWER_COMPLETE;
 		}
+	}
+
+	private Vector3 getNextComponentPosition() {
+		int next = getNextComponent();
+		Vector3 offset = Vector3.zero;
+		switch (next) {
+		case TOWER_COMPLETE:
+			break;
+		case TOWER_TURRET:
+			offset += _towerComponents[TOWER_STEM].baseNextComponentPosition;
+				goto case TOWER_STEM;	// Using fallthrough, C# style.
+		case TOWER_STEM:
+			offset += _towerComponents[TOWER_BASE].baseNextComponentPosition;
+			break;
+		case TOWER_BASE:
+			break;
+		}
+		return offset;
 	}
 }
 

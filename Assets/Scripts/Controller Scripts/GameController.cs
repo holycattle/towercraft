@@ -37,6 +37,10 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	public GameObject GenerateTowerComponent() {
+		return null;
+	}
+
 	#region Setter Getters
 	public Menu ActiveMenu {
 		get { return _activeMenu;}

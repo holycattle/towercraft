@@ -11,6 +11,7 @@ public class ModifiedStat : BaseStat {
 
 	public void AddModifier(ModifyingAttribute mod) {
 		_mods.Add(mod);
+		CalculateModValue();
 	}
 	
 	private void CalculateModValue() {
@@ -40,5 +41,9 @@ public struct ModifyingAttribute {
 	public ModifyingAttribute (Stat s, int a) {
 		stat = s;
 		amount = a;
+	}
+
+	public string DebugLog() {
+		return stat.ToString() + ": " + amount;
 	}
 }

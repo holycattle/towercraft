@@ -18,15 +18,17 @@ public class WeaponController : MonoBehaviour {
 	private int _activeTool;
 
 	// Gun Movement (User Defined)
-	private float backRecoil = 0.5f; // World Space moved (World Units)
-//	private float upwardRecoil = 10f; // World Space rotated (Degrees)
-
-	private float weaponRotAmount = 0.4f; // 0 = No Movement, 1 = Instant Movement. Domain: [0, 1]
-	private float recoilRecovery = 0.95f; // 0 = Instant Recovery, 1 = No Recovery. Domain: [0, 1]
-	private float recoilAmount = 0.3f; // 0 = No Recoil, 1 = Instant Max Recoil. Domain: [0, 1]
+	private float verticalImpulse = 0.2f;	// World Space moved (World Units)
+	private float impulseRecovery = 0.3f;
+	//--
+	private float backRecoil = 0.5f;		// World Space moved (World Units)
+	private float weaponRotAmount = 0.4f;	// 0 = No Movement, 1 = Instant Movement. Domain: [0, 1]
+	private float recoilRecovery = 0.95f; 	// 0 = Instant Recovery, 1 = No Recovery. Domain: [0, 1]
+	private float recoilAmount = 0.3f;		// 0 = No Recoil, 1 = Instant Max Recoil. Domain: [0, 1]
 
 	// Gun Movement (Non-User Defined)
-	private float currentRecoil = 0; // 0 = No Recoil, 1 = Max Recoil Range: [0, 1]
+	private float currentRecoil = 0; 		// 0 = No Recoil, 1 = Max Recoil - Range: [0, 1]
+	private float currentImpulse = 0; 		// 0 = No Impulse, +-1 = Max Impulse - Range: [-1, 1]. Used for jumping and landing force.
 	private Vector3 baseRotation;
 	private Vector3 basePosition;
 
@@ -62,10 +64,15 @@ public class WeaponController : MonoBehaviour {
 			 * -----Keyboard Presses-----
 			 */
 			// Changing of Active Weapon
-			if (Input.GetKeyDown(KeyCode.Alpha1)) {
+			if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKey(KeyCode.Alpha1)) {			// TODO: Why do you have to use both GetKey + GetKeyDown?
 				SetActiveWeapon(0);
-			} else if (Input.GetKeyDown(KeyCode.Alpha2)) {
+			} else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKey(KeyCode.Alpha2)) {
 				SetActiveWeapon(1);
+			}
+
+			// ----TESTING!!!----
+			if (Input.GetKeyDown(KeyCode.P) || Input.GetKey(KeyCode.P)) {
+				ComponentGenerator.Get().GenerateComponent(0);
 			}
 
 			/*
@@ -106,14 +113,17 @@ public class WeaponController : MonoBehaviour {
 
 	private void RecoilUpdate() {
 		currentRecoil *= recoilRecovery;
-		transform.localPosition = new Vector3(basePosition.x, basePosition.y, basePosition.z - currentRecoil * backRecoil);
+		currentImpulse *= impulseRecovery;
+		transform.localPosition = new Vector3(basePosition.x,
+												basePosition.y + currentImpulse * verticalImpulse,
+												basePosition.z - currentRecoil * backRecoil);
 //		transform.localRotation = Quaternion.Euler(transform.localRotation.x - currentRecoil * upwardRecoil, transform.localRotation.y, transform.localRotation.z);
 	}
 
 	private void WeaponRotation() {
-		int mouseClamp = 10;
-		float mHoriz = Input.GetAxis("Mouse X") * mouseClamp;
-		float mVert = -Input.GetAxis("Mouse Y") * mouseClamp;
+		int mouseClamp = 6;
+		float mHoriz = -Input.GetAxis("Mouse X") * mouseClamp;
+		float mVert = Input.GetAxis("Mouse Y") * mouseClamp;
 
 		int keyClamp = 6; // Measured in degrees
 		float kHoriz = Input.GetAxis("Horizontal") * keyClamp;
@@ -134,6 +144,14 @@ public class WeaponController : MonoBehaviour {
 			return hit.transform.gameObject;
 		else
 			return null;
+	}
+
+	public void OnLand() {
+		currentImpulse = -1;
+	}
+
+	public void OnJump() {
+		currentImpulse = 1;
 	}
 
 	public int RaycastLayer {

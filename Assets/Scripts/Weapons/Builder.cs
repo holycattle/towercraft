@@ -54,6 +54,10 @@ public class Builder : GameTool {
 		_input.RaycastLayer = LayerMask.NameToLayer("Level");
 	}
 
+	public override void MouseDownOn(GameObject g) {
+		MouseClickOn(g);
+	}
+
 	public override void MouseClickOn(GameObject g) {
 		if (_game.ActiveMenu == Menu.Game && g != null) {
 			_game.ActiveMenu = Menu.Builder;

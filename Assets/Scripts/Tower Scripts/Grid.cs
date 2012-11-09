@@ -62,7 +62,6 @@ public class Grid : MonoBehaviour {
 		// Update Path
 		_levelController.UpdatePath();
 
-		Debug.Log("Instantiated Base Tower");
 		return t.GetComponent<BaseTower>();
 	}
 

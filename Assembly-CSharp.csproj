@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Controller Scripts\CameraController.cs" />
+     <Compile Include="Assets\Scripts\Controller Scripts\ComponentGenerator.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\FPSWalkerEnhanced.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\InputHandler.cs" />
@@ -54,6 +55,7 @@
      <Compile Include="Assets\Scripts\Enemy Scripts\BaseEnemy.cs" />
      <Compile Include="Assets\Scripts\Environment Scripts\EndPortal.cs" />
      <Compile Include="Assets\Scripts\HUD Scripts\HUDScript.cs" />
+     <Compile Include="Assets\Scripts\Items\Inventory.cs" />
      <Compile Include="Assets\Scripts\Items\Item.cs" />
      <Compile Include="Assets\Scripts\Items\ItemCollector.cs" />
      <Compile Include="Assets\Scripts\Items\ItemScript.cs" />

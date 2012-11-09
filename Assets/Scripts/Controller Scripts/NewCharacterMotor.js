@@ -223,14 +223,14 @@ private function UpdateFunction () {
 			controller.Move(moveDistance);
 		
 		// Support moving platform rotation as well:
-        var newGlobalRotation : Quaternion = movingPlatform.activePlatform.rotation * movingPlatform.activeLocalRotation;
-        var rotationDiff : Quaternion = newGlobalRotation * Quaternion.Inverse(movingPlatform.activeGlobalRotation);
-        
-        var yRotation = rotationDiff.eulerAngles.y;
-        if (yRotation != 0) {
-	        // Prevent rotation of the local up vector
-	        tr.Rotate(0, yRotation, 0);
-        }
+	        var newGlobalRotation : Quaternion = movingPlatform.activePlatform.rotation * movingPlatform.activeLocalRotation;
+	        var rotationDiff : Quaternion = newGlobalRotation * Quaternion.Inverse(movingPlatform.activeGlobalRotation);
+	        
+	        var yRotation = rotationDiff.eulerAngles.y;
+	        if (yRotation != 0) {
+		        // Prevent rotation of the local up vector
+		        tr.Rotate(0, yRotation, 0);
+	        }
 	}
 	
 	// Save lastPosition for velocity calculation.
@@ -305,7 +305,7 @@ private function UpdateFunction () {
 			movement.velocity += movingPlatform.platformVelocity;
 		}
 		
-		SendMessage("OnFall", SendMessageOptions.DontRequireReceiver);
+		BroadcastMessage("OnFall", SendMessageOptions.DontRequireReceiver);
 		// We pushed the character down to ensure it would stay on the ground if there was any.
 		// But there wasn't so now we cancel the downwards offset to make the fall smoother.
 		tr.position += pushDownOffset * Vector3.up;
@@ -316,7 +316,7 @@ private function UpdateFunction () {
 		jumping.jumping = false;
 		SubtractNewPlatformVelocity();
 		
-		SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
+		BroadcastMessage("OnLand", SendMessageOptions.DontRequireReceiver);
 	}
 	
 	// Moving platforms support
@@ -327,8 +327,8 @@ private function UpdateFunction () {
 		movingPlatform.activeLocalPoint = movingPlatform.activePlatform.InverseTransformPoint(movingPlatform.activeGlobalPoint);
 		
 		// Support moving platform rotation as well:
-        movingPlatform.activeGlobalRotation = tr.rotation;
-        movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation; 
+	        movingPlatform.activeGlobalRotation = tr.rotation;
+	        movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation; 
 	}
 }
 
@@ -418,8 +418,9 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 		jumping.lastButtonDownTime = -100;
 	}
 	
-	if (inputJump && jumping.lastButtonDownTime < 0 && canControl)
+	if (inputJump && jumping.lastButtonDownTime < 0 && canControl) {
 		jumping.lastButtonDownTime = Time.time;
+	}
 	
 	if (grounded)
 		velocity.y = Mathf.Min(0, velocity.y) - movement.gravity * Time.deltaTime;
@@ -473,7 +474,7 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 				velocity += movingPlatform.platformVelocity;
 			}
 			
-			SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
+			BroadcastMessage("OnJump", SendMessageOptions.DontRequireReceiver);
 		}
 		else {
 			jumping.holdingJumpButton = false;
