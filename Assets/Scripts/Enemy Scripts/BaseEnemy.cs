@@ -3,9 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class BaseEnemy : MonoBehaviour {
+	// Constants
 	public const float MOV_OFFSET = 0.0f;
 	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
 	public const float OFFSETABLE = 0.5f;
+
+	//
+	private static GameObject _item;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
 	private float turnSpeed;
@@ -32,6 +36,12 @@ public class BaseEnemy : MonoBehaviour {
 		turnSpeed = moveSpeed;
 
 		originalRot = transform.rotation;
+
+		if (_item == null)
+			_item = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
+		if (_item != null) {
+			Debug.Log("Loaded");
+		}
 	}
 
 	void Update() {
@@ -104,6 +114,8 @@ public class BaseEnemy : MonoBehaviour {
 	public void kill() {
 		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
 		Destroy(this.transform.root.gameObject);
+		GameObject g = Instantiate(_item, transform.position, Quaternion.identity) as GameObject;
+		g.rigidbody.velocity = new Vector3(Random.Range(0, 1), 4, Random.Range(0, 1));
 	}
 	#endregion
 

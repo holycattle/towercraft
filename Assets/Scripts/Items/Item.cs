@@ -2,10 +2,29 @@ using UnityEngine;
 using System.Collections;
 
 public class Item {
-	public string name;
 	public Texture texture;
+	private TowerComponent _tc;
 
 	public Item () {
-		name = "" + Random.Range(0, 20);
+		System.Random r = new System.Random();
+		_tc = ComponentGenerator.Get().GenerateComponent(r.Next(BaseTower.TOWER_COMPLETE));
+		Debug.Log("Generated: " + _tc.componentName);
+	}
+
+	public Item (int i) {
+		_tc = ComponentGenerator.Get().GenerateComponent(i);
+		Debug.Log("Generated: " + _tc.componentName);
+	}
+
+	public string Name {
+		get { return _tc.componentName; }
+	}
+
+	public TowerComponent GetTowerComponent() {
+		return _tc;
+	}
+
+	public GameObject GetComponentPrefab() {
+		return _tc.gameObject;
 	}
 }

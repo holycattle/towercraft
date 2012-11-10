@@ -13,6 +13,9 @@ public class GameTool : MonoBehaviour {
 		bullets = 0;
 	}
 
+	protected virtual void Start() {
+	}
+
 	protected void Init() {
 	}
 
