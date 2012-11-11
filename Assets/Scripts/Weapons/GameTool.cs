@@ -16,7 +16,7 @@ public class GameTool : MonoBehaviour {
 	protected virtual void Start() {
 	}
 
-	protected void Init() {
+	protected virtual void OnGUI() {
 	}
 
 	public virtual void WhenEquipped() {

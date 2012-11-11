@@ -42,7 +42,8 @@ public class Builder : GameTool {
 		_inventory = transform.root.gameObject.GetComponentInChildren<ItemCollector>();
 	}
 
-	void OnGUI() {
+	protected override void OnGUI() {
+		base.OnGUI();
 		if (_game.ActiveMenu == Menu.Builder) {
 			for (int i = 0; i < _displayArray.Length; i++) {
 				if (GUI.Button(buttonRects[i], _displayArray[i].GetComponent<TowerComponent>().componentName)) {

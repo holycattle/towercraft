@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class Weapon : GameTool {
+	private const int LIFE_WIDTH = 160;
+	private const int LIFE_HEIGHT = 50;
 	private Vector3 SCREEN_CENTER = new Vector3(Screen.width / 2, Screen.height / 2, 0);
 
 	//
@@ -15,6 +17,9 @@ public class Weapon : GameTool {
 	private int damage = 1;
 	private float _timeTillFire;
 
+	// GUI Information
+	private BaseEnemy _targetted;
+
 	protected override void Awake() {
 		base.Awake();
 
@@ -22,9 +27,19 @@ public class Weapon : GameTool {
 		bullets = 30;
 	}
 
-	void Start() {
+	protected override void Start() {
+		base.Start();
+
 		emitter = GetComponentInChildren<ParticleEmitter>();
 		emitter.emit = false;
+	}
+
+	protected override void OnGUI() {
+		base.OnGUI();
+
+		if (_targetted != null) {
+			GUI.TextArea(new Rect(Screen.width / 2 - LIFE_WIDTH / 2, 0, LIFE_WIDTH, LIFE_HEIGHT), _targetted.Name + "\n" + _targetted.Life + " / " + _targetted.maxLife);
+		}
 	}
 
 	public override void WhenEquipped() {
@@ -51,8 +66,11 @@ public class Weapon : GameTool {
 			// Casts the ray and get the first game object hit
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity, _input.RaycastLayer)) {
 				// Damage Game Object
-				if (hit.transform.gameObject.GetComponent<BaseEnemy>() != null)
-					g.GetComponent<BaseEnemy>().SubLife(damage);	// Collided with enemy, otherwise collided with terrain
+				BaseEnemy b = g.GetComponent<BaseEnemy>();
+				if (b != null) {
+					b.SubLife(damage);	// Collided with enemy, otherwise collided with terrain
+					_targetted = b;
+				}
 
 				// Calculate Rotation Vector
 				Vector3 path = transform.position - hit.point;

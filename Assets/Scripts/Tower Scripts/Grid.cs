@@ -10,7 +10,7 @@ public class Grid : MonoBehaviour {
 	private BaseTower _ts; // Tower on this grid.
 	private MeshRenderer _selectionGrid;
 
-	void Start() {
+	void Awake() {
 		_ts = null;
 		_levelController = GameObject.Find(" GameController").GetComponent<LevelController>();
 		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();

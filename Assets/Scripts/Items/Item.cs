@@ -8,12 +8,12 @@ public class Item {
 	public Item () {
 		System.Random r = new System.Random();
 		_tc = ComponentGenerator.Get().GenerateComponent(r.Next(BaseTower.TOWER_COMPLETE));
-		Debug.Log("Generated: " + _tc.componentName);
+//		Debug.Log("Generated: " + _tc.componentName);
 	}
 
 	public Item (int i) {
 		_tc = ComponentGenerator.Get().GenerateComponent(i);
-		Debug.Log("Generated: " + _tc.componentName);
+//		Debug.Log("Generated: " + _tc.componentName);
 	}
 
 	public string Name {

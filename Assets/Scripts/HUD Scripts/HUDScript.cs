@@ -35,6 +35,6 @@ public class HUDScript : MonoBehaviour {
 
 //		GUI.DrawTexture(new Rect(10, 10, menu.width, menu.height), menu);
 //		GUI.DrawTexture(new Rect(74, 74, item.width, item.height), item);
-		GUI.DrawTexture(_crosshairPos, crosshair);
+//		GUI.DrawTexture(_crosshairPos, crosshair);
 	}
 }

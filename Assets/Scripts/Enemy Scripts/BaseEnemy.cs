@@ -39,9 +39,6 @@ public class BaseEnemy : MonoBehaviour {
 
 		if (_item == null)
 			_item = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
-		if (_item != null) {
-			Debug.Log("Loaded");
-		}
 	}
 
 	void Update() {
@@ -114,8 +111,10 @@ public class BaseEnemy : MonoBehaviour {
 	public void kill() {
 		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
 		Destroy(this.transform.root.gameObject);
-		GameObject g = Instantiate(_item, transform.position, Quaternion.identity) as GameObject;
-		g.rigidbody.velocity = new Vector3(Random.Range(0, 1), 4, Random.Range(0, 1));
+
+		if (Random.Range(0, 10) < 10) {
+			Instantiate(_item, transform.position, Quaternion.identity);
+		}
 	}
 	#endregion
 
@@ -127,6 +126,10 @@ public class BaseEnemy : MonoBehaviour {
 		return 0;
 	}
 
+	public string Name {
+		get { return gameObject.name; }
+	}
+
 	public int WaveCost {
 		get { return waveCost; }
 	}
@@ -134,7 +137,6 @@ public class BaseEnemy : MonoBehaviour {
 	public List<Vector2> Path {
 		set { _path = value; }
 	}
-
 }
 
 public enum MobType {

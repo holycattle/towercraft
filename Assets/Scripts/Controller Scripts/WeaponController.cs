@@ -2,20 +2,31 @@ using UnityEngine;
 using System.Collections;
 
 public class WeaponController : MonoBehaviour {
-	private Vector3 SCREEN_CENTER;
+	private Vector2 SCREEN_CENTER = new Vector2(Screen.width / 2, Screen.height / 2);
 	private string OnMouseEnter = "InputMouseEnter";
 	private string OnMouseExit = "InputMouseExit";
 
 	// RayCasting
-	private int layerMask; // Temporarily Public
+	private int layerMask;
 	private GameObject _activeTarget;
 
 	// Game Controller
 	private GameController _game;
 
 	// Player Components
-	public GameObject[] weapons;
+	private GameObject[] weapons;
 	private int _activeTool;
+
+	// HUD Components
+	// -> TODO: Get the array version of this to work. "Unsupported int type vector" error
+	private const int MAX_OFFSET = 20;
+	private int[] X_OFFSET = {-1, 1, 1, -1};
+	private int[] Y_OFFSET = {-1, -1, 1, 1};
+	public Texture2D crosshair0;
+	public Texture2D crosshair1;
+	public Texture2D crosshair2;
+	public Texture2D crosshair3;
+	private Rect[] crosshairRect;
 
 	// Gun Movement (User Defined)
 	private float verticalImpulse = 0.2f;	// World Space moved (World Units)
@@ -51,11 +62,22 @@ public class WeaponController : MonoBehaviour {
 		// Gun Movement
 		baseRotation = transform.rotation.eulerAngles;
 		basePosition = transform.localPosition;
+
+		// HUD Components
+		crosshairRect = new Rect[4];
+		for (int i = 0; i < crosshairRect.Length; i++) {
+			crosshairRect[i] = new Rect(Screen.width / 2 - crosshair0.width / 2, Screen.height / 2 - crosshair0.height / 2, crosshair0.width, crosshair0.height);
+		}
 	}
 
 	void OnGUI() {
 		GUI.backgroundColor = Color.grey;
 		GUI.Box(new Rect(0, 120, 128, 30), "Bullets: " + ActiveTool.bullets);
+
+		GUI.DrawTexture(crosshairRect[0], crosshair0);
+		GUI.DrawTexture(crosshairRect[1], crosshair1);
+		GUI.DrawTexture(crosshairRect[2], crosshair2);
+		GUI.DrawTexture(crosshairRect[3], crosshair3);
 	}
 
 	void FixedUpdate() {
@@ -118,6 +140,12 @@ public class WeaponController : MonoBehaviour {
 												basePosition.y + currentImpulse * verticalImpulse,
 												basePosition.z - currentRecoil * backRecoil);
 //		transform.localRotation = Quaternion.Euler(transform.localRotation.x - currentRecoil * upwardRecoil, transform.localRotation.y, transform.localRotation.z);
+
+		// Update position of crosshair
+		int offset = (int)(currentRecoil * MAX_OFFSET);
+		for (int i = 0; i < crosshairRect.Length; i++) {
+			crosshairRect[i].center = SCREEN_CENTER + new Vector2(X_OFFSET[i], Y_OFFSET[i]) * offset;
+		}
 	}
 
 	private void WeaponRotation() {

@@ -28,7 +28,7 @@ public class ItemCollector : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (CanPickup()) {
 			if (other.gameObject.tag == "Item") {
-				Debug.Log("Item Collected");
+//				Debug.Log("Item Collected");
 				Pickup(other.gameObject.GetComponent<ItemScript>().item);
 				DestroyObject(other.gameObject);
 			}

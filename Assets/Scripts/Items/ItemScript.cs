@@ -9,7 +9,7 @@ public class ItemScript : MonoBehaviour {
 
 	void Start() {
 		item = new Item();
-//		rigidbody.velocity = new Vector3(1, 1, 1);
+		rigidbody.velocity = new Vector3(Random.Range(0, 0.5f), 8, Random.Range(0, 0.5f));
 		_line = GetComponent<LineRenderer>();
 	}
 
