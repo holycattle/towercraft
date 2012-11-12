@@ -8,24 +8,31 @@ public class BaseEnemy : MonoBehaviour {
 	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
 	public const float OFFSETABLE = 0.5f;
 
-	//
+	// References
+	private PlayerController _player;
 	private static GameObject _item;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
-	private float turnSpeed;
-	public float totalTurn;
-	private Quaternion originalRot;
 	public int moveSpeed;
 	public int maxLife;
+	private int _life;					// Current Life
 	public int moneyReward;
 	public int waveCost;
-	public MobType type;
+	private int damage = 1;
+	private float firingInterval = 1f;
+	private float range = 32;
 
-	// Private Variables
+	// Movement Variables
+	private float turnSpeed;
+	private float totalTurn;
+	private Quaternion originalRot;
+	public MobType type;
+	private float _timeTillFire;
+
+	// Path Following
 	private List<Vector2> _path;
 	private int _activePoint;
 	private Vector2 _offset;
-	private int _life;
 
 	void Start() {
 		_activePoint = 1;
@@ -39,6 +46,8 @@ public class BaseEnemy : MonoBehaviour {
 
 		if (_item == null)
 			_item = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
+
+		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 	}
 
 	void Update() {
@@ -80,9 +89,20 @@ public class BaseEnemy : MonoBehaviour {
 		}
 		totalTurn += turnSpeed * Time.deltaTime;
 
-		// LIVING
-		if (_life <= 0) {
-			Destroy(this.transform.root.gameObject);
+		// ATTACKING
+		if (Vector3.Distance(transform.position, _player.transform.position) <= range) {
+			if (_timeTillFire <= 0) {
+				if (Random.Range(0, 1) == 0) {
+					// Hit
+					_player.SubLife(damage);
+				}
+
+				_timeTillFire += firingInterval;
+			}
+		}
+
+		if (_timeTillFire > 0) {
+			_timeTillFire -= Time.deltaTime;
 		}
 	}
 
@@ -91,24 +111,20 @@ public class BaseEnemy : MonoBehaviour {
 	public void AddLife(int amt) {
 		_life += amt;
 		if (_life <= 0)
-			kill();
+			Kill();
 	}
 
 	public void SubLife(int amt) {
 		_life -= amt;
-
-//		float x = _life / (float)maxLife;
-//		transform.FindChild("EnemyModel").gameObject.GetComponent<Renderer>().material.color = new Color(x, x, x);
-
 		if (_life <= 0)
-			kill();
+			Kill();
 	}
 
 	public int Life {
 		get { return _life; }
 	}
 
-	public void kill() {
+	public void Kill() {
 		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
 		Destroy(this.transform.root.gameObject);
 

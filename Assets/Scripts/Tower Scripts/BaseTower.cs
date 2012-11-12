@@ -23,7 +23,7 @@ public class BaseTower : MonoBehaviour {
 
 	// Tower Logic
 	private List<GameObject> _enemiesInRange;	// List of enemies in range
-	private float _timeSinceFired;				// # of seconds since you last fired
+	private float _timeTillFire;				// # of seconds till you can fire again
 	private GameObject _target;
 	public Transform _missileSource;
 
@@ -38,7 +38,7 @@ public class BaseTower : MonoBehaviour {
 
 	void Start() {
 		_enemiesInRange = new List<GameObject>();
-		_timeSinceFired = 0;
+		_timeTillFire = 0;
 
 		// Update the Radius of the Capsule Collider (Range)
 //		GetComponent<CapsuleCollider>().radius = towerRange;
@@ -57,7 +57,7 @@ public class BaseTower : MonoBehaviour {
 		}
 		
 		// Try to Fire
-		if (_timeSinceFired <= 0 && isFiring) {
+		if (_timeTillFire <= 0 && isFiring) {
 			if (_enemiesInRange.Count > 0) {
 				_target = _enemiesInRange[0];
 				while (!(_target != null)) { // If the target has already been destroyed
@@ -71,20 +71,20 @@ public class BaseTower : MonoBehaviour {
 				}
 
 				// Missile Firing
-				if (_target != null && _timeSinceFired <= 0) {
+				if (_target != null && _timeTillFire <= 0) {
 					GameObject g = Instantiate(missile, _missileSource.position, Quaternion.identity) as GameObject;
 
 					// Set target
 					g.GetComponent<BaseMissile>().Target = _enemiesInRange[0];
 
-					_timeSinceFired += firingInterval;
+					_timeTillFire += firingInterval;
 				}
 			}
 		}
 
 		// Update FiringCounter
-		if (_timeSinceFired > 0)
-			_timeSinceFired -= Time.deltaTime;
+		if (_timeTillFire > 0)
+			_timeTillFire -= Time.deltaTime;
 	}
 
 	void OnTriggerEnter(Collider other) {

@@ -15,11 +15,6 @@ public class ItemCollector : MonoBehaviour {
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 
 		Pickup(new Item(0));
-		Pickup(new Item(1));
-		Pickup(new Item(2));
-		Pickup(new Item(0));
-		Pickup(new Item(1));
-		Pickup(new Item(2));
 		Pickup(new Item(0));
 		Pickup(new Item(1));
 		Pickup(new Item(2));
@@ -28,11 +23,18 @@ public class ItemCollector : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if (CanPickup()) {
 			if (other.gameObject.tag == "Item") {
-//				Debug.Log("Item Collected");
-				Pickup(other.gameObject.GetComponent<ItemScript>().item);
-				DestroyObject(other.gameObject);
+				StartCoroutine("PickupDelay", other.gameObject);
 			}
 		}
+	}
+
+	private IEnumerator PickupDelay(GameObject g) {
+		ItemScript i = g.GetComponent<ItemScript>();
+		i.Target = transform;
+
+		yield return new WaitForSeconds(0.3f);
+		Pickup(i.item);
+		DestroyObject(g);
 	}
 
 	void Update() {

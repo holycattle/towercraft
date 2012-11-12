@@ -50,11 +50,11 @@
      <Compile Include="Assets\Scripts\Controller Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\InputHandler.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\LevelController.cs" />
+     <Compile Include="Assets\Scripts\Controller Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\WaveController.cs" />
      <Compile Include="Assets\Scripts\Controller Scripts\WeaponController.cs" />
      <Compile Include="Assets\Scripts\Enemy Scripts\BaseEnemy.cs" />
      <Compile Include="Assets\Scripts\Environment Scripts\EndPortal.cs" />
-     <Compile Include="Assets\Scripts\HUD Scripts\HUDScript.cs" />
      <Compile Include="Assets\Scripts\Items\Inventory.cs" />
      <Compile Include="Assets\Scripts\Items\Item.cs" />
      <Compile Include="Assets\Scripts\Items\ItemCollector.cs" />

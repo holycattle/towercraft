@@ -43,7 +43,7 @@ public class Weapon : GameTool {
 	}
 
 	public override void WhenEquipped() {
-		_input.RaycastLayer = LayerMask.NameToLayer("Mob");
+		_weapon.RaycastLayer = 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Mob");
 	}
 
 	public override void MouseClickOn(GameObject g) {
@@ -60,11 +60,14 @@ public class Weapon : GameTool {
 	private void TryToFire(GameObject g) {
 		if (_timeTillFire <= 0) {
 			// Raycast
-			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER);
+			int maxInaccuracy = (int)(_weapon.CurrentRecoil * WeaponController.CROSSHAIR_OFFSET);
+//			Debug.Log("Max Inaccuracy: " + maxInaccuracy);
+			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER +
+				new Vector3(Random.Range(-maxInaccuracy, maxInaccuracy), Random.Range(-maxInaccuracy, maxInaccuracy), 0));
 			RaycastHit hit;
 
 			// Casts the ray and get the first game object hit
-			if (Physics.Raycast(ray, out hit, Mathf.Infinity, _input.RaycastLayer)) {
+			if (Physics.Raycast(ray, out hit, Mathf.Infinity, _weapon.RaycastLayer)) {
 				// Damage Game Object
 				BaseEnemy b = g.GetComponent<BaseEnemy>();
 				if (b != null) {
@@ -77,6 +80,7 @@ public class Weapon : GameTool {
 				Vector3 bounced = 2 * hit.normal * Vector3.Dot(hit.normal, path) - path;
 				Instantiate(sparks, hit.point, Quaternion.LookRotation(bounced));
 
+				// Gun Projectile
 //				GameObject b = Instantiate(bullet, transform.position, Quaternion.LookRotation(hit.point - transform.position)) as GameObject;
 //				b.GetComponent<Rigidbody>().velocity = (hit.point - transform.position).normalized * 128;
 //				Physics.IgnoreCollision(b.collider, transform.root.collider);
@@ -87,7 +91,7 @@ public class Weapon : GameTool {
 				bullets = 30;
 
 			emitter.Emit(1);
-			_input.Recoil();
+			_weapon.Recoil();
 		}
 	}
 

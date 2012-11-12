@@ -19,7 +19,7 @@ public class WeaponController : MonoBehaviour {
 
 	// HUD Components
 	// -> TODO: Get the array version of this to work. "Unsupported int type vector" error
-	private const int MAX_OFFSET = 20;
+	public const int CROSSHAIR_OFFSET = 32;		// Screen units (also used for gun inaccuracy)
 	private int[] X_OFFSET = {-1, 1, 1, -1};
 	private int[] Y_OFFSET = {-1, -1, 1, 1};
 	public Texture2D crosshair0;
@@ -35,11 +35,12 @@ public class WeaponController : MonoBehaviour {
 	private float backRecoil = 0.5f;		// World Space moved (World Units)
 	private float weaponRotAmount = 0.4f;	// 0 = No Movement, 1 = Instant Movement. Domain: [0, 1]
 	private float recoilRecovery = 0.95f; 	// 0 = Instant Recovery, 1 = No Recovery. Domain: [0, 1]
-	private float recoilAmount = 0.3f;		// 0 = No Recoil, 1 = Instant Max Recoil. Domain: [0, 1]
+	private float recoilAmount = 0.4f;		// 0 = No Recoil, 1 = Instant Max Recoil. Domain: [0, 1]
+	private const float RECOIL_ASYMPTOTE = 0.7f;
 
 	// Gun Movement (Non-User Defined)
-	private float currentRecoil = 0; 		// 0 = No Recoil, 1 = Max Recoil - Range: [0, 1]
-	private float currentImpulse = 0; 		// 0 = No Impulse, +-1 = Max Impulse - Range: [-1, 1]. Used for jumping and landing force.
+	private float _currentRecoil = 0; 		// 0 = No Recoil, 1 = Max Recoil - Range: [0, 1]
+	private float _currentImpulse = 0; 		// 0 = No Impulse, +-1 = Max Impulse - Range: [-1, 1]. Used for jumping and landing force.
 	private Vector3 baseRotation;
 	private Vector3 basePosition;
 
@@ -130,19 +131,19 @@ public class WeaponController : MonoBehaviour {
 	}
 
 	public void Recoil() {
-		currentRecoil += (1 - currentRecoil) * recoilAmount;
+		_currentRecoil += (1 - _currentRecoil) * recoilAmount;
 	}
 
 	private void RecoilUpdate() {
-		currentRecoil *= recoilRecovery;
-		currentImpulse *= impulseRecovery;
+		_currentRecoil *= recoilRecovery;
+		_currentImpulse *= impulseRecovery;
 		transform.localPosition = new Vector3(basePosition.x,
-												basePosition.y + currentImpulse * verticalImpulse,
-												basePosition.z - currentRecoil * backRecoil);
+												basePosition.y + _currentImpulse * verticalImpulse,
+												basePosition.z - CurrentRecoil * backRecoil);
 //		transform.localRotation = Quaternion.Euler(transform.localRotation.x - currentRecoil * upwardRecoil, transform.localRotation.y, transform.localRotation.z);
 
 		// Update position of crosshair
-		int offset = (int)(currentRecoil * MAX_OFFSET);
+		int offset = (int)(CurrentRecoil * CROSSHAIR_OFFSET);
 		for (int i = 0; i < crosshairRect.Length; i++) {
 			crosshairRect[i].center = SCREEN_CENTER + new Vector2(X_OFFSET[i], Y_OFFSET[i]) * offset;
 		}
@@ -175,15 +176,15 @@ public class WeaponController : MonoBehaviour {
 	}
 
 	public void OnLand() {
-		currentImpulse = -1;
+		_currentImpulse = -1;
 	}
 
 	public void OnJump() {
-		currentImpulse = 1;
+		_currentImpulse = 1;
 	}
 
 	public int RaycastLayer {
-		set { layerMask = 1 << value; }
+		set { layerMask = value; }
 		get { return layerMask; }
 	}
 
@@ -198,6 +199,10 @@ public class WeaponController : MonoBehaviour {
 		_activeTool = i;
 		weapons[_activeTool].SetActiveRecursively(true);
 		ActiveTool.WhenEquipped();
+	}
+
+	public float CurrentRecoil {
+		get { return _currentRecoil / RECOIL_ASYMPTOTE; }
 	}
 
 	public GameObject ActiveToolObject {

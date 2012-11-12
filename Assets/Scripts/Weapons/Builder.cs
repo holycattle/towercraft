@@ -68,7 +68,7 @@ public class Builder : GameTool {
 	}
 
 	public override void WhenEquipped() {
-		_input.RaycastLayer = LayerMask.NameToLayer("Level");
+		_weapon.RaycastLayer = 1 << LayerMask.NameToLayer("Level");
 	}
 
 	public override void MouseDownOn(GameObject g) {

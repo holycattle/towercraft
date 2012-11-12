@@ -3,11 +3,11 @@ using System.Collections;
 
 public class GameTool : MonoBehaviour {
 	protected GameController _game;
-	protected WeaponController _input;
+	protected WeaponController _weapon;
 	public int bullets;
 
 	protected virtual void Awake() {
-		_input = GameObject.Find("Player").GetComponentInChildren<WeaponController>();
+		_weapon = GameObject.Find("Player").GetComponentInChildren<WeaponController>();
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 
 		bullets = 0;
