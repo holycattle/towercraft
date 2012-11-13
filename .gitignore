@@ -1,0 +1,5 @@
+*.sln
+*.userprefs
+*.pidb
+*.csproj
+Library/
