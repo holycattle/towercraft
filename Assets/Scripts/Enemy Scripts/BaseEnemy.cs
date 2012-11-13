@@ -40,8 +40,9 @@ public class BaseEnemy : MonoBehaviour {
 		_life = maxLife;
 
 		// Set Turn Speed
-		turnSpeed = moveSpeed;
-
+//		turnSpeed = moveSpeed;
+		turnSpeed = (moveSpeed / LevelController.TILE_SIZE) * 2;
+		
 		originalRot = transform.rotation;
 
 		if (_item == null)
@@ -68,18 +69,8 @@ public class BaseEnemy : MonoBehaviour {
 			_activePoint++;
 			_offset = new Vector2(Random.Range(-MOV_OFFSET, MOV_OFFSET), Random.Range(-MOV_OFFSET, MOV_OFFSET));
 			if (_activePoint != _path.Count) {
-				// Set turn speed
-				if (_activePoint >= 2 && _activePoint < _path.Count - 1) {
-					Vector2 v1 = _path[_activePoint - 2] - _path[_activePoint - 1];
-					Vector2 v2 = _path[_activePoint + 1] - _path[_activePoint];
-					v1.Normalize();
-					v2.Normalize();
-
-					targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
-					turnSpeed = moveSpeed / Vector2.Distance(_path[_activePoint - 1], _path[_activePoint]);
-
-					originalRot = transform.rotation;
-				}
+				targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
+				originalRot = transform.rotation;
 			}
 
 			totalTurn = 0;
