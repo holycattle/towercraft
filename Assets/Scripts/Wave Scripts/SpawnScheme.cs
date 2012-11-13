@@ -8,7 +8,7 @@ public class SpawnScheme {
 	private LevelController _gameController;
 	protected List<MobSpawn> _spawnScheme;
 	private float _timeSinceLastSpawn;
-
+	public float moveSpeed;
 	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost) {
 		_gameController = gameController;
 		_spawnScheme = new List<MobSpawn>();
@@ -32,7 +32,8 @@ public class SpawnScheme {
 //
 //			i = (i + 1) % Enum.GetValues(typeof(MobType)).Length;
 //		}
-
+		moveSpeed = UnityEngine.Random.Range(5, 12);
+		Debug.Log("SpawnScheme moveSpeed = " + moveSpeed.ToString());
 		_timeSinceLastSpawn = 0;
 	}
 	
@@ -45,7 +46,8 @@ public class SpawnScheme {
 					Quaternion.identity);
 
 				BaseEnemy m = g.GetComponent<BaseEnemy>();
-				m.Path = _gameController.Path;
+				m.moveSpeed = (int)moveSpeed;
+				m.Path = _gameController.Path; //set enemy path to path determined by A* search
 
 				_timeSinceLastSpawn -= _spawnScheme[0].WaitTime;
 				_spawnScheme.RemoveAt(0);
