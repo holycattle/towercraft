@@ -106,6 +106,15 @@ public class LevelController : MonoBehaviour {
 		}
 	}
 
+	public bool HasPath() {
+		List <Vector2> testPath = AStar.PathFind(new Vector2(0, 0), new Vector2(mapWidth - 1, mapHeight - 1), _map, mapWidth, mapHeight);
+		if (testPath == null) {
+			return false;
+		}
+
+		return testPath != null;
+	}
+
 	public List<Vector2> RecalculatePath(Vector2 start) {
 		// Pathfind!
 		List<Vector2> newPath = AStar.PathFind(start, new Vector2(mapWidth - 1, mapHeight - 1), _map, mapWidth, mapHeight);

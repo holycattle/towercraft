@@ -9,10 +9,18 @@ public class AStar {
 		
 		List<Node> closedSet = new List<Node>();
 		List<Node> openSet = new List<Node>();
-		
+
+		// Check if the initial / final states are solid
+		if (map[(int)start.x * height + (int)start.y].HasTower()) {
+			return null;
+		}
+		if (map[(int)end.x * height + (int)end.y].HasTower()) {
+			return null;
+		}
+
 		// Add the initial state.
 		openSet.Add(new Node(start, 0f, Vector2.Distance(start, end)));
-		
+
 		while (openSet.Count > 0) {
 			// Find the Node with the lowest F
 			int lowestIndex = 0;
@@ -42,7 +50,7 @@ public class AStar {
 					continue;
 				if (current.pos.y + yoffs[i] >= height)
 					continue;
-				if (map[(int)current.pos.y * height + (int)current.pos.x].Tower != null) {
+				if (map[(int)current.pos.y * height + (int)current.pos.x].HasTower()) {
 					continue;
 				}
 				
@@ -151,13 +159,13 @@ public class AStar {
 			for (; dist >= 0; dist -= 0.1f) {
 				if ((int)leftLine.y < height && (int)leftLine.y >= 0 &&
 					(int)leftLine.x < width && (int)leftLine.x >= 0 &&
-					map[(int)leftLine.y * height + (int)leftLine.x].Tower != null) {
+					map[(int)leftLine.y * height + (int)leftLine.x].HasTower()) {
 					noTowersInPath = false;
 					break;
 				}
 				if ((int)rightLine.y < height && (int)rightLine.y >= 0 &&
 					(int)rightLine.x < width && (int)rightLine.x >= 0 &&
-					map[(int)rightLine.y * height + (int)rightLine.x].Tower != null) {
+					map[(int)rightLine.y * height + (int)rightLine.x].HasTower()) {
 					noTowersInPath = false;
 					break;
 				}

@@ -77,9 +77,18 @@ public class Builder : GameTool {
 
 	public override void MouseClickOn(GameObject g) {
 		if (_game.ActiveMenu == Menu.Game && g != null) {
-			_game.ActiveMenu = Menu.Builder;
 			targettedGrid = g.GetComponent<Grid>();
-			Debug.Log("G Name: " + g.name);
+
+			// First check if you can build at that spot
+			targettedGrid.TempTower = true;
+			if (!_level.HasPath()) {
+				targettedGrid.TempTower = false;
+				return;
+			}
+			targettedGrid.TempTower = false;
+
+			_game.ActiveMenu = Menu.Builder;
+//			Debug.Log("G Name: " + g.name);
 
 			BaseTower currentTower = targettedGrid.Tower;
 			if (currentTower == null) {

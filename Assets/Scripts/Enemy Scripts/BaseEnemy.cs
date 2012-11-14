@@ -55,6 +55,10 @@ public class BaseEnemy : MonoBehaviour {
 	}
 
 	void Update() {
+		if (_path == null) {
+			Debug.Log("NULL WHY?");
+		}
+
 		// MOVEMENT
 		if (_activePoint == _path.Count) {
 			// Dont do anything anymore.
@@ -87,7 +91,6 @@ public class BaseEnemy : MonoBehaviour {
 		Vector2 currentPos = _level.GridConvert(transform.position);
 		if (currentPos != _gridPosition) {
 			_gridPosition = currentPos;
-			Debug.Log("New Position: " + _gridPosition.x + ", " + _gridPosition.y);
 		}
 
 		if (_path != null) {
@@ -123,6 +126,12 @@ public class BaseEnemy : MonoBehaviour {
 	public void PathUpdate() {
 		_path = _level.RecalculatePath(_gridPosition);
 		_activePoint = 2;
+
+		if (_path != null) {
+			Debug.Log("Path Updated");
+		} else {
+			Debug.Log("UKNOWN");
+		}
 	}
 
 	#region Life Management

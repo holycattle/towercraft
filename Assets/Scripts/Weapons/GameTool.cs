@@ -4,11 +4,13 @@ using System.Collections;
 public class GameTool : MonoBehaviour {
 	protected GameController _game;
 	protected WeaponController _weapon;
+	protected LevelController _level;
 	public int bullets;
 
 	protected virtual void Awake() {
 		_weapon = GameObject.Find("Player").GetComponentInChildren<WeaponController>();
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
+		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
 
 		bullets = 0;
 	}

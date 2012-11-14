@@ -9,6 +9,7 @@ public class Grid : MonoBehaviour {
 	public GameObject tower;
 	private BaseTower _ts; // Tower on this grid.
 	private MeshRenderer _selectionGrid;
+	private bool _hasTower;
 
 	void Awake() {
 		_ts = null;
@@ -16,6 +17,7 @@ public class Grid : MonoBehaviour {
 		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();
 
 		_selectionGrid = transform.FindChild("GridSelection").GetComponent<MeshRenderer>();
+		_hasTower = false;
 		SetSelected(false);
 	}
 
@@ -39,19 +41,6 @@ public class Grid : MonoBehaviour {
 		_levelController.UpdatePath();
 	}
 
-	public void AddTower(GameObject tower) {
-		if (!_gameController.SubMoney(2))
-			return;
-
-		GameObject t = Instantiate(tower, transform.position, Quaternion.identity) as GameObject;
-		t.name = "Tower: " + name;
-		t.transform.parent = transform;
-		_ts = t.GetComponent<BaseTower>();
-
-		// Update Path
-		_levelController.UpdatePath();
-	}
-
 	public BaseTower GenerateBaseTower() {
 		// Create the tower
 		GameObject t = Instantiate(tower, transform.position, Quaternion.identity) as GameObject;
@@ -67,6 +56,15 @@ public class Grid : MonoBehaviour {
 
 	private void SetSelected(bool sel) {
 		_selectionGrid.enabled = sel;
+	}
+
+	public bool HasTower() {
+		return _ts != null || _hasTower;
+	}
+
+	public bool TempTower {
+		get { return _hasTower; }
+		set { _hasTower = value; }
 	}
 
 	// Used for path generation
