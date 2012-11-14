@@ -12,8 +12,8 @@ public class Creepling : SpawnScheme {
 				break;
 			}
 		}
-		_spawnScheme.Add(new MobSpawn(g, 0f));
 
+		_spawnScheme.Add(new MobSpawn(g, 0f));
 		while (cost > 0) {
 			// Choose which mob to spawn.
 			g = null;
@@ -23,9 +23,8 @@ public class Creepling : SpawnScheme {
 					break;
 				}
 			}
-			
-			float interval = (float)((1f/moveSpeed) * 12f);
-			Debug.Log("Spawn Interval = " + ((1/moveSpeed) * 15).ToString());
+
+			float interval = 12f / moveSpeed;				// Equation Simplified
 			_spawnScheme.Add(new MobSpawn(g, interval));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;
 		}

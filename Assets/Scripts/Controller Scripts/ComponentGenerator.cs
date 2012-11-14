@@ -20,8 +20,7 @@ public class ComponentGenerator {
 				_towerParts[i][o].Type = i;
 			}
 		}
-
-		Debug.Log("ComponentGenerator: " + _towerParts[0].Length + "/" + _towerParts[1].Length + "/" + _towerParts[2].Length);
+//		Debug.Log("ComponentGenerator: " + _towerParts[0].Length + "/" + _towerParts[1].Length + "/" + _towerParts[2].Length);
 	}
 
 	public static ComponentGenerator Get() {

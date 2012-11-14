@@ -14,7 +14,8 @@ public class LevelController : MonoBehaviour {
 	public int startXPosition;
 	[HideInInspector]
 	public int startYPosition;
-	
+	public Vector3 mobSpawnPoint;
+
 	// Objects
 	public GameObject tilePrefab;
 	public GameObject enemyPrefab;
@@ -37,7 +38,9 @@ public class LevelController : MonoBehaviour {
 		_map = new Grid[mapWidth * mapHeight];
 		startXPosition = -(mapWidth / 2) * TILE_SIZE;
 		startYPosition = -(mapHeight / 2) * TILE_SIZE;
-		
+
+		mobSpawnPoint = new Vector3(startXPosition + HTILE_SIZE, 1, startYPosition - TILE_SIZE);
+
 		// Instantiate the Tiles and Path
 		GameObject gridParent = new GameObject("Grid Parent");
 		for (int y = 0; y < mapHeight; y++) {
@@ -57,12 +60,16 @@ public class LevelController : MonoBehaviour {
 	void Update() {
 		// Draw the Path
 		if (_path != null) {
-			for (int i = 0; i < _path.Count - 1; i++) {
-				Vector3 p = new Vector3(_path[i].x, 1, _path[i].y);
+			Vector3 p;
+			int i = 0;
+			for (; i < _path.Count - 1; i++) {
+				p = new Vector3(_path[i].x, 1, _path[i].y);
 
 				Debug.DrawLine(p, new Vector3(_path[i + 1].x, 1, _path[i + 1].y));
 				Debug.DrawLine(p, p + Vector3.up * 5);
 			}
+			p = new Vector3(_path[i].x, 1, _path[i].y);
+			Debug.DrawLine(p, p + Vector3.up * 5);
 		}
 
 		if (Input.GetKeyDown(KeyCode.F4)) {
@@ -78,14 +85,14 @@ public class LevelController : MonoBehaviour {
 				new Vector3(startXPosition + HTILE_SIZE + Random.Range(-1f, 1f), 2, startYPosition - HTILE_SIZE + Random.Range(-1f, 1f)),
 				Quaternion.identity) as GameObject;
 			BaseEnemy m = g.GetComponent<BaseEnemy>();
-			m.Path = _path;
+			m.MotionPath = _path;
 		}
 	}
 	
 	public void UpdatePath() {
 		// Pathfind!
 		_path = AStar.PathFind(new Vector2(0, 0), new Vector2(mapWidth - 1, mapHeight - 1), _map, mapWidth, mapHeight);
-		
+
 		if (_path != null) {
 			// Convert Path to real coordinates.
 			List<Vector2> act = new List<Vector2>();
@@ -94,9 +101,6 @@ public class LevelController : MonoBehaviour {
 				_path.RemoveAt(0);
 			}
 			_path = act;
-			
-			// Append Coords of the End Portal
-//			_path.Add(new Vector2(startXPosition + (mapWidth - 1) * TILE_SIZE + HTILE_SIZE, startYPosition + mapHeight * TILE_SIZE + HTILE_SIZE));
 		}
 	}
 	
@@ -113,7 +117,7 @@ public class LevelController : MonoBehaviour {
 		return _map[y * mapWidth + x];
 	}
 
-	public List<Vector2> Path {
+	public List<Vector2> MotionPath {
 		get { return _path; }
 	}
 }

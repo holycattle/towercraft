@@ -88,7 +88,7 @@ public class AStar {
 	
 	private static List<Vector2> ReconstructPath(List<Node> list, Vector2 target) {		
 		List<Vector2> solution = new List<Vector2>();
-		
+
 		// Find index of last.
 		int index = 0;
 		for (int i = 0; i < list.Count; i++) {
@@ -178,13 +178,20 @@ public class AStar {
 		}
 
 		List<Vector2> act = new List<Vector2>();
+
+		// If there are no towers that obstruct the path,
+		// then the only 2 points on the path are START and END
+		// ELSE: Do standard procedure.
 		if (list.Count == 2) {
-			act.Add(new Vector2(0.5f, -0.5f));
-			act.Add(list[0] + new Vector2(0.5f, 0.5f));
-			act.Add(list[1] + new Vector2(0.5f, 0.5f));
+			act.Add(new Vector2(0.5f, -0.5f));					// Start.
+			act.Add(list[0] + new Vector2(0.5f, 0.5f));			// Start Grid Intersection.
+			act.Add(list[1] + new Vector2(0.5f, 0.5f));			// End Grid Intersection.
+			act.Add(new Vector2(width - 0.5f, height + 0.5f));	// End.
 		} else {
 			list.Insert(0, new Vector2(0f, -1f));
 			list.Add(new Vector2(width - 1, height));
+
+			Debug.Log("Length: " + list.Count);
 			for (int i = 1; i < list.Count - 1; i++) {
 				Vector2 p1 = list[i - 1];
 				p1.x = p1.x + 0.5f;
@@ -207,7 +214,6 @@ public class AStar {
 				}
 
 				temp = p3 - p2;
-//				Debug.Log("Temp2: " + temp.x + ", " + temp.y);
 				if (Mathf.Abs(temp.x) < Mathf.Abs(temp.y)) {
 					// Hits the Y-Axis
 					np2 = p2 + new Vector2((0.5f * temp.x * Mathf.Sign(temp.y)) / temp.y, Mathf.Sign(temp.y) * 0.5f);

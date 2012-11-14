@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 public class BaseEnemy : MonoBehaviour {
 	// Constants
-	public const float MOV_OFFSET = 0.0f;
+	public const float MOV_OFFSET = 0.5f;
 	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
-	public const float OFFSETABLE = 0.5f;
+//	public const float OFFSETABLE = 0.5f;
 
 	// References
 	private PlayerController _player;
 	private static GameObject _item;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
-	public int moveSpeed;
+	public float moveSpeed;
 	public int maxLife;
 	private int _life;					// Current Life
 	public int moneyReward;
@@ -40,9 +40,9 @@ public class BaseEnemy : MonoBehaviour {
 		_life = maxLife;
 
 		// Set Turn Speed
-//		turnSpeed = moveSpeed;
-		turnSpeed = (moveSpeed / LevelController.TILE_SIZE) * 2;
-		
+		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
+//		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
+
 		originalRot = transform.rotation;
 
 		if (_item == null)
@@ -141,7 +141,7 @@ public class BaseEnemy : MonoBehaviour {
 		get { return waveCost; }
 	}
 
-	public List<Vector2> Path {
+	public List<Vector2> MotionPath {
 		set { _path = value; }
 	}
 }

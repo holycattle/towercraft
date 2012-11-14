@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour {
-
 	private const int WAVESTART_COST = 64;
 	private const float WAVE_INCREASE = 1.5f;
 	private const int WAVE_INTERVAL = 10; // In seconds
