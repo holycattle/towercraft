@@ -11,7 +11,7 @@ public class AStar {
 		List<Node> openSet = new List<Node>();
 		
 		// Add the initial state.
-		openSet.Add(new Node(start, 0f, Vector2.Distance(new Vector2(0, 0), start)));
+		openSet.Add(new Node(start, 0f, Vector2.Distance(start, end)));
 		
 		while (openSet.Count > 0) {
 			// Find the Node with the lowest F
@@ -27,9 +27,7 @@ public class AStar {
 			closedSet.Add(current);
 
 			if (current.pos == end) {
-//				return CleanPath(ReconstructPath(closedSet, end), map, width, height);
-				return CleanPathNew(ReconstructPath(closedSet, end), map, width, height);
-//				return ReconstructPath(closedSet, end);
+				return CleanPathNew(ReconstructPath(closedSet, end), start, end, map, width, height);
 			}
 			
 			for (int i = 0; i < 4; i++) {
@@ -127,7 +125,7 @@ public class AStar {
 		}
 	}
 
-	private static List<Vector2> CleanPathNew(List<Vector2> list, Grid[] map, int width, int height) {
+	private static List<Vector2> CleanPathNew(List<Vector2> list, Vector2 start, Vector2 end, Grid[] map, int width, int height) {
 		for (int i = 0; i < list.Count - 2; i++) {
 			Vector2 p1 = list[i];
 			p1.x = p1.x + 0.5f;
@@ -188,10 +186,10 @@ public class AStar {
 			act.Add(list[1] + new Vector2(0.5f, 0.5f));			// End Grid Intersection.
 			act.Add(new Vector2(width - 0.5f, height + 0.5f));	// End.
 		} else {
+			// Add the ACTUAL start and end points.
+			//  Note: These are points OUTSIDE the grid.
 			list.Insert(0, new Vector2(0f, -1f));
 			list.Add(new Vector2(width - 1, height));
-
-			Debug.Log("Length: " + list.Count);
 			for (int i = 1; i < list.Count - 1; i++) {
 				Vector2 p1 = list[i - 1];
 				p1.x = p1.x + 0.5f;
@@ -231,107 +229,6 @@ public class AStar {
 			}
 		}
 		return act;
-	}
-
-	private static List<Vector2> CleanPath(List<Vector2> list, Grid[] map, int width, int height) {
-		for (int i = 0; i < list.Count - 2; i++) {
-			Vector2 p1 = list[i];
-			Vector2 p3 = list[i + 2];
-
-
-			// Source: http://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
-			// Note: Uses All-Integer Math Algorithm
-			// Get all intersections
-			float dx = Mathf.Abs((int)p3.x - (int)p1.x);
-			float dy = Mathf.Abs((int)p3.y - (int)p1.y);
-
-			int x = (int)p1.x;
-			int y = (int)p1.y;
-
-			int n = 1;
-			int xIncrement, yIncrement;
-			double error;
-
-			n = 1 + (int)dx + (int)dy;
-			xIncrement = p3.x > p1.x ? 1 : -1;
-			yIncrement = p3.y > p1.y ? 1 : -1;
-			error = dx - dy;
-			dx *= 2;
-			dy *= 2;
-
-//			if (dx == 0) {
-//				xIncrement = 0;
-//				error = float.PositiveInfinity;
-//			} else if (p3.x > p1.x) {
-//				xIncrement = 1;
-//				n += (int)p3.x - x;
-//				error = (x + 1 - p1.x) * dy;
-//			} else {
-//				xIncrement = -1;
-//				n += x - (int)p3.x;
-//				error = (p1.x - x) * dy;
-//			}
-//
-//			if (dy == 0) {
-//				yIncrement = 0;
-//				error -= float.PositiveInfinity;
-//			} else if (p3.y > p1.y) {
-//				yIncrement = 1;
-//				n += (int)p3.y - y;
-//				error -= (y + 1 - p1.y) * dx;
-//			} else {
-//				yIncrement = -1;
-//				n += y - (int)p3.y;
-//				error -= (p1.y - y) * dx;
-//			}
-
-
-			bool noTowersInPath = true;
-			for (; n > 0; n--) {
-				// Check solidity
-				if (map[y * height + x].Tower != null) {
-					// Solid
-					noTowersInPath = false;
-					break;
-				}
-
-				// Note: By manipulating the range check of [error], you can define how close you want the inteserctions
-				// 	checked against the tower pieces.
-				if (error > 0) {
-					x += xIncrement;
-					error -= dy;
-				} else if (error < 0) {
-					y += yIncrement;
-					error += dx;
-				} else {
-//					if (y + 1 < height && map[(y + 1) * height + x].Tower != null ||
-//						x + 1 < width && map[y * height + (x + 1)].Tower != null) {
-//						// Solid
-//						noTowersInPath = false;
-//						break;
-//					}
-
-					// TODO: Still not perfect.
-					if (y + 1 < height && map[(y + 1) * height + x].Tower != null ||
-						x + 1 < width && map[y * height + (x + 1)].Tower != null ||
-						y - 1 >= 0 && map[(y - 1) * height + x].Tower != null ||
-						x - 1 >= 0 && map[y * height + (x - 1)].Tower != null) {
-						// Solid
-						noTowersInPath = false;
-						break;
-					}
-				}
-			}
-
-			if (noTowersInPath) {
-				// Remove p2
-				list.RemoveAt(i + 1);
-				i--;
-			} else {
-//				Debug.Log("No path!");
-			}
-		}
-		return list;
 	}
 }
 

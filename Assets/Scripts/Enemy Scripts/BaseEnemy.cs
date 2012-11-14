@@ -6,9 +6,9 @@ public class BaseEnemy : MonoBehaviour {
 	// Constants
 	public const float MOV_OFFSET = 0.5f;
 	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
-//	public const float OFFSETABLE = 0.5f;
 
 	// References
+	private LevelController _level;
 	private PlayerController _player;
 	private static GameObject _item;
 
@@ -23,6 +23,7 @@ public class BaseEnemy : MonoBehaviour {
 	private float range = 32;
 
 	// Movement Variables
+	private Vector2 _gridPosition;
 	private float turnSpeed;
 	private float totalTurn;
 	private Quaternion originalRot;
@@ -44,11 +45,13 @@ public class BaseEnemy : MonoBehaviour {
 //		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
 
 		originalRot = transform.rotation;
+		_gridPosition = new Vector2(-100, -100);
 
 		if (_item == null)
 			_item = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
 
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
+		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
 	}
 
 	void Update() {
@@ -80,6 +83,26 @@ public class BaseEnemy : MonoBehaviour {
 		}
 		totalTurn += turnSpeed * Time.deltaTime;
 
+		// Update current grid position
+		Vector2 currentPos = _level.GridConvert(transform.position);
+		if (currentPos != _gridPosition) {
+			_gridPosition = currentPos;
+			Debug.Log("New Position: " + _gridPosition.x + ", " + _gridPosition.y);
+		}
+
+		if (_path != null) {
+			Vector3 p;
+			int i = 0;
+			for (; i < _path.Count - 1; i++) {
+				p = new Vector3(_path[i].x, 1, _path[i].y);
+
+				Debug.DrawLine(p, new Vector3(_path[i + 1].x, 1, _path[i + 1].y), Color.cyan);
+				Debug.DrawLine(p, p + Vector3.up * 5, Color.cyan);
+			}
+			p = new Vector3(_path[i].x, 1, _path[i].y);
+			Debug.DrawLine(p, p + Vector3.up * 5);
+		}
+
 		// ATTACKING
 		if (Vector3.Distance(transform.position, _player.transform.position) <= range) {
 			if (_timeTillFire <= 0) {
@@ -97,6 +120,10 @@ public class BaseEnemy : MonoBehaviour {
 		}
 	}
 
+	public void PathUpdate() {
+		_path = _level.RecalculatePath(_gridPosition);
+		_activePoint = 2;
+	}
 
 	#region Life Management
 	public void AddLife(int amt) {

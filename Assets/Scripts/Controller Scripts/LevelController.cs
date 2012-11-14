@@ -24,10 +24,6 @@ public class LevelController : MonoBehaviour {
 	// Map Variables
 	private Grid[] _map;
 	private List<Vector2> _path;
-
-	// Player Variables
-//	private int _livesLeft;
-//	private int _money;
 	
 	void Awake() {
 		// Set default width x height
@@ -102,8 +98,48 @@ public class LevelController : MonoBehaviour {
 			}
 			_path = act;
 		}
+
+		// Update the paths of all Enemies on the board
+		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+		for (int i = 0; i < enemies.Length; i++) {
+			enemies[i].GetComponent<BaseEnemy>().PathUpdate();
+		}
 	}
-	
+
+	public List<Vector2> RecalculatePath(Vector2 start) {
+		// Pathfind!
+		List<Vector2> newPath = AStar.PathFind(start, new Vector2(mapWidth - 1, mapHeight - 1), _map, mapWidth, mapHeight);
+
+		if (newPath != null) {
+			// Convert Path to real coordinates.
+			List<Vector2> act = new List<Vector2>();
+			while (newPath.Count > 0) {
+				act.Add(new Vector2(startXPosition + newPath[0].x * TILE_SIZE, startYPosition + newPath[0].y * TILE_SIZE));
+				newPath.RemoveAt(0);
+			}
+			newPath = act;
+		}
+
+		return newPath;
+	}
+
+	public Vector2 GridConvert(float x, float y) {
+		Vector2 v = new Vector2((int)((x + mapWidth * HTILE_SIZE) / TILE_SIZE), (int)((y + mapHeight * HTILE_SIZE) / TILE_SIZE));
+		if (v.x < 0)
+			v.Set(0, v.y);
+		if (v.x >= mapWidth)
+			v.Set(mapWidth - 1, v.y);
+		if (v.y < 0)
+			v.Set(v.x, 0);
+		if (v.y >= mapHeight)
+			v.Set(v.x, mapHeight - 1);
+		return v;
+	}
+
+	public Vector2 GridConvert(Vector3 v) {
+		return GridConvert(v.x, v.z);
+	}
+
 	public Grid GetTile(int x, int y) {
 		if (x >= mapWidth)
 			x = mapWidth - 1;

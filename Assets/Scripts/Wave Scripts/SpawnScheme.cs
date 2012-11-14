@@ -15,6 +15,7 @@ public class SpawnScheme {
 		_spawnScheme = new List<MobSpawn>();
 
 		moveSpeed = UnityEngine.Random.Range(5, 12);
+//		moveSpeed = 6;
 		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
 	}
