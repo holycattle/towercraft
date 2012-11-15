@@ -23,7 +23,7 @@ public class BaseEnemy : MonoBehaviour {
 	private float range = 32;
 
 	// Movement Variables
-	private Vector2 _gridPosition;
+//	private Vector2 _gridPosition;
 	private float turnSpeed;
 	private float totalTurn;
 	private Quaternion originalRot;
@@ -45,7 +45,6 @@ public class BaseEnemy : MonoBehaviour {
 //		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
 
 		originalRot = transform.rotation;
-		_gridPosition = new Vector2(-100, -100);
 
 		if (_item == null)
 			_item = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
@@ -55,9 +54,9 @@ public class BaseEnemy : MonoBehaviour {
 	}
 
 	void Update() {
-		if (_path == null) {
-			Debug.Log("NULL WHY?");
-		}
+//		if (_path == null) {
+//			Debug.Log("NULL WHY?");
+//		}
 
 		// MOVEMENT
 		if (_activePoint == _path.Count) {
@@ -69,6 +68,7 @@ public class BaseEnemy : MonoBehaviour {
 		float dist = Vector3.Distance(targetPos, transform.position);
 
 		if (dist < moveSpeed * Time.deltaTime) {
+//			Debug.Log("NextMove: Path Length >" + _path.Count);
 			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
 			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 
@@ -88,10 +88,10 @@ public class BaseEnemy : MonoBehaviour {
 		totalTurn += turnSpeed * Time.deltaTime;
 
 		// Update current grid position
-		Vector2 currentPos = _level.GridConvert(transform.position);
-		if (currentPos != _gridPosition) {
-			_gridPosition = currentPos;
-		}
+//		Vector2 currentPos = _level.GridConvert(transform.position);
+//		if (currentPos != _gridPosition) {
+//			_gridPosition = currentPos;
+//		}
 
 		if (_path != null) {
 			Vector3 p;
@@ -101,6 +101,7 @@ public class BaseEnemy : MonoBehaviour {
 
 				Debug.DrawLine(p, new Vector3(_path[i + 1].x, 1, _path[i + 1].y), Color.cyan);
 				Debug.DrawLine(p, p + Vector3.up * 5, Color.cyan);
+//				Debug.DrawLine(p, p + (Vector3.up + new Vector3(Random.Range(-0.5f, 0.5f), 0, Random.Range(-0.5f, 0.5f))) * 5, Color.cyan);
 			}
 			p = new Vector3(_path[i].x, 1, _path[i].y);
 			Debug.DrawLine(p, p + Vector3.up * 5);
@@ -124,14 +125,14 @@ public class BaseEnemy : MonoBehaviour {
 	}
 
 	public void PathUpdate() {
-		_path = _level.RecalculatePath(_gridPosition);
+		_path = _level.RecalculatePath(GridPosition);
 		_activePoint = 2;
 
-		if (_path != null) {
-			Debug.Log("Path Updated");
-		} else {
-			Debug.Log("UKNOWN");
-		}
+//		if (_path != null) {
+//			Debug.Log("Path Updated");
+//		} else {
+//			Debug.Log("UKNOWN");
+//		}
 	}
 
 	#region Life Management
@@ -167,6 +168,10 @@ public class BaseEnemy : MonoBehaviour {
 		else if (diff < 0)
 			return -1;
 		return 0;
+	}
+
+	public Vector2 GridPosition {
+		get { return _level.GridConvert(transform.position); }
 	}
 
 	public string Name {

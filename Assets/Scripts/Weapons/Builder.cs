@@ -79,13 +79,29 @@ public class Builder : GameTool {
 		if (_game.ActiveMenu == Menu.Game && g != null) {
 			targettedGrid = g.GetComponent<Grid>();
 
-			// First check if you can build at that spot
+			// 1) CHECK if you can build at that spot
 			targettedGrid.TempTower = true;
 			if (!_level.HasPath()) {
-				targettedGrid.TempTower = false;
+				Debug.Log("Prevent Building! No Possible Path");
+//				targettedGrid.TempTower = false;
 				return;
 			}
-			targettedGrid.TempTower = false;
+
+			// 2) CHECK if there is a mob at that spot OR if a mob gets trapped
+			GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+			for (int i= 0; i < enemies.Length; i++) {
+				BaseEnemy b = enemies[i].GetComponent<BaseEnemy>();
+				if (b.GridPosition == targettedGrid.GridValue) {
+					Debug.Log("Prevent Building! Mob on Grid");
+					return;
+				} else {
+					if (!_level.HasPath(b.GridPosition)) {
+						Debug.Log("Prevent Building! Mob Trap");
+						return;
+					}
+				}
+			}
+//			targettedGrid.TempTower = false;
 
 			_game.ActiveMenu = Menu.Builder;
 //			Debug.Log("G Name: " + g.name);

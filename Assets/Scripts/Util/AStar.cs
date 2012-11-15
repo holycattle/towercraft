@@ -11,10 +11,19 @@ public class AStar {
 		List<Node> openSet = new List<Node>();
 
 		// Check if the initial / final states are solid
-		if (map[(int)start.x * height + (int)start.y].HasTower()) {
+		if (map[(int)start.y * height + (int)start.x].HasTower()) {
+			Debug.Log("StartNull: " + start.x + ", " + start.y);
+			Debug.Log("StartNull: " + (int)start.x + ", " + (int)start.y);
+			if (map[(int)start.y * height + (int)start.x].Tower != null) {
+				Debug.Log("Tower NOT null");
+			}
+			if (map[(int)start.y * height + (int)start.x].TESTFUNC()) {
+				Debug.Log("_hastower TRUE");
+			}
 			return null;
 		}
-		if (map[(int)end.x * height + (int)end.y].HasTower()) {
+		if (map[(int)end.y * height + (int)end.x].HasTower()) {
+			Debug.Log("EndNull");
 			return null;
 		}
 
@@ -29,7 +38,7 @@ public class AStar {
 					lowestIndex = i;
 				}
 			}
-			
+
 			Node current = openSet[lowestIndex];
 			openSet.Remove(current);
 			closedSet.Add(current);
@@ -64,7 +73,7 @@ public class AStar {
 				}
 				if (found)
 					continue;
-				
+
 				// Check if neighbor is in openSet
 				bool inOpenSet = false;
 				int o = 0;
@@ -89,10 +98,12 @@ public class AStar {
 				}
 			}
 		}
+
+		Debug.Log("NoneNull");
 		return null;
 	}
 	
-	private static List<Vector2> ReconstructPath(List<Node> list, Vector2 target) {		
+	private static List<Vector2> ReconstructPath(List<Node> list, Vector2 target) {
 		List<Vector2> solution = new List<Vector2>();
 
 		// Find index of last.
@@ -110,7 +121,6 @@ public class AStar {
 			current = current.parent;
 		}
 		solution.Insert(0, current.pos);
-
 		return solution;
 	}
 
@@ -236,6 +246,17 @@ public class AStar {
 					act.Add(p3);
 			}
 		}
+
+		// Final Clean (Remove Duplicates)
+		// TODO: Integrate this clean runthrough with the above loop.
+//		Debug.Log("Before Count: " + act.Count);
+		for (int i = 0; i < act.Count - 1; i++) {
+			if (act[i] == act[i + 1]) {
+				act.RemoveAt(i + 1);
+				i--;
+			}
+		}
+//		Debug.Log("After Count: " + act.Count);
 		return act;
 	}
 }

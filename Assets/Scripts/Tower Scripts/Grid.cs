@@ -5,7 +5,10 @@ public class Grid : MonoBehaviour {
 	private LevelController _levelController;
 	private GameController _gameController;
 
-	// Towers
+	// Grid Info
+	private Vector2 _gridValue;
+
+	// Tower Info
 	public GameObject tower;
 	private BaseTower _ts; // Tower on this grid.
 	private MeshRenderer _selectionGrid;
@@ -21,6 +24,10 @@ public class Grid : MonoBehaviour {
 		SetSelected(false);
 	}
 
+	void LateUpdate() {
+		_hasTower = false;
+	}
+
 	void InputMouseEnter() {
 //		GetComponent<MeshRenderer>().enabled = true;
 //		GetComponent<Renderer>().material.color = Color.red;
@@ -32,7 +39,7 @@ public class Grid : MonoBehaviour {
 //		GetComponent<Renderer>().material.color = Color.white;
 		SetSelected(false);
 	}
-	
+
 	public void RemoveTower() {
 		Destroy(_ts.gameObject);
 		_ts = null;
@@ -62,12 +69,20 @@ public class Grid : MonoBehaviour {
 		return _ts != null || _hasTower;
 	}
 
+	public bool TESTFUNC() {
+		return _hasTower;
+	}
+
+	public Vector2 GridValue {
+		get { return _gridValue; }
+		set { _gridValue = value; }
+	}
+
 	public bool TempTower {
 		get { return _hasTower; }
 		set { _hasTower = value; }
 	}
 
-	// Used for path generation
 	public BaseTower Tower {
 		get { return _ts; }
 		set { _ts = value; }

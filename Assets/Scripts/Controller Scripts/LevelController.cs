@@ -48,6 +48,7 @@ public class LevelController : MonoBehaviour {
 				t.name = "Grid:" + x + "," + y;
 				t.transform.parent = gridParent.transform;
 				_map[y * mapWidth + x] = t.GetComponent<Grid>();
+				_map[y * mapWidth + x].GridValue = new Vector2(x, y);
 			}
 		}
 		UpdatePath();
@@ -84,7 +85,7 @@ public class LevelController : MonoBehaviour {
 			m.MotionPath = _path;
 		}
 	}
-	
+
 	public void UpdatePath() {
 		// Pathfind!
 		_path = AStar.PathFind(new Vector2(0, 0), new Vector2(mapWidth - 1, mapHeight - 1), _map, mapWidth, mapHeight);
@@ -106,13 +107,17 @@ public class LevelController : MonoBehaviour {
 		}
 	}
 
-	public bool HasPath() {
-		List <Vector2> testPath = AStar.PathFind(new Vector2(0, 0), new Vector2(mapWidth - 1, mapHeight - 1), _map, mapWidth, mapHeight);
+	public bool HasPath(Vector2 start) {
+		List <Vector2> testPath = AStar.PathFind(start, new Vector2(mapWidth - 1, mapHeight - 1), _map, mapWidth, mapHeight);
 		if (testPath == null) {
 			return false;
 		}
 
 		return testPath != null;
+	}
+
+	public bool HasPath() {
+		return HasPath(new Vector2(0, 0));
 	}
 
 	public List<Vector2> RecalculatePath(Vector2 start) {
