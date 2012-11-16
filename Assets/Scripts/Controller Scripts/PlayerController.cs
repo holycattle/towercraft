@@ -30,7 +30,10 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void Update() {
-
+		if (_life <= 0) {
+			_life = MAX_LIFE;
+			transform.position = new Vector3(0, 50, 0);
+		}
 	}
 
 	void OnGUI() {

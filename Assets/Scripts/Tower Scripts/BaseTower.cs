@@ -25,7 +25,7 @@ public class BaseTower : MonoBehaviour {
 	private List<GameObject> _enemiesInRange;	// List of enemies in range
 	private float _timeTillFire;				// # of seconds till you can fire again
 	private GameObject _target;
-	public Transform _missileSource;
+	private Transform _missileSource;
 
 	void Awake() {
 		_towerComponents = new TowerComponent[TOWER_COMPLETE];
@@ -50,12 +50,13 @@ public class BaseTower : MonoBehaviour {
 		// Make the Cannon face the Enemy
 		if (_target != null) {
 			float distance = Vector2.Distance(new Vector2(_target.transform.position.x, _target.transform.position.z), new Vector2(transform.position.x, transform.position.z));
-			if (distance < towerRange)
-				_missileSource.rotation =
-				Quaternion.Slerp(_missileSource.rotation,
-					Quaternion.LookRotation(_missileSource.position - _target.transform.position), 90 * Time.deltaTime);
+			Debug.Log("Distance: " + distance + " > " + stats[(int)Stat.Range].AdjustedBaseValue);
+			if (distance < stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE) {
+				Debug.Log("Rotitulating!");
+				_missileSource.rotation = Quaternion.Slerp(_missileSource.rotation, Quaternion.LookRotation(_missileSource.position - _target.transform.position), 0.5f);
+			}
 		}
-		
+
 		// Try to Fire
 		if (_timeTillFire <= 0 && isFiring) {
 			if (_enemiesInRange.Count > 0) {
@@ -99,7 +100,19 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	private void UpdateStats() {
-		_missileSource = _towerComponents[TOWER_TURRET].transform.FindChild("MissileSource");
+		_missileSource = _towerComponents[TOWER_TURRET].transform.Find("MissileSource");
+//		foreach (Transform trans in _towerComponents[TOWER_TURRET].GetComponentsInChildren<Transform>()) {
+//			if (trans.gameObject.name == "MissileSource") {
+//				_missileSource = trans;
+//				break;
+//			}
+//		}
+
+		if (_missileSource == null) {
+			Debug.Log("Source Null");
+		} else {
+			Debug.Log("NOT NOOL");
+		}
 
 		foreach (TowerComponent c in _towerComponents) {
 			foreach (ModifyingAttribute m in c.attributes) {
@@ -124,22 +137,24 @@ public class BaseTower : MonoBehaviour {
 
 	public void addNextComponent(GameObject g) {
 		int next = getNextComponent();
-		TowerComponent comp = null;
-		switch (next) {
-		case TOWER_BASE:
-			comp = g.GetComponent<TowerBase>();
-			break;
-		case TOWER_STEM:
-			comp = g.GetComponent<TowerStem>();
-			break;
-		case TOWER_TURRET:
-			comp = g.GetComponent<TowerTurret>();
-			break;
-		}
+		TowerComponent comp = g.GetComponent<TowerComponent>();
+//		switch (next) {
+//			case TOWER_BASE:
+//				comp = g.GetComponent<TowerBase>();
+//				break;
+//			case TOWER_STEM:
+//				comp = g.GetComponent<TowerStem>();
+//				break;
+//			case TOWER_TURRET:
+//				comp = g.GetComponent<TowerTurret>();
+//				break;
+//		}
 
 		// Proper Component is not Attached.
-		if (comp == null)
+		if (comp == null) {
+			Debug.Log("Not Attached");
 			return;
+		}
 
 		// Instantiate the Game Object
 		GameObject t = Instantiate(g, transform.position + getNextComponentPosition(), Quaternion.identity) as GameObject;
@@ -167,16 +182,16 @@ public class BaseTower : MonoBehaviour {
 		int next = getNextComponent();
 		Vector3 offset = Vector3.zero;
 		switch (next) {
-		case TOWER_COMPLETE:
-			break;
-		case TOWER_TURRET:
-			offset += _towerComponents[TOWER_STEM].baseNextComponentPosition;
+			case TOWER_COMPLETE:
+				break;
+			case TOWER_TURRET:
+				offset += _towerComponents[TOWER_STEM].baseNextComponentPosition;
 				goto case TOWER_STEM;	// Using fallthrough, C# style.
-		case TOWER_STEM:
-			offset += _towerComponents[TOWER_BASE].baseNextComponentPosition;
-			break;
-		case TOWER_BASE:
-			break;
+			case TOWER_STEM:
+				offset += _towerComponents[TOWER_BASE].baseNextComponentPosition;
+				break;
+			case TOWER_BASE:
+				break;
 		}
 		return offset;
 	}

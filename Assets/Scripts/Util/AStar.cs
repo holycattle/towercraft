@@ -17,9 +17,9 @@ public class AStar {
 			if (map[(int)start.y * height + (int)start.x].Tower != null) {
 				Debug.Log("Tower NOT null");
 			}
-			if (map[(int)start.y * height + (int)start.x].TESTFUNC()) {
-				Debug.Log("_hastower TRUE");
-			}
+//			if (map[(int)start.y * height + (int)start.x].TESTFUNC()) {
+//				Debug.Log("_hastower TRUE");
+//			}
 			return null;
 		}
 		if (map[(int)end.y * height + (int)end.x].HasTower()) {

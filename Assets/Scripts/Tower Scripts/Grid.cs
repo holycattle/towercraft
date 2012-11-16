@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class Grid : MonoBehaviour {
+	// Controllers
 	private LevelController _levelController;
-	private GameController _gameController;
+//	private GameController _gameController;
 
 	// Grid Info
 	private Vector2 _gridValue;
@@ -17,7 +18,7 @@ public class Grid : MonoBehaviour {
 	void Awake() {
 		_ts = null;
 		_levelController = GameObject.Find(" GameController").GetComponent<LevelController>();
-		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();
+//		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();
 
 		_selectionGrid = transform.FindChild("GridSelection").GetComponent<MeshRenderer>();
 		_hasTower = false;
@@ -67,10 +68,6 @@ public class Grid : MonoBehaviour {
 
 	public bool HasTower() {
 		return _ts != null || _hasTower;
-	}
-
-	public bool TESTFUNC() {
-		return _hasTower;
 	}
 
 	public Vector2 GridValue {

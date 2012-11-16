@@ -46,8 +46,10 @@ public class Builder : GameTool {
 		base.OnGUI();
 		if (_game.ActiveMenu == Menu.Builder) {
 			for (int i = 0; i < _displayArray.Length; i++) {
-				if (GUI.Button(buttonRects[i], _displayArray[i].GetComponent<TowerComponent>().componentName)) {
+				if (GUI.Button(buttonRects[i], _displayArray[i].GetComponent<TowerComponent>().ComponentName)) {
 					_game.ActiveMenu = Menu.Game;
+
+					Debug.Log("Buildulating: " + _activeMenu);
 
 					BaseTower currentTower = targettedGrid.Tower;
 					if (currentTower == null) {

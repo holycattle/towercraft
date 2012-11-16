@@ -69,7 +69,7 @@ public class Weapon : GameTool {
 			// Casts the ray and get the first game object hit
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity, _weapon.RaycastLayer)) {
 				// Damage Game Object
-				BaseEnemy b = g.GetComponent<BaseEnemy>();
+				BaseEnemy b = hit.transform.gameObject.GetComponent<BaseEnemy>();
 				if (b != null) {
 					b.SubLife(damage);	// Collided with enemy, otherwise collided with terrain
 					_targetted = b;

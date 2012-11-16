@@ -22,6 +22,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	void Update() {
+		/*
+		 *	Screen Locking
+		 */
 		if (Screen.lockCursor) {
 			if (ActiveMenu == Menu.Game) {
 				Time.timeScale = 1;			// (Locked) AND (Active) = Playable
@@ -35,13 +38,16 @@ public class GameController : MonoBehaviour {
 			Screen.lockCursor = ActiveMenu == Menu.Game;
 			Time.timeScale = Screen.lockCursor ? 1.0f : 0.0f;
 		}
+
+		/*
+		 *	Game Status Check
+		 */
+		if (_livesLeft <= 0) {
+			// You Lose!
+			Debug.Log("You Lose the Game!");
+		}
 	}
 
-	public GameObject GenerateTowerComponent() {
-		return null;
-	}
-
-	#region Setter Getters
 	public Menu ActiveMenu {
 		get { return _activeMenu;}
 		set { _activeMenu = value;}
@@ -88,7 +94,6 @@ public class GameController : MonoBehaviour {
 		}
 		return true;
 	}
-	#endregion
 }
 
 public enum Menu {

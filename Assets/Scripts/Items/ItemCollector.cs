@@ -18,6 +18,7 @@ public class ItemCollector : MonoBehaviour {
 		Pickup(new Item(0));
 		Pickup(new Item(1));
 		Pickup(new Item(2));
+		Pickup(new Item(2));
 	}
 
 	void OnTriggerEnter(Collider other) {

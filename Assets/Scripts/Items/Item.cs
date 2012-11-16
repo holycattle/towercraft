@@ -17,7 +17,7 @@ public class Item {
 	}
 
 	public string Name {
-		get { return _tc.componentName; }
+		get { return _tc.ComponentName; }
 	}
 
 	public TowerComponent GetTowerComponent() {

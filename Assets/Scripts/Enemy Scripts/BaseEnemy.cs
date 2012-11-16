@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class BaseEnemy : MonoBehaviour {
 	// Constants
-	public const float MOV_OFFSET = 0.5f;
-	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
+	public const float MOV_OFFSET = 2f;
+//	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
 
 	// References
 	private LevelController _level;
@@ -13,27 +13,29 @@ public class BaseEnemy : MonoBehaviour {
 	private static GameObject _item;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
+	public MobType type;
 	public float moveSpeed;
 	public int maxLife;
 	private int _life;					// Current Life
 	public int moneyReward;
 	public int waveCost;
-	private int damage = 1;
+	private int damage = 2;
+	private int accuracy = (int)(0.25f * 100);
 	private float firingInterval = 1f;
 	private float range = 32;
 
-	// Movement Variables
-//	private Vector2 _gridPosition;
-	private float turnSpeed;
-	private float totalTurn;
-	private Quaternion originalRot;
-	public MobType type;
+	// Movement
+	private float turnSpeed;			// Defines how long it takes to turn 90 degrees.
+	private float totalTurn;			// [0, 1] How far I have turned.
+	private Quaternion originalRot;		// Rotation if totalturn == 0
+
+	// Attacking
 	private float _timeTillFire;
 
 	// Path Following
-	private List<Vector2> _path;
-	private int _activePoint;
-	private Vector2 _offset;
+	private List<Vector2> _path;	// List of waypoints to follow
+	private int _activePoint;		// Current point in the path
+	private Vector2 _offset;		// Random offset for movement
 
 	void Start() {
 		_activePoint = 1;
@@ -54,11 +56,9 @@ public class BaseEnemy : MonoBehaviour {
 	}
 
 	void Update() {
-//		if (_path == null) {
-//			Debug.Log("NULL WHY?");
-//		}
-
-		// MOVEMENT
+		/*
+		 *	Movement
+		 */
 		if (_activePoint == _path.Count) {
 			// Dont do anything anymore.
 			return;
@@ -68,7 +68,6 @@ public class BaseEnemy : MonoBehaviour {
 		float dist = Vector3.Distance(targetPos, transform.position);
 
 		if (dist < moveSpeed * Time.deltaTime) {
-//			Debug.Log("NextMove: Path Length >" + _path.Count);
 			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
 			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 
@@ -87,12 +86,6 @@ public class BaseEnemy : MonoBehaviour {
 		}
 		totalTurn += turnSpeed * Time.deltaTime;
 
-		// Update current grid position
-//		Vector2 currentPos = _level.GridConvert(transform.position);
-//		if (currentPos != _gridPosition) {
-//			_gridPosition = currentPos;
-//		}
-
 		if (_path != null) {
 			Vector3 p;
 			int i = 0;
@@ -107,14 +100,16 @@ public class BaseEnemy : MonoBehaviour {
 			Debug.DrawLine(p, p + Vector3.up * 5);
 		}
 
-		// ATTACKING
+
+		/*
+		 *	Attacking the Player
+		 */
 		if (Vector3.Distance(transform.position, _player.transform.position) <= range) {
 			if (_timeTillFire <= 0) {
-				if (Random.Range(0, 1) == 0) {
+				if (Random.Range(0, 100) < accuracy) {
 					// Hit
 					_player.SubLife(damage);
 				}
-
 				_timeTillFire += firingInterval;
 			}
 		}
@@ -127,15 +122,8 @@ public class BaseEnemy : MonoBehaviour {
 	public void PathUpdate() {
 		_path = _level.RecalculatePath(GridPosition);
 		_activePoint = 2;
-
-//		if (_path != null) {
-//			Debug.Log("Path Updated");
-//		} else {
-//			Debug.Log("UKNOWN");
-//		}
 	}
 
-	#region Life Management
 	public void AddLife(int amt) {
 		_life += amt;
 		if (_life <= 0)
@@ -160,7 +148,6 @@ public class BaseEnemy : MonoBehaviour {
 			Instantiate(_item, transform.position, Quaternion.identity);
 		}
 	}
-	#endregion
 
 	private int CalculateDirection(float diff) {
 		if (diff > 0)
