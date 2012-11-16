@@ -4,7 +4,14 @@ using System.Collections.Generic;
 using System;
 
 public class SpawnScheme {
-
+	//moveSpeed range - to be tweaked later on
+	private const int MIN_SPEED = 5;
+	private const int MAX_SPEED = 12;
+	
+	//maxHealth coefficient and multiplier
+	private const int HEALTH_COEFF = 50; //this determines the scale of the HP
+	private const float HEALTH_MULTIPLIER = 0.2f; //every wave, health increases by current_health * HEALTH_MULTIPLIER
+	
 	private LevelController _levelController;
 	protected List<MobSpawn> _spawnScheme;
 	private float _timeSinceLastSpawn;
@@ -14,7 +21,7 @@ public class SpawnScheme {
 		_levelController = gameController;
 		_spawnScheme = new List<MobSpawn>();
 
-		moveSpeed = UnityEngine.Random.Range(5, 12);
+		moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
 		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
 	}
@@ -31,7 +38,7 @@ public class SpawnScheme {
 				
 				//procedurally assign new Enemy entity maxLife based on moveSpeed
 				WaveController waveController = _levelController.GetComponent<WaveController>();
-				m.maxLife = (int)(((1f/moveSpeed) * 50) * (1 + (waveController.waveNumber * 0.2f)));
+				m.maxLife = (int)(((1f/moveSpeed) * HEALTH_COEFF) * (1 + (waveController.waveNumber * HEALTH_MULTIPLIER)));
 				
 				m.MotionPath = _levelController.MotionPath; //set enemy path to path determined by A* search
 
