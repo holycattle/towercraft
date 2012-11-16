@@ -15,7 +15,6 @@ public class SpawnScheme {
 		_spawnScheme = new List<MobSpawn>();
 
 		moveSpeed = UnityEngine.Random.Range(5, 12);
-//		moveSpeed = 6;
 		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
 	}
@@ -29,6 +28,11 @@ public class SpawnScheme {
 
 				BaseEnemy m = g.GetComponent<BaseEnemy>();
 				m.moveSpeed = (int)moveSpeed;
+				
+				//procedurally assign new Enemy entity maxLife based on moveSpeed
+				WaveController waveController = _levelController.GetComponent<WaveController>();
+				m.maxLife = (int)(((1f/moveSpeed) * 50) * (1 + (waveController.waveNumber * 0.2f)));
+				
 				m.MotionPath = _levelController.MotionPath; //set enemy path to path determined by A* search
 
 				_timeSinceLastSpawn -= _spawnScheme[0].WaitTime;

@@ -25,6 +25,7 @@ public class Creepling : SpawnScheme {
 			}
 
 			float interval = 12f / moveSpeed;				// Equation Simplified
+			Debug.Log("Spawn Interval = " + interval.ToString());
 //			interval = 16f;
 			_spawnScheme.Add(new MobSpawn(g, interval));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;

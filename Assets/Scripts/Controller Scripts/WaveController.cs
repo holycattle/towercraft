@@ -50,7 +50,11 @@ public class WaveController : MonoBehaviour {
 		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
 		_waveActive = true;
 	}
-
+	
+	public int waveNumber {
+		get {return _waveNumber;}
+	}
+	
 	public int TimeTillNextWavex100 {
 		get { return (int)(_timeTillNextWave * 100); }
 	}
