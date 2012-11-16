@@ -5,11 +5,11 @@ using System;
 
 public class SpawnScheme {
 	//moveSpeed range - to be tweaked later on
-	private const int MIN_SPEED = 5;
-	private const int MAX_SPEED = 12;
+	private const int MIN_SPEED = 2;
+	private const int MAX_SPEED = 10;
 	
 	//maxHealth coefficient and multiplier
-	private const int HEALTH_COEFF = 50; //this determines the scale of the HP
+	private const int HEALTH_COEFF = 30; //this determines the scale of the HP
 	private const float HEALTH_MULTIPLIER = 0.2f; //every wave, health increases by current_health * HEALTH_MULTIPLIER
 	
 	private LevelController _levelController;
@@ -34,6 +34,7 @@ public class SpawnScheme {
 				GameObject g = _spawnScheme[0].Spawn(_levelController.mobSpawnPoint + offset, Quaternion.identity);
 
 				BaseEnemy m = g.GetComponent<BaseEnemy>();
+				//random moveSpeed
 				m.moveSpeed = (int)moveSpeed;
 				
 				//procedurally assign new Enemy entity maxLife based on moveSpeed
@@ -51,6 +52,18 @@ public class SpawnScheme {
 			return true;
 		}
 		return false;
+	}
+	
+	public static int GetMIN_SPEED {
+		get {return MIN_SPEED;}
+	}
+	
+	public static int GetMAX_SPEED {
+		get {return MAX_SPEED;}
+	}
+	
+	public static int GetMED_SPEED { //get median speed
+		get {return MAX_SPEED / MIN_SPEED;}
 	}
 
 	protected class MobSpawn {
