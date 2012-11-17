@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ItemCollector : MonoBehaviour {
-	private const int WIDTH = 3;
-	private const int HEIGHT = 4;
+	private const int WIDTH = 5;
+	private const int HEIGHT = 5;
 	private const int GRIDSIZE = 64;
 	private const int SPACE = 4;
 	private Item[] inventory;

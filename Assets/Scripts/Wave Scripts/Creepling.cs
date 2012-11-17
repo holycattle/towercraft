@@ -20,7 +20,7 @@ public class Creepling : SpawnScheme {
 			}
 
 			float interval = (1f / moveSpeed) * INTERVAL_COEFF;
-			Debug.Log("Spawn Interval = " + interval.ToString());
+//			Debug.Log("Spawn Interval = " + interval.ToString());
 //			interval = 16f;
 			_spawnScheme.Add(new MobSpawn(g, interval));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;
@@ -28,10 +28,11 @@ public class Creepling : SpawnScheme {
 	}
 	
 	private MobType determineEnemyType() {
-		if(moveSpeed >= GetMIN_SPEED && moveSpeed < GetMIN_SPEED + 3) {
+		if (moveSpeed >= GetMIN_SPEED && moveSpeed < GetMIN_SPEED + 3) {
 			return MobType.Tank;
-		} else if(moveSpeed >= GetMIN_SPEED + 3 && moveSpeed < GetMIN_SPEED + 6) {
+		} else if (moveSpeed >= GetMIN_SPEED + 3 && moveSpeed < GetMIN_SPEED + 6) {
 			return MobType.Creepling;
-		} else return MobType.Speedster;
+		} else
+			return MobType.Speedster;
 	}
 }

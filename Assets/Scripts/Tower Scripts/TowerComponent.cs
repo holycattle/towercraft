@@ -1,16 +1,21 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TowerComponent : MonoBehaviour {
 	private string _componentName;
 	private int _componentType;
-	public ModifyingAttribute[] attributes;
+	public List<ModifyingAttribute> attributes;
 	public Vector3 baseNextComponentPosition;	// Position of next component relative to this component
 
 	void Awake() {
-		attributes = new ModifyingAttribute[2];
-		attributes[0] = new ModifyingAttribute(Stat.Range, 2);
-		attributes[1] = new ModifyingAttribute(Stat.Damage, 1);
+		attributes = new List<ModifyingAttribute>();
+		attributes.Add(new ModifyingAttribute(Stat.Range, 2));
+		attributes.Add(new ModifyingAttribute(Stat.Damage, 1));
+	}
+
+	public void AddAttribute(ModifyingAttribute m) {
+		attributes.Add(m);
 	}
 
 	public string ComponentName {

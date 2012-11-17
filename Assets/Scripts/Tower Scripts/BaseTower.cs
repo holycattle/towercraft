@@ -39,20 +39,15 @@ public class BaseTower : MonoBehaviour {
 	void Start() {
 		_enemiesInRange = new List<GameObject>();
 		_timeTillFire = 0;
-
-		// Update the Radius of the Capsule Collider (Range)
-//		GetComponent<CapsuleCollider>().radius = towerRange;
-
-//		_missileSource = transform.Find("MissileSource").transform;
 	}
 
 	void Update() {
 		// Make the Cannon face the Enemy
 		if (_target != null) {
 			float distance = Vector2.Distance(new Vector2(_target.transform.position.x, _target.transform.position.z), new Vector2(transform.position.x, transform.position.z));
-			Debug.Log("Distance: " + distance + " > " + stats[(int)Stat.Range].AdjustedBaseValue);
+//			Debug.Log("Distance: " + distance + " > " + stats[(int)Stat.Range].AdjustedBaseValue);
 			if (distance < stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE) {
-				Debug.Log("Rotitulating!");
+//				Debug.Log("Rotitulating!");
 				_missileSource.rotation = Quaternion.Slerp(_missileSource.rotation, Quaternion.LookRotation(_missileSource.position - _target.transform.position), 0.5f);
 			}
 		}
@@ -76,7 +71,9 @@ public class BaseTower : MonoBehaviour {
 					GameObject g = Instantiate(missile, _missileSource.position, Quaternion.identity) as GameObject;
 
 					// Set target
-					g.GetComponent<BaseMissile>().Target = _enemiesInRange[0];
+					BaseMissile b = g.GetComponent<BaseMissile>();
+					b.Target = _enemiesInRange[0];
+					b.damage = stats[(int)Stat.Damage].AdjustedBaseValue;
 
 					_timeTillFire += firingInterval;
 				}

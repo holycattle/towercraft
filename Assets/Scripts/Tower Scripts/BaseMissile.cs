@@ -7,12 +7,10 @@ public class BaseMissile : MonoBehaviour {
 	public int damage;
 	public float splashRadius;
 	public float splashDissipationFactor;
-	
 	public GameObject explosionEffect;
-	
 	private GameObject _target;
 	
-	void Update () {
+	void Update() {
 		if (_target != null) {
 			// Rotation
 			transform.LookAt(_target.transform);
@@ -54,12 +52,16 @@ public class BaseMissile : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter(Collision collision) {
-		if (collision.gameObject.tag == "Enemy") {
-			collision.transform.root.gameObject.GetComponent<BaseEnemy>().SubLife(damage);
-			
-			// Add Particle Effects
-			Instantiate(explosionEffect, this.transform.position, Quaternion.identity);
+		if (_target != null) {
+			if (collision.gameObject.tag == "Enemy") {
+				collision.transform.root.gameObject.GetComponent<BaseEnemy>().SubLife(damage);
+
+				// Add Particle Effects
+				Instantiate(explosionEffect, this.transform.position, Quaternion.identity);
+				Destroy(this.gameObject);
+			}
+		} else {
+			Destroy(this.gameObject);
 		}
-		Destroy(this.gameObject);
 	}
 }

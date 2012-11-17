@@ -80,8 +80,14 @@ public class Builder : GameTool {
 	public override void MouseClickOn(GameObject g) {
 		if (_game.ActiveMenu == Menu.Game && g != null) {
 			targettedGrid = g.GetComponent<Grid>();
+			Debug.Log("Clicked: " + g.name);
 
-			// 1) CHECK if you can build at that spot
+			// 1) CHECK if the clicked object is a grid
+			if (targettedGrid == null) {
+				Debug.Log("Not Clicked Correctly");
+			}
+
+			// 2) CHECK if you can build at that spot
 			targettedGrid.TempTower = true;
 			if (!_level.HasPath()) {
 				Debug.Log("Prevent Building! No Possible Path");
@@ -89,10 +95,14 @@ public class Builder : GameTool {
 				return;
 			}
 
-			// 2) CHECK if there is a mob at that spot OR if a mob gets trapped
+			// 3) CHECK if there is a mob at that spot OR if a mob gets trapped
 			GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 			for (int i= 0; i < enemies.Length; i++) {
 				BaseEnemy b = enemies[i].GetComponent<BaseEnemy>();
+				if (b == null)
+					continue;
+
+				Debug.Log("B> " + b.gameObject.name);
 				if (b.GridPosition == targettedGrid.GridValue) {
 					Debug.Log("Prevent Building! Mob on Grid");
 					return;

@@ -52,7 +52,7 @@ public class WaveController : MonoBehaviour {
 	}
 	
 	public int waveNumber {
-		get {return _waveNumber;}
+		get { return _waveNumber;}
 	}
 	
 	public int TimeTillNextWavex100 {
