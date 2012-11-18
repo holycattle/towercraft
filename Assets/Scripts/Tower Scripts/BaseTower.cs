@@ -44,13 +44,14 @@ public class BaseTower : MonoBehaviour {
 	void Update() {
 		// Make the Cannon face the Enemy
 		if (_target != null) {
+			Debug.Log("Trying to fire!");
 			float distance = Vector2.Distance(new Vector2(_target.transform.position.x, _target.transform.position.z), new Vector2(transform.position.x, transform.position.z));
-//			Debug.Log("Distance: " + distance + " > " + stats[(int)Stat.Range].AdjustedBaseValue);
 			if (distance < stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE) {
-//				Debug.Log("Rotitulating!");
 				_missileSource.rotation = Quaternion.Slerp(_missileSource.rotation, Quaternion.LookRotation(_missileSource.position - _target.transform.position), 0.5f);
 			}
 		}
+
+//		Debug.Log("Count: " + _enemiesInRange.Count);
 
 		// Try to Fire
 		if (_timeTillFire <= 0 && isFiring) {
@@ -86,6 +87,7 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
+		Debug.Log("Im here: " + other.name);
 		if (other.gameObject.tag == "Enemy") {
 			_enemiesInRange.Add(other.transform.root.gameObject);
 		}

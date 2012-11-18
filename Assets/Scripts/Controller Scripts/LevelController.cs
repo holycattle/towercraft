@@ -99,9 +99,12 @@ public class LevelController : MonoBehaviour {
 		}
 
 		// Update the paths of all Enemies on the board
+		// => TODO!!! Make this more optimal. 
 		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 		for (int i = 0; i < enemies.Length; i++) {
-			enemies[i].GetComponent<BaseEnemy>().PathUpdate();
+			BaseEnemy b = enemies[i].GetComponent<BaseEnemy>();
+			if (b != null)
+				b.PathUpdate();
 		}
 	}
 
