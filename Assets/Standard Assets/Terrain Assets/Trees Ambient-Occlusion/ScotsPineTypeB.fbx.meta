@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: fbe6759f9e37f4519a54d6bb299ede38
+guid: 8d302a31bd1113061100b7a844295342
 ModelImporter:
   fileIDToRecycleName:
-    4300000: BanyanTree
+    4300000: ScotsPineB
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,7 +20,7 @@ ModelImporter:
     clipAnimations: []
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     swapUVChannels: 0

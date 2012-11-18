@@ -24,6 +24,14 @@ public class Creepling : SpawnScheme {
 //			interval = 16f;
 			_spawnScheme.Add(new MobSpawn(g, interval));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;
+
+			// Cycle through mob types
+			if (enemyType == MobType.Tank)
+				enemyType = MobType.Creepling;
+			else if (enemyType == MobType.Creepling)
+				enemyType = MobType.Speedster;
+			else
+				enemyType = MobType.Tank;
 		}
 	}
 	

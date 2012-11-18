@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 6b020f9981247434d97e924956dee647
+guid: 21e1dddb280f946a3b1555bb9d691e43
 ModelImporter:
   fileIDToRecycleName:
-    4300000: FernMesh
+    4300000: BananaBush
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,7 +20,7 @@ ModelImporter:
     clipAnimations: []
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     swapUVChannels: 0

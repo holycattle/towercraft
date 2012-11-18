@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: ce49fdf7bd118bca11002b7b44295342
+guid: 96ba5bd6f9ef547cfa2bedfffc791631
 ModelImporter:
   fileIDToRecycleName:
-    4300000: polySurface7
+    4300000: ThinTree
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,7 +20,7 @@ ModelImporter:
     clipAnimations: []
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     swapUVChannels: 0

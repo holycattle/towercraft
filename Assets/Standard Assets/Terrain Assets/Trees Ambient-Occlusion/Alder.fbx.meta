@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 1c81a9a4bd118bca11002b7b44295342
+guid: 25fa881dbd110e38a00062d88f962b59
 ModelImporter:
   fileIDToRecycleName:
-    4300000: Bush2
+    4300000: polySurface340
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,7 +20,7 @@ ModelImporter:
     clipAnimations: []
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     swapUVChannels: 0

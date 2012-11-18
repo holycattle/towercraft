@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 3bf429429e1ed4353922c9ebf4c8abbf
+guid: 5ca99170bd118bca11002b7b44295342
 ModelImporter:
   fileIDToRecycleName:
-    4300000: Palms
+    4300000: Bush1
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,7 +20,7 @@ ModelImporter:
     clipAnimations: []
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     swapUVChannels: 0
