@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class LevelController : MonoBehaviour {
-
 	public const int TILE_SIZE = 8;
 	public const int HTILE_SIZE = TILE_SIZE / 2;
 	
@@ -18,13 +17,14 @@ public class LevelController : MonoBehaviour {
 
 	// Objects
 	public GameObject tilePrefab;
-	public GameObject enemyPrefab;
 
-	/* PRIVATE */
 	// Map Variables
 	private Grid[] _map;
 	private List<Vector2> _path;
-	
+
+	// Other Components
+	private MinimapScript minimap;
+
 	void Awake() {
 		// Set default width x height
 		if (mapWidth * mapHeight == 0) {
@@ -36,6 +36,9 @@ public class LevelController : MonoBehaviour {
 		startYPosition = -(mapHeight / 2) * TILE_SIZE;
 
 		mobSpawnPoint = new Vector3(startXPosition + HTILE_SIZE, 1, startYPosition - TILE_SIZE);
+
+		// Get the Minimap
+		minimap = GetComponent<MinimapScript>();
 
 		// Instantiate the Tiles and Path
 		GameObject gridParent = new GameObject("Grid Parent");
@@ -53,7 +56,7 @@ public class LevelController : MonoBehaviour {
 		}
 		UpdatePath();
 	}
-	
+
 	void Update() {
 		// Draw the Path
 		if (_path != null) {
@@ -76,17 +79,12 @@ public class LevelController : MonoBehaviour {
 				Destroy(go);
 			}
 		}
-
-		if (Input.GetKeyDown(KeyCode.KeypadEnter)) {
-			GameObject g = Instantiate(enemyPrefab,
-				new Vector3(startXPosition + HTILE_SIZE + Random.Range(-1f, 1f), 2, startYPosition - HTILE_SIZE + Random.Range(-1f, 1f)),
-				Quaternion.identity) as GameObject;
-			BaseEnemy m = g.GetComponent<BaseEnemy>();
-			m.MotionPath = _path;
-		}
 	}
 
 	public void UpdatePath() {
+		// Path needs to be updated!
+		minimap.UpdateTowerList();
+
 		// Pathfind!
 		_path = AStar.PathFind(new Vector2(0, 0), new Vector2(mapWidth - 1, mapHeight - 1), _map, mapWidth, mapHeight);
 

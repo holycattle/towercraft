@@ -46,12 +46,10 @@ public class PlayerController : MonoBehaviour {
 
 	public void AddLife(int amt) {
 		_life += amt;
-//		if (_life <= 0)
-//			Lose();
-	}
 
-	public void SubLife(int amt) {
-		_life -= amt;
+		if (_life >= MAX_LIFE) {
+			_life = MAX_LIFE;
+		}
 //		if (_life <= 0)
 //			Lose();
 	}

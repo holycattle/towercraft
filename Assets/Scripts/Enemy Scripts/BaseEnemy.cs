@@ -108,7 +108,7 @@ public class BaseEnemy : MonoBehaviour {
 			if (_timeTillFire <= 0) {
 				if (Random.Range(0, 100) < accuracy) {
 					// Hit
-					_player.SubLife(damage);
+					_player.AddLife(-damage);
 				}
 				_timeTillFire += firingInterval;
 			}

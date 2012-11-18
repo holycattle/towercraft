@@ -4,7 +4,6 @@ using System.Collections;
 public class Grid : MonoBehaviour {
 	// Controllers
 	private LevelController _levelController;
-//	private GameController _gameController;
 
 	// Grid Info
 	private Vector2 _gridValue;
@@ -18,7 +17,6 @@ public class Grid : MonoBehaviour {
 	void Awake() {
 		_ts = null;
 		_levelController = GameObject.Find(" GameController").GetComponent<LevelController>();
-//		_gameController = GameObject.Find(" GameController").GetComponent<GameController>();
 
 		_selectionGrid = transform.FindChild("GridSelection").GetComponent<MeshRenderer>();
 		_hasTower = false;
@@ -30,14 +28,10 @@ public class Grid : MonoBehaviour {
 	}
 
 	void InputMouseEnter() {
-//		GetComponent<MeshRenderer>().enabled = true;
-//		GetComponent<Renderer>().material.color = Color.red;
 		SetSelected(true);
 	}
 
 	void InputMouseExit() {
-//		GetComponent<MeshRenderer>().enabled = false;
-//		GetComponent<Renderer>().material.color = Color.white;
 		SetSelected(false);
 	}
 

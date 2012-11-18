@@ -105,12 +105,6 @@ public class BaseTower : MonoBehaviour {
 //			}
 //		}
 
-		if (_missileSource == null) {
-			Debug.Log("Source Null");
-		} else {
-			Debug.Log("NOT NOOL");
-		}
-
 		foreach (TowerComponent c in _towerComponents) {
 			foreach (ModifyingAttribute m in c.attributes) {
 				stats[(int)m.stat].AddModifier(m);

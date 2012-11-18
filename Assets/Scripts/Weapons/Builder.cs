@@ -49,8 +49,6 @@ public class Builder : GameTool {
 				if (GUI.Button(buttonRects[i], _displayArray[i].GetComponent<TowerComponent>().ComponentName)) {
 					_game.ActiveMenu = Menu.Game;
 
-					Debug.Log("Buildulating: " + _activeMenu);
-
 					BaseTower currentTower = targettedGrid.Tower;
 					if (currentTower == null) {
 						currentTower = targettedGrid.GenerateBaseTower();
@@ -80,7 +78,6 @@ public class Builder : GameTool {
 	public override void MouseClickOn(GameObject g) {
 		if (_game.ActiveMenu == Menu.Game && g != null) {
 			targettedGrid = g.GetComponent<Grid>();
-			Debug.Log("Clicked: " + g.name);
 
 			// 1) CHECK if the clicked object is a grid
 			if (targettedGrid == null) {
@@ -102,7 +99,6 @@ public class Builder : GameTool {
 				if (b == null)
 					continue;
 
-				Debug.Log("B> " + b.gameObject.name);
 				if (b.GridPosition == targettedGrid.GridValue) {
 					Debug.Log("Prevent Building! Mob on Grid");
 					return;
