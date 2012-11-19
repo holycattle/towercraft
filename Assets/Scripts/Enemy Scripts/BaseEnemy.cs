@@ -25,9 +25,11 @@ public class BaseEnemy : MonoBehaviour {
 	private float range = 32;
 
 	// Movement
+	private float turnTime;
 	private float turnSpeed;			// Defines how long it takes to turn 90 degrees.
 	private float totalTurn;			// [0, 1] How far I have turned.
 	private Quaternion originalRot;		// Rotation if totalturn == 0
+	private bool isAnimating;
 
 	// Attacking
 	private float _timeTillFire;
@@ -44,6 +46,7 @@ public class BaseEnemy : MonoBehaviour {
 
 		// Set Turn Speed
 		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
+		turnTime = (Mathf.Sqrt(2) * LevelController.TILE_SIZE) / moveSpeed;
 //		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
 
 		originalRot = transform.rotation;
@@ -53,6 +56,11 @@ public class BaseEnemy : MonoBehaviour {
 
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
+	}
+
+	public void StopAnimation() {
+		Debug.Log("Stop Animating");
+		isAnimating = false;
 	}
 
 	void Update() {
@@ -67,8 +75,17 @@ public class BaseEnemy : MonoBehaviour {
 		Vector3 targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
 		float dist = Vector3.Distance(targetPos, transform.position);
 
+//		if (!isAnimating) {
+//			iTween.MoveTo(gameObject, iTween.Hash("position", targetPos, "speed", moveSpeed, "easetype", "linear", "oncomplete", "StopAnimation"));
+//			iTween.RotateTo(gameObject, iTween.Hash("rotation", Quaternion.LookRotation(targetPos - transform.position).eulerAngles, "time", 0));
+//			isAnimating = true;
+
+//			_activePoint++;
+//		}
+
 		if (dist < moveSpeed * Time.deltaTime) {
 			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
+//			iTween.RotateTo(gameObject, iTween.Hash("rotation", Quaternion.LookRotation(targetPos - transform.position).eulerAngles, "time", turnTime));
 			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 
 			// Move the extra
