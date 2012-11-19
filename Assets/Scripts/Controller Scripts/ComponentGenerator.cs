@@ -27,8 +27,8 @@ public class ComponentGenerator {
 			_towerParts[i] = new TowerComponent[loaded.Length];
 			for (int o = 0; o < loaded.Length; o++) {
 				_towerParts[i][o] = ((GameObject)loaded[o]).GetComponent<TowerComponent>();
-				_towerParts[i][o].Type = i;
-				_towerParts[i][o].ComponentName = ((GameObject)loaded[o]).name;
+				_towerParts[i][o].componentType = i;
+				_towerParts[i][o].componentName = ((GameObject)loaded[o]).name;
 			}
 		}
 
@@ -52,7 +52,7 @@ public class ComponentGenerator {
 		return _cgen;
 	}
 
-	public TowerComponent GenerateComponent(int type) {
+	public TowerComponent GenerateComponent(int type, int cost) {
 		if (type < 0 || type >= BaseTower.TOWER_COMPLETE)
 			return null;
 
@@ -84,13 +84,51 @@ public class ComponentGenerator {
 			}
 
 			TowerComponent t = g.GetComponent<TowerComponent>();
-			t.Type = BaseTower.TOWER_TURRET;
-			t.ComponentName = chMissile + "|" + chBarrel + "|" + chSpinner;
-			g.SetActiveRecursively(false);
+			t.componentType = BaseTower.TOWER_TURRET;
+			t.componentName = chMissile + "|" + chBarrel + "|" + chSpinner;
 
+			int amt = Random.Range(0, cost);
+			t.attributes.Add(new ModifyingAttribute(Stat.Damage, 1 + amt));
+			if (cost - amt > 0) {
+				t.attributes.Add(new ModifyingAttribute(Stat.Range, cost - amt));
+			}
+
+			g.SetActiveRecursively(false);
+			return t;
+		} else if (type == BaseTower.TOWER_STEM) {
+			GameObject g = GameObject.Instantiate(_towerParts[type][Random.Range(0, _towerParts[type].Length)].gameObject, buildSpot, Quaternion.identity) as GameObject;
+
+			TowerComponent t = g.GetComponent<TowerComponent>();
+			t.componentType = BaseTower.TOWER_STEM;
+			t.componentName = "Stem o' Matic";
+
+			int amt = Random.Range(0, cost);
+			t.attributes.Add(new ModifyingAttribute(Stat.Range, 1 + amt));
+			if (cost - amt > 0) {
+				t.attributes.Add(new ModifyingAttribute(Stat.Damage, cost - amt));
+			}
+
+			g.SetActiveRecursively(false);
+//			Debug.Log("Tee After Count: " + t.attributes.Count);
+			return t;
+		} else if (type == BaseTower.TOWER_BASE) {
+			GameObject g = GameObject.Instantiate(_towerParts[type][Random.Range(0, _towerParts[type].Length)].gameObject, buildSpot, Quaternion.identity) as GameObject;
+
+			TowerComponent t = g.GetComponent<TowerComponent>();
+			t.componentType = BaseTower.TOWER_BASE;
+			t.componentName = "Baseometer";
+
+			int amt = Random.Range(0, cost);
+			t.attributes.Add(new ModifyingAttribute(Stat.Range, 1 + amt));
+			if (cost - amt > 0) {
+				t.attributes.Add(new ModifyingAttribute(Stat.Damage, cost - amt));
+			}
+
+			g.SetActiveRecursively(false);
+//			Debug.Log("Base After Count: " + t.attributes.Count);
 			return t;
 		}
 
-		return _towerParts[type][Random.Range(0, _towerParts[type].Length)];
+		return null;
 	}
 }

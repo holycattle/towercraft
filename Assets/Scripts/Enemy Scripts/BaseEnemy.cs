@@ -10,7 +10,8 @@ public class BaseEnemy : MonoBehaviour {
 	// References
 	private LevelController _level;
 	private PlayerController _player;
-	private static GameObject _item;
+	private static GameObject ITEM_PREFAB;
+	private static GameObject HEALTH_PREFAB;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
 	public MobType type;
@@ -25,11 +26,11 @@ public class BaseEnemy : MonoBehaviour {
 	private float range = 32;
 
 	// Movement
-	private float turnTime;
+//	private float turnTime;
 	private float turnSpeed;			// Defines how long it takes to turn 90 degrees.
 	private float totalTurn;			// [0, 1] How far I have turned.
 	private Quaternion originalRot;		// Rotation if totalturn == 0
-	private bool isAnimating;
+//	private bool isAnimating;
 
 	// Attacking
 	private float _timeTillFire;
@@ -46,22 +47,25 @@ public class BaseEnemy : MonoBehaviour {
 
 		// Set Turn Speed
 		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
-		turnTime = (Mathf.Sqrt(2) * LevelController.TILE_SIZE) / moveSpeed;
+//		turnTime = (Mathf.Sqrt(2) * LevelController.TILE_SIZE) / moveSpeed;
 //		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
 
 		originalRot = transform.rotation;
 
-		if (_item == null)
-			_item = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
+		// TODO: Make this more optimal
+		if (ITEM_PREFAB == null)
+			ITEM_PREFAB = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
+		if (HEALTH_PREFAB == null)
+			HEALTH_PREFAB = Resources.Load("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
 
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
 	}
 
-	public void StopAnimation() {
-		Debug.Log("Stop Animating");
-		isAnimating = false;
-	}
+//	public void StopAnimation() {
+//		Debug.Log("Stop Animating");
+//		isAnimating = false;
+//	}
 
 	void Update() {
 		/*
@@ -147,12 +151,6 @@ public class BaseEnemy : MonoBehaviour {
 			Kill();
 	}
 
-	public void SubLife(int amt) {
-		_life -= amt;
-		if (_life <= 0)
-			Kill();
-	}
-
 	public int Life {
 		get { return _life; }
 	}
@@ -161,8 +159,10 @@ public class BaseEnemy : MonoBehaviour {
 		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
 		Destroy(this.transform.root.gameObject);
 
-		if (Random.Range(0, 10) < 10) {
-			Instantiate(_item, transform.position, Quaternion.identity);
+		if (Random.Range(0, 10) < 6) {
+			Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity);
+		} else if (Random.Range(0, 10) < 10) {
+			Instantiate(ITEM_PREFAB, transform.position, Quaternion.identity);
 		}
 	}
 

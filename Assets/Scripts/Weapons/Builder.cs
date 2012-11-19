@@ -8,7 +8,7 @@ public class Builder : GameTool {
 //	public GameObject[] towerStems;
 //	public GameObject[] towerTurrets;
 //	private GameObject[][] towerPrefabs;
-	private GameObject[] _displayArray;
+	private TowerComponent[] _displayArray;
 
 	// Inventory
 	private ItemCollector _inventory;
@@ -19,6 +19,7 @@ public class Builder : GameTool {
 	private const int BUTTON_PADDING = 50;
 	private Rect[] buttonRects;
 	private int _activeMenu;
+	private bool _buildMode;	// TRUE = Building. FALSE = Swapping.
 	private Grid targettedGrid;
 
 	// Laser Sight
@@ -46,15 +47,26 @@ public class Builder : GameTool {
 		base.OnGUI();
 		if (_game.ActiveMenu == Menu.Builder) {
 			for (int i = 0; i < _displayArray.Length; i++) {
-				if (GUI.Button(buttonRects[i], _displayArray[i].GetComponent<TowerComponent>().ComponentName)) {
+				if (GUI.Button(buttonRects[i], _displayArray[i].componentName)) {
+					Debug.Log("Display Array: " + _displayArray[i].componentName + " > " + _displayArray[i].attributes.Count);
 					_game.ActiveMenu = Menu.Game;
 
 					BaseTower currentTower = targettedGrid.Tower;
-					if (currentTower == null) {
-						currentTower = targettedGrid.GenerateBaseTower();
+
+					if (_buildMode) {
+						// Build Mode
+						if (currentTower == null) {
+							currentTower = targettedGrid.GenerateBaseTower();
+						}
+						currentTower.AddNextComponent(_displayArray[i]);
+					} else {
+						// Swap Mode
+						TowerComponent t = currentTower.SwapComponent(_displayArray[i]);
+						if (t != null) {
+							_inventory.Pickup(new Item(t));
+						}
 					}
-					currentTower.addNextComponent(_displayArray[i]);
-//					targettedGrid.SetSelected(false);
+					_inventory.Remove(_displayArray[i]);
 					targettedGrid = null;
 				}
 			}
@@ -111,21 +123,25 @@ public class Builder : GameTool {
 			}
 //			targettedGrid.TempTower = false;
 
-			_game.ActiveMenu = Menu.Builder;
-//			Debug.Log("G Name: " + g.name);
-
 			BaseTower currentTower = targettedGrid.Tower;
+
+			_game.ActiveMenu = Menu.Builder;
+			_buildMode = true;
 			if (currentTower == null) {
 				_activeMenu = BaseTower.TOWER_BASE;
-			} else if (currentTower.getNextComponent() == BaseTower.TOWER_STEM) {
+			} else if (currentTower.GetNextComponent() == BaseTower.TOWER_STEM) {
 				_activeMenu = BaseTower.TOWER_STEM;
-			} else if (currentTower.getNextComponent() == BaseTower.TOWER_TURRET) {
+			} else if (currentTower.GetNextComponent() == BaseTower.TOWER_TURRET) {
 				_activeMenu = BaseTower.TOWER_TURRET;
 			} else {
-				// Tower is complete.
-				_game.ActiveMenu = Menu.Game;
-				targettedGrid = null;
-				return;
+				// Tower is Complete.
+				// SWAP MODE!
+				_activeMenu = BaseTower.TOWER_TURRET; // TODO: This will be changable.
+				_buildMode = false;
+//				// Tower is complete.
+//				_game.ActiveMenu = Menu.Game;
+//				targettedGrid = null;
+//				return;
 			}
 
 //			targettedGrid.SetSelected(true);

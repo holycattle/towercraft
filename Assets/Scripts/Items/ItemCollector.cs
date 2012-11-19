@@ -14,27 +14,29 @@ public class ItemCollector : MonoBehaviour {
 		inventory = new Item[WIDTH * HEIGHT];
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 
-		Pickup(new Item(0));
-		Pickup(new Item(0));
-		Pickup(new Item(1));
-		Pickup(new Item(2));
-		Pickup(new Item(2));
+		Pickup(new Item(0, 4));
+//		Pickup(new Item(0, 1));
+		Pickup(new Item(1, 4));
+		Pickup(new Item(2, 4));
+		Pickup(new Item(2, 4));
 	}
 
 	void OnTriggerEnter(Collider other) {
 		if (CanPickup()) {
 			if (other.gameObject.tag == "Item") {
-				StartCoroutine("PickupDelay", other.gameObject);
+				PickupableScript i = other.gameObject.GetComponent<PickupableScript>();
+				if (i.CanPickup(this))
+					StartCoroutine("PickupDelay", other.gameObject);
 			}
 		}
 	}
 
 	private IEnumerator PickupDelay(GameObject g) {
-		ItemScript i = g.GetComponent<ItemScript>();
+		PickupableScript i = g.GetComponent<PickupableScript>();
 		i.Target = transform;
 
 		yield return new WaitForSeconds(0.3f);
-		Pickup(i.item);
+		i.Pickup(this);
 		DestroyObject(g);
 	}
 
@@ -54,17 +56,17 @@ public class ItemCollector : MonoBehaviour {
 		}
 	}
 
-	public GameObject[] GetGameObjects(int type) {
-		List<GameObject> objects = new List<GameObject>();
-
+	public TowerComponent[] GetGameObjects(int type) {
+		List<TowerComponent> objects = new List<TowerComponent>();
 		for (int i = 0; i < inventory.Length; i++) {
 			if (inventory[i] != null) {
-				if (inventory[i].GetTowerComponent().Type == type) {
-					objects.Add(inventory[i].GetTowerComponent().gameObject);
+				Debug.Log("Checking: " + inventory[i].GetTowerComponent().componentName + " > " + inventory[i].GetTowerComponent().componentType);
+				if (inventory[i].GetTowerComponent().componentType == type) {
+					objects.Add(inventory[i].GetTowerComponent());
 				}
 			}
 		}
-		GameObject[] temp = objects.ToArray();
+		TowerComponent[] temp = objects.ToArray();
 		return temp;
 	}
 
@@ -80,7 +82,31 @@ public class ItemCollector : MonoBehaviour {
 		return s;
 	}
 
-	private bool Pickup(Item it) {
+	public void Remove(Item it) {
+		for (int i = 0; i < inventory.Length; i++) {
+			if (it == inventory[i]) {
+				inventory[i] = null;
+				Debug.Log("Removed Successful!");
+				return;
+			}
+		}
+		Debug.Log("Removed FAIL!");
+	}
+
+	public void Remove(TowerComponent t) {
+		for (int i = 0; i < inventory.Length; i++) {
+			if (inventory[i] != null) {
+				if (inventory[i].GetTowerComponent() == t) {
+					inventory[i] = null;
+					Debug.Log("Removed Successful!");
+					return;
+				}
+			}
+		}
+		Debug.Log("Removed FAIL!");
+	}
+
+	public bool Pickup(Item it) {
 		for (int i = 0; i < inventory.Length; i++) {
 			if (inventory[i] == null) {
 				inventory[i] = it;
@@ -90,7 +116,7 @@ public class ItemCollector : MonoBehaviour {
 		return false;
 	}
 
-	private bool CanPickup() {
+	public bool CanPickup() {
 		foreach (Item i in inventory) {
 			if (i == null) {
 				return true;

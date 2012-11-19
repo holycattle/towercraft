@@ -10,7 +10,7 @@ public class Bullet : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		BaseEnemy b = collision.gameObject.GetComponent<BaseEnemy>();
 		if (b != null) {
-			b.SubLife(damage);
+			b.AddLife(-damage);
 		}
 		Destroy(gameObject);
 	}

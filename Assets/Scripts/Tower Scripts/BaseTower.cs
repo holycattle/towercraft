@@ -10,6 +10,11 @@ public class BaseTower : MonoBehaviour {
 	public const int TOWER_TURRET = 2;
 	public const int TOWER_COMPLETE = 3;	// Also acts as the max # of components per tower
 
+	// Tower Stat Constants (replacing the Enum)
+	public const int STAT_DAMAGE = 0;
+	public const int STAT_RANGE = 1;
+	public const int STAT_FIRINGRANGE = 2;
+
 	// Tower Parts
 	private TowerComponent[] _towerComponents;
 
@@ -27,6 +32,9 @@ public class BaseTower : MonoBehaviour {
 	private GameObject _target;
 	private Transform _missileSource;
 
+	// TEST VARIABLE
+	public bool PRINTOUTSTUFF = false;
+
 	void Awake() {
 		_towerComponents = new TowerComponent[TOWER_COMPLETE];
 
@@ -42,9 +50,15 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	void Update() {
+		// TEST STUFF
+		if (PRINTOUTSTUFF) {
+			for (int i = 0; i < Enum.GetValues(typeof(Stat)).Length; i++) {
+				Debug.Log(((Stat)i).ToString() + ": " + stats[i].AdjustedBaseValue);
+			}
+		}
+
 		// Make the Cannon face the Enemy
 		if (_target != null) {
-			Debug.Log("Trying to fire!");
 			float distance = Vector2.Distance(new Vector2(_target.transform.position.x, _target.transform.position.z), new Vector2(transform.position.x, transform.position.z));
 			if (distance < stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE) {
 				_missileSource.rotation = Quaternion.Slerp(_missileSource.rotation, Quaternion.LookRotation(_missileSource.position - _target.transform.position), 0.5f);
@@ -87,7 +101,6 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		Debug.Log("Im here: " + other.name);
 		if (other.gameObject.tag == "Enemy") {
 			_enemiesInRange.Add(other.transform.root.gameObject);
 		}
@@ -99,6 +112,11 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	private void UpdateStats() {
+		Debug.Log("Update Stats!");
+		for (int i = 0; i < TOWER_COMPLETE; i++) {
+			Debug.Log("Tower: " + _towerComponents[i].componentName);
+		}
+
 		_missileSource = _towerComponents[TOWER_TURRET].transform.Find("MissileSource");
 //		foreach (Transform trans in _towerComponents[TOWER_TURRET].GetComponentsInChildren<Transform>()) {
 //			if (trans.gameObject.name == "MissileSource") {
@@ -107,7 +125,11 @@ public class BaseTower : MonoBehaviour {
 //			}
 //		}
 
+		foreach (Stat s in Enum.GetValues(typeof(Stat))) {
+			stats[(int)s].ClearModifiers();
+		}
 		foreach (TowerComponent c in _towerComponents) {
+			Debug.Log("Length Attributes: " + c.componentName + " > " + c.attributes.Count);
 			foreach (ModifyingAttribute m in c.attributes) {
 				stats[(int)m.stat].AddModifier(m);
 			}
@@ -118,7 +140,6 @@ public class BaseTower : MonoBehaviour {
 
 		// Set Collider Range
 		GetComponent<SphereCollider>().radius = stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE;
-//		GetComponent<SphereCollider>().radius = 4 * LevelController.TILE_SIZE;
 
 		isFiring = true;
 
@@ -128,9 +149,9 @@ public class BaseTower : MonoBehaviour {
 		}
 	}
 
-	public void addNextComponent(GameObject g) {
-		int next = getNextComponent();
-		TowerComponent comp = g.GetComponent<TowerComponent>();
+	public void AddNextComponent(TowerComponent t) {
+		int next = GetNextComponent();
+//		TowerComponent comp = g.GetComponent<TowerComponent>();
 //		switch (next) {
 //			case TOWER_BASE:
 //				comp = g.GetComponent<TowerBase>();
@@ -144,22 +165,57 @@ public class BaseTower : MonoBehaviour {
 //		}
 
 		// Proper Component is not Attached.
-		if (comp == null) {
-			Debug.Log("Not Attached");
-			return;
-		}
+//		if (comp == null) {
+//			Debug.Log("Not Attached");
+//			return;
+//		}
+
+		Debug.Log("Adding Component: " + t.componentName);
 
 		// Instantiate the Game Object
-		GameObject t = Instantiate(g, transform.position + getNextComponentPosition(), Quaternion.identity) as GameObject;
-		t.transform.parent = transform;
-		_towerComponents[next] = t.GetComponent<TowerComponent>();	// Note: You can't use comp here because it is the component of the prefab.
+		TowerComponent towerInstance = Instantiate(t, transform.position + GetNextComponentPosition(), Quaternion.identity) as TowerComponent;
+		towerInstance.transform.parent = transform;
+		_towerComponents[next] = towerInstance;	// Note: You can't use t here because it is the component of the prefab.
+
+		// Copy the PREFAB's ModifyingAttributes to the INSTANCE
+		foreach (ModifyingAttribute m in t.attributes) {
+			towerInstance.attributes.Add(m);
+			Debug.Log("Adding Attribute to INSTANCE!");
+		}
+
+		// Destroy the Prefab (Save on space)
+		Destroy(t.gameObject);
+
+		Debug.Log("Component PREFAB Count: " + t.attributes.Count);
+		Debug.Log("Component INSTANCE Count: " + towerInstance.attributes.Count);
 
 		if (next == TOWER_TURRET) {
 			UpdateStats();
 		}
 	}
 
-	public int getNextComponent() {
+	public TowerComponent SwapComponent(TowerComponent t) {
+		int swapType = t.componentType;
+
+		_towerComponents[swapType].transform.position = new Vector3(0, 50, 0);	// Move to a far away place
+		_towerComponents[swapType].transform.parent = null;	// DE-Parent
+		_towerComponents[swapType].gameObject.SetActiveRecursively(false);
+		TowerComponent swappedOutComponent = _towerComponents[swapType].GetComponent<TowerComponent>();
+
+		TowerComponent towerInstance = Instantiate(t, transform.position + GetNextComponentPosition(swapType), Quaternion.identity) as TowerComponent;
+		towerInstance.transform.parent = transform;
+		_towerComponents[swapType] = towerInstance;	// Note: You can't use t here because it is the component of the prefab.
+
+		// Copy the PREFAB's ModifyingAttributes to the INSTANCE
+		foreach (ModifyingAttribute m in t.attributes) {
+			towerInstance.attributes.Add(m);
+		}
+
+		UpdateStats();
+		return swappedOutComponent;
+	}
+
+	public int GetNextComponent() {
 		if (_towerComponents[TOWER_BASE] == null) {
 			return TOWER_BASE;
 		} else if (_towerComponents[TOWER_STEM] == null) {
@@ -171,10 +227,9 @@ public class BaseTower : MonoBehaviour {
 		}
 	}
 
-	private Vector3 getNextComponentPosition() {
-		int next = getNextComponent();
+	private Vector3 GetNextComponentPosition(int type) {
 		Vector3 offset = Vector3.zero;
-		switch (next) {
+		switch (type) {
 			case TOWER_COMPLETE:
 				break;
 			case TOWER_TURRET:
@@ -187,6 +242,10 @@ public class BaseTower : MonoBehaviour {
 				break;
 		}
 		return offset;
+	}
+
+	private Vector3 GetNextComponentPosition() {
+		return GetNextComponentPosition(GetNextComponent());
 	}
 }
 

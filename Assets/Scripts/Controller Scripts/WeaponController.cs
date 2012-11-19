@@ -93,11 +93,6 @@ public class WeaponController : MonoBehaviour {
 				SetActiveWeapon(1);
 			}
 
-			// ----TESTING!!!----
-			if (Input.GetKeyDown(KeyCode.P) || Input.GetKey(KeyCode.P)) {
-				ComponentGenerator.Get().GenerateComponent(0);
-			}
-
 			/*
 			 * ----Mouse Clicks-----
 			 */

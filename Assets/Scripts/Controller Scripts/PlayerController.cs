@@ -36,6 +36,10 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	void OnCollisionEnter(Collision c) {
+		Debug.Log("Collision!: " + c.gameObject.name);
+	}
+
 	void OnGUI() {
 		GUI.backgroundColor = Color.grey;
 		GUI.Box(new Rect(0, 0, LIVES_WIDTH, LIVES_HEIGHT), "Lives Left: " + _game.Lives, style);

@@ -71,7 +71,7 @@ public class Weapon : GameTool {
 				// Damage Game Object
 				BaseEnemy b = hit.transform.gameObject.GetComponent<BaseEnemy>();
 				if (b != null) {
-					b.SubLife(damage);	// Collided with enemy, otherwise collided with terrain
+					b.AddLife(-damage);	// Collided with enemy, otherwise collided with terrain
 					_targetted = b;
 				}
 

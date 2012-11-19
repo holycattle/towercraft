@@ -3,28 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TowerComponent : MonoBehaviour {
-	private string _componentName;
-	private int _componentType;
+	public string componentName;
+	public int componentType;
 	public List<ModifyingAttribute> attributes;
 	public Vector3 baseNextComponentPosition;	// Position of next component relative to this component
 
 	void Awake() {
 		attributes = new List<ModifyingAttribute>();
-		attributes.Add(new ModifyingAttribute(Stat.Range, 2));
-		attributes.Add(new ModifyingAttribute(Stat.Damage, 1));
+//		attributes.Add(new ModifyingAttribute(Stat.Range, 2));
+//		attributes.Add(new ModifyingAttribute(Stat.Damage, 1));
+//		Debug.Log("Instantiation: " + attributes.Count);
 	}
 
-	public void AddAttribute(ModifyingAttribute m) {
-		attributes.Add(m);
+	void Start() {
 	}
 
-	public string ComponentName {
-		get { return _componentName; }
-		set { _componentName = value; }
-	}
-
-	public int Type {
-		get { return _componentType; }
-		set { _componentType = value; }
-	}
+//	public void AddAttribute(ModifyingAttribute m) {
+//		attributes.Add(m);
+//	}
 }

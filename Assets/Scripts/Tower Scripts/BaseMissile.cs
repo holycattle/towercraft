@@ -54,7 +54,7 @@ public class BaseMissile : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		if (_target != null) {
 			if (collision.gameObject.tag == "Enemy") {
-				collision.transform.root.gameObject.GetComponent<BaseEnemy>().SubLife(damage);
+				collision.transform.root.gameObject.GetComponent<BaseEnemy>().AddLife(-damage);
 
 				// Add Particle Effects
 				Instantiate(explosionEffect, this.transform.position, Quaternion.identity);
