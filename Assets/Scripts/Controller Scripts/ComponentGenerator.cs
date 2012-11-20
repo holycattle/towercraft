@@ -84,8 +84,9 @@ public class ComponentGenerator {
 			}
 
 			TowerComponent t = g.GetComponent<TowerComponent>();
-			t.componentType = BaseTower.TOWER_TURRET;
 			t.componentName = chMissile + "|" + chBarrel + "|" + chSpinner;
+			t.componentType = BaseTower.TOWER_TURRET;
+			t.cost = cost;
 
 			int amt = Random.Range(0, cost);
 			t.attributes.Add(new ModifyingAttribute(Stat.Damage, 1 + amt));
@@ -99,8 +100,9 @@ public class ComponentGenerator {
 			GameObject g = GameObject.Instantiate(_towerParts[type][Random.Range(0, _towerParts[type].Length)].gameObject, buildSpot, Quaternion.identity) as GameObject;
 
 			TowerComponent t = g.GetComponent<TowerComponent>();
-			t.componentType = BaseTower.TOWER_STEM;
 			t.componentName = "Stem o' Matic";
+			t.componentType = BaseTower.TOWER_STEM;
+			t.cost = cost;
 
 			int amt = Random.Range(0, cost);
 			t.attributes.Add(new ModifyingAttribute(Stat.Range, 1 + amt));
@@ -115,8 +117,9 @@ public class ComponentGenerator {
 			GameObject g = GameObject.Instantiate(_towerParts[type][Random.Range(0, _towerParts[type].Length)].gameObject, buildSpot, Quaternion.identity) as GameObject;
 
 			TowerComponent t = g.GetComponent<TowerComponent>();
-			t.componentType = BaseTower.TOWER_BASE;
 			t.componentName = "Baseometer";
+			t.componentType = BaseTower.TOWER_BASE;
+			t.cost = cost;
 
 			int amt = Random.Range(0, cost);
 			t.attributes.Add(new ModifyingAttribute(Stat.Range, 1 + amt));
@@ -130,5 +133,17 @@ public class ComponentGenerator {
 		}
 
 		return null;
+	}
+
+	public TowerComponent TowerClone(TowerComponent t) {
+		// Instantiate the Game Object
+		TowerComponent towerInstance = GameObject.Instantiate(t, buildSpot, Quaternion.identity) as TowerComponent;
+
+		// Copy the PREFAB's ModifyingAttributes to the INSTANCE
+		foreach (ModifyingAttribute m in t.attributes) {
+			towerInstance.attributes.Add(m);
+		}
+
+		return towerInstance;
 	}
 }

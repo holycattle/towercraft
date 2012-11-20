@@ -94,6 +94,7 @@ public class Builder : GameTool {
 			// 1) CHECK if the clicked object is a grid
 			if (targettedGrid == null) {
 				Debug.Log("Not Clicked Correctly");
+				return;
 			}
 
 			// 2) CHECK if you can build at that spot

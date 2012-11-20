@@ -29,7 +29,7 @@ public class WeaponController : MonoBehaviour {
 	private Rect[] crosshairRect;
 
 	// Gun Movement (User Defined)
-	private float verticalImpulse = 0.2f;	// World Space moved (World Units)
+	private float verticalImpulse = 0.06f;
 	private float impulseRecovery = 0.3f;
 	//--
 	private float backRecoil = 0.5f;		// World Space moved (World Units)
@@ -69,6 +69,9 @@ public class WeaponController : MonoBehaviour {
 		for (int i = 0; i < crosshairRect.Length; i++) {
 			crosshairRect[i] = new Rect(Screen.width / 2 - crosshair0.width / 2, Screen.height / 2 - crosshair0.height / 2, crosshair0.width, crosshair0.height);
 		}
+
+		iTween.Init(gameObject);
+//		iTween.ShakePosition(gameObject, iTween.Hash("amount", new Vector3(1, 1, 1), "time", 20));
 	}
 
 	void OnGUI() {
@@ -171,11 +174,19 @@ public class WeaponController : MonoBehaviour {
 	}
 
 	public void OnLand() {
-		_currentImpulse = -1;
+//		_currentImpulse = -1;
+//		iTween.PunchPosition(gameObject, iTween.Hash("amount", new Vector3(0, -verticalImpulse, 0), "time", 1f, "space", Space.Self));
+		iTween.MoveFrom(gameObject,
+			iTween.Hash("position", transform.localPosition + new Vector3(0, -verticalImpulse, 0),
+			"time", 0.25f, "islocal", true, "easetype", iTween.EaseType.easeOutCubic));
 	}
 
 	public void OnJump() {
-		_currentImpulse = 1;
+//		_currentImpulse = 1;
+//		iTween.PunchPosition(gameObject, iTween.Hash("amount", new Vector3(0, verticalImpulse, 0), "time", 1f, "space", Space.Self));
+		iTween.MoveFrom(gameObject,
+			iTween.Hash("position", transform.localPosition + new Vector3(0, verticalImpulse / 2, 0),
+			"time", 1f, "islocal", true, "easetype", iTween.EaseType.easeOutCubic));
 	}
 
 	public int RaycastLayer {
