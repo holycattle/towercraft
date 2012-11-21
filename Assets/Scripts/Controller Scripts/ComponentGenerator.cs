@@ -144,6 +144,7 @@ public class ComponentGenerator {
 			towerInstance.attributes.Add(m);
 		}
 
+		towerInstance.gameObject.SetActiveRecursively(false);
 		return towerInstance;
 	}
 }

@@ -6,7 +6,7 @@ public class ItemScript : PickupableScript {
 
 	protected override void Start() {
 		base.Start();
-		item = new Item();
+		item = new Item(Random.Range(0, BaseTower.TOWER_COMPLETE), Random.Range(2, 10));
 	}
 
 	public override void Pickup(ItemCollector ic) {

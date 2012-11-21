@@ -72,6 +72,16 @@ public class WeaponController : MonoBehaviour {
 
 		iTween.Init(gameObject);
 //		iTween.ShakePosition(gameObject, iTween.Hash("amount", new Vector3(1, 1, 1), "time", 20));
+
+		// Idle Movement
+//		Vector3[] idlePath = new Vector3[4];
+//		idlePath[0] = transform.localPosition + new Vector3(0, -1, 0);
+//		idlePath[1] = transform.localPosition + new Vector3(1, 0, 0);
+//		idlePath[2] = transform.localPosition + new Vector3(0, 1, 0);
+//		idlePath[3] = transform.localPosition + new Vector3(-1, 0, 0);
+//		iTween.MoveFrom(gameObject, iTween.Hash("path", idlePath, "time", 1,
+//			"islocal", true,
+//			"looptype", iTween.LoopType.loop, "easetype", iTween.EaseType.linear));
 	}
 
 	void OnGUI() {
@@ -179,6 +189,8 @@ public class WeaponController : MonoBehaviour {
 		iTween.MoveFrom(gameObject,
 			iTween.Hash("position", transform.localPosition + new Vector3(0, -verticalImpulse, 0),
 			"time", 0.25f, "islocal", true, "easetype", iTween.EaseType.easeOutCubic));
+
+//		iTween.MoveAdd(gameObject, iTween.Hash("amount", new Vector3(0, 1f, 0), "time", 3, "islocal", true));
 	}
 
 	public void OnJump() {
