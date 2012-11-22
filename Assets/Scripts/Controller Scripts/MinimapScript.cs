@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MinimapScript : MonoBehaviour {
+
+	// Update Counter
+	private const int UPDATELIMIT = (int)(60.0f / 15);	// = 60 / #ofUpdatesPerSec
+	private int updateCounter;
+
 	// Images
 	public GUIStyle miniMap;
 	public GUIStyle playerIcon;
@@ -18,11 +23,11 @@ public class MinimapScript : MonoBehaviour {
 	private int terrainWidth = 192;
 	private int terrainHeight = 192;
 	private int towerIconSize = 8;
+	private int playerIconSize = 16;
+	private int _playerRotation;
 	private int mobIconSize = 8;
 	private Rect mapGroup;
 
-	// Update Counter
-	private int updateCounter;
 
 	// Transforms of Objects
 	private Rect[] movables;
@@ -48,7 +53,11 @@ public class MinimapScript : MonoBehaviour {
 		for (int i= 0; i < towers.Length; i++) {
 			GUI.Box(towers[i], "", towerIcon);
 		}
+
+		GUIUtility.RotateAroundPivot(_playerRotation, movables[0].center);
 		GUI.Box(movables[0], "", playerIcon);
+		GUIUtility.RotateAroundPivot(-_playerRotation, movables[0].center);
+
 		for (int i = 1; i < movables.Length; i++) {
 			GUI.Box(movables[i], "", mobIcon);
 		}
@@ -60,10 +69,10 @@ public class MinimapScript : MonoBehaviour {
 		GameObject[] mobs = GameObject.FindGameObjectsWithTag("Enemy");
 		movables = new Rect[mobs.Length + 1];
 
-		movables[0] = new Rect(GetMapPosition(player.transform.position.x, terrainWidth) - mobIconSize / 2,
-				mapHeight - GetMapPosition(player.transform.position.z, terrainHeight) - mobIconSize / 2,
-				mobIconSize, mobIconSize);
-
+		movables[0] = new Rect(GetMapPosition(player.transform.position.x, terrainWidth) - playerIconSize / 2,
+				mapHeight - GetMapPosition(player.transform.position.z, terrainHeight) - playerIconSize / 2,
+				playerIconSize, playerIconSize);
+		_playerRotation = (int)player.transform.rotation.eulerAngles.y;
 //		Debug.Log("Length: " + mobs.Length);
 		for (int i = 1; i < mobs.Length + 1; i++) {
 //			Debug.Log("Movables: " + i + " > " + mobs[i].name);

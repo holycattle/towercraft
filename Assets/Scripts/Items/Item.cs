@@ -24,6 +24,10 @@ public class Item {
 		_tc = t;
 	}
 
+	public string Tooltip {
+		get { return _tc.GetTooltipString(); }
+	}
+
 	public string Name {
 		get { return _tc.componentName; }
 	}

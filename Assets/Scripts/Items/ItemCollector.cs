@@ -29,6 +29,7 @@ public class ItemCollector : MonoBehaviour {
 	private Rect[] toDestroyRects;
 	private Rect cloneButtonRect;
 	private Rect modeChangeButtonRect;
+	private Rect tooltipRect;
 
 	// Cloning / Combining
 	private int craftingMode;
@@ -60,9 +61,19 @@ public class ItemCollector : MonoBehaviour {
 		}
 		cloneButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy + (GRIDHEIGHT + SPACE) * HEIGHT, GRIDWIDTH, GRIDHEIGHT);
 		modeChangeButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy - (GRIDHEIGHT + SPACE), GRIDWIDTH, GRIDHEIGHT);
+		tooltipRect = new Rect(sx, sy + totalHeight + SPACE, GRIDWIDTH * 2, GRIDHEIGHT * 4);
 
 		Pickup(new Item(0, 4));
 //		Pickup(new Item(0, 1));
+		Pickup(new Item(1, 4));
+		Pickup(new Item(2, 4));
+		Pickup(new Item(2, 4));
+		Pickup(new Item(1, 4));
+		Pickup(new Item(2, 4));
+		Pickup(new Item(2, 4));
+		Pickup(new Item(1, 4));
+		Pickup(new Item(2, 4));
+		Pickup(new Item(2, 4));
 		Pickup(new Item(1, 4));
 		Pickup(new Item(2, 4));
 		Pickup(new Item(2, 4));
@@ -96,6 +107,8 @@ public class ItemCollector : MonoBehaviour {
 			if (Input.GetKeyDown(KeyCode.E)) {
 				_game.ActiveMenu = _game.ActiveMenu == Menu.Inventory ? Menu.Game : Menu.Inventory;
 				SetInventoryOpen(_game.ActiveMenu == Menu.Inventory);
+
+				craftingMode = CRAFT_COMBINE;
 			}
 		}
 	}
@@ -123,7 +136,7 @@ public class ItemCollector : MonoBehaviour {
 			for (int i = 0; i < WIDTH * HEIGHT; i++) {
 				if (inventory[i] == null)
 					continue;
-				if (GUI.Button(drawRects[i], inventory[i].Name)) {
+				if (GUI.Button(drawRects[i], new GUIContent(inventory[i].Name, inventory[i].Tooltip))) {
 					if (craftingMode == CRAFT_COMBINE) {
 						// Combine Mode
 						if (Pickup(toDestroy, inventory[i])) {
@@ -142,6 +155,7 @@ public class ItemCollector : MonoBehaviour {
 					}
 				}
 			}
+			GUI.Label(tooltipRect, GUI.tooltip);
 
 			// Draw ToClone
 			if (craftingMode == CRAFT_CLONE) {
