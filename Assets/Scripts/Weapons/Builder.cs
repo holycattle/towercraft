@@ -26,10 +26,10 @@ public class Builder : GameTool {
 	private LineRenderer laserSight;
 	
 	void Update() {
-		if(Input.GetKeyDown(KeyCode.Escape)) {
+		if(Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1)) {
 			_game.ActiveMenu = Menu.Game;
 			Screen.lockCursor = false;
-			Time.timeScale = 1;
+			Time.timeScale = 0.0f;
 		}
 	}
 	
@@ -54,6 +54,11 @@ public class Builder : GameTool {
 	protected override void OnGUI() {
 		base.OnGUI();
 		if (_game.ActiveMenu == Menu.Builder) {
+			if(_displayArray.Length == 0) {
+				
+				return;
+			}
+			
 			for (int i = 0; i < _displayArray.Length; i++) {
 				if (GUI.Button(buttonRects[i], _displayArray[i].componentName)) {
 //					Debug.Log("Display Array: " + _displayArray[i].componentName + " > " + _displayArray[i].attributes.Count);
