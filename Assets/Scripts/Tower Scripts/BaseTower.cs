@@ -6,9 +6,8 @@ using System.Collections.Generic;
 public class BaseTower : MonoBehaviour {
 	// Tower Part Constants
 	public const int TOWER_BASE = 0;
-	public const int TOWER_STEM = 1;
-	public const int TOWER_TURRET = 2;
-	public const int TOWER_COMPLETE = 3;	// Also acts as the max # of components per tower
+	public const int TOWER_TURRET = 1;
+	public const int TOWER_COMPLETE = 2;	// Also acts as the max # of components per tower
 
 	// Tower Stat Constants (replacing the Enum)
 	public const int STAT_DAMAGE = 0;
@@ -32,9 +31,6 @@ public class BaseTower : MonoBehaviour {
 	private GameObject _target;
 	private Transform _missileSource;
 
-	// TEST VARIABLE
-	public bool PRINTOUTSTUFF = false;
-
 	void Awake() {
 		_towerComponents = new TowerComponent[TOWER_COMPLETE];
 
@@ -50,13 +46,6 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	void Update() {
-		// TEST STUFF
-		if (PRINTOUTSTUFF) {
-			for (int i = 0; i < Enum.GetValues(typeof(Stat)).Length; i++) {
-				Debug.Log(((Stat)i).ToString() + ": " + stats[i].AdjustedBaseValue);
-			}
-		}
-
 		// Make the Cannon face the Enemy
 		if (_target != null) {
 			float distance = Vector2.Distance(new Vector2(_target.transform.position.x, _target.transform.position.z), new Vector2(transform.position.x, transform.position.z));
@@ -218,8 +207,6 @@ public class BaseTower : MonoBehaviour {
 	public int GetNextComponent() {
 		if (_towerComponents[TOWER_BASE] == null) {
 			return TOWER_BASE;
-		} else if (_towerComponents[TOWER_STEM] == null) {
-			return TOWER_STEM;
 		} else if (_towerComponents[TOWER_TURRET] == null) {
 			return TOWER_TURRET;
 		} else {
@@ -228,20 +215,13 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	private Vector3 GetNextComponentPosition(int type) {
-		Vector3 offset = Vector3.zero;
-		switch (type) {
-			case TOWER_COMPLETE:
-				break;
-			case TOWER_TURRET:
-				offset += _towerComponents[TOWER_STEM].baseNextComponentPosition;
-				goto case TOWER_STEM;	// Using fallthrough, C# style.
-			case TOWER_STEM:
-				offset += _towerComponents[TOWER_BASE].baseNextComponentPosition;
-				break;
-			case TOWER_BASE:
-				break;
+		if (_towerComponents[TOWER_BASE] == null) {
+			return Vector3.zero;
+		} else if (_towerComponents[TOWER_TURRET] == null) {
+			return _towerComponents[TOWER_BASE].baseNextComponentPosition;
+		} else {
+			return Vector3.zero;
 		}
-		return offset;
 	}
 
 	private Vector3 GetNextComponentPosition() {

@@ -64,19 +64,12 @@ public class ItemCollector : MonoBehaviour {
 		tooltipRect = new Rect(sx, sy + totalHeight + SPACE, GRIDWIDTH * 2, GRIDHEIGHT * 4);
 
 		Pickup(new Item(0, 4));
-//		Pickup(new Item(0, 1));
+		Pickup(new Item(0, 4));
+		Pickup(new Item(0, 4));
 		Pickup(new Item(1, 4));
-		Pickup(new Item(2, 4));
-		Pickup(new Item(2, 4));
 		Pickup(new Item(1, 4));
-		Pickup(new Item(2, 4));
-		Pickup(new Item(2, 4));
 		Pickup(new Item(1, 4));
-		Pickup(new Item(2, 4));
-		Pickup(new Item(2, 4));
 		Pickup(new Item(1, 4));
-		Pickup(new Item(2, 4));
-		Pickup(new Item(2, 4));
 
 		toDestroy = new Item[NUM_CRAFTABLES];
 
@@ -177,8 +170,8 @@ public class ItemCollector : MonoBehaviour {
 
 			// Clone Button
 			if (craftingMode == CRAFT_CLONE) {
-				if (GUI.Button(cloneButtonRect, toClone == null ? "" : toClone.GetTowerComponent().cost + "<< == >>" + SumDestroyCost())) {
-					if (toClone.GetTowerComponent().cost <= SumDestroyCost()) {
+				if (GUI.Button(cloneButtonRect, toClone == null ? "" : toClone.GetTowerComponent().level + "<< == >>" + SumDestroyCost())) {
+					if (toClone.GetTowerComponent().level <= SumDestroyCost()) {
 						Pickup(new Item(ComponentGenerator.Get().TowerClone(toClone.GetTowerComponent())));
 						toDestroy = new Item[NUM_CRAFTABLES];
 					}
@@ -198,7 +191,7 @@ public class ItemCollector : MonoBehaviour {
 		int cost = 0;
 		for (int i= 0; i < toDestroy.Length; i++) {
 			if (toDestroy[i] != null) {
-				cost += toDestroy[i].GetTowerComponent().cost;
+				cost += toDestroy[i].GetTowerComponent().level;
 			}
 		}
 		return cost;

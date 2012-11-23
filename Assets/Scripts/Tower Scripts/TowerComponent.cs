@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class TowerComponent : MonoBehaviour {
 	public string componentName;
 	public int componentType;
-	public int cost;
+	public int level;
 	public List<ModifyingAttribute> attributes;
 	public Vector3 baseNextComponentPosition;	// Position of next component relative to this component
 

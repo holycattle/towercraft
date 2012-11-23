@@ -130,8 +130,6 @@ public class Builder : GameTool {
 			_buildMode = true;
 			if (currentTower == null) {
 				_activeMenu = BaseTower.TOWER_BASE;
-			} else if (currentTower.GetNextComponent() == BaseTower.TOWER_STEM) {
-				_activeMenu = BaseTower.TOWER_STEM;
 			} else if (currentTower.GetNextComponent() == BaseTower.TOWER_TURRET) {
 				_activeMenu = BaseTower.TOWER_TURRET;
 			} else {
@@ -144,7 +142,6 @@ public class Builder : GameTool {
 //				targettedGrid = null;
 //				return;
 			}
-
 //			targettedGrid.SetSelected(true);
 
 			_displayArray = _inventory.GetGameObjects(_activeMenu);

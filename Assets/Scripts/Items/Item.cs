@@ -6,8 +6,7 @@ public class Item {
 	private TowerComponent _tc;
 
 	public Item () {
-		System.Random r = new System.Random();
-		_tc = ComponentGenerator.Get().GenerateComponent(r.Next(BaseTower.TOWER_COMPLETE), 0);
+		_tc = ComponentGenerator.Get().GenerateComponent(Random.Range(0, BaseTower.TOWER_COMPLETE), 0);
 //		Debug.Log("Item Gen: " + _tc.componentName + "> ");
 //		Debug.Log("Item Gen: " + _tc.componentName + "> " + _tc.attributes.Count);
 //		Debug.Log("Generated: " + _tc.componentName);
@@ -33,6 +32,8 @@ public class Item {
 	}
 
 	public TowerComponent GetTowerComponent() {
+		if (_tc == null) 
+			Debug.Log("COMPONENT NULL");
 		return _tc;
 	}
 }
