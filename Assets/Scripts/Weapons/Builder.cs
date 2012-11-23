@@ -24,7 +24,15 @@ public class Builder : GameTool {
 
 	// Laser Sight
 	private LineRenderer laserSight;
-
+	
+	void Update() {
+		if(Input.GetKeyDown(KeyCode.Escape)) {
+			_game.ActiveMenu = Menu.Game;
+			Screen.lockCursor = false;
+			Time.timeScale = 1;
+		}
+	}
+	
 	protected override void Awake() {
 		base.Awake();
 
