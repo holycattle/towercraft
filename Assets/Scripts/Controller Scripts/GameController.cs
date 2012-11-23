@@ -8,8 +8,9 @@ public class GameController : MonoBehaviour {
 	public const int MENU_WEAPON = 2;
 	public const int MAX_LIVES = 10;
 
-	// Game Active
-	private Menu _activeMenu;
+	// Game
+	private Menu _activeMenu = Menu.Game;
+	private bool _captureCursor = true;
 
 	// Game Variables
 	private int _livesLeft;
@@ -25,18 +26,27 @@ public class GameController : MonoBehaviour {
 		/*
 		 *	Screen Locking
 		 */
-		if (Screen.lockCursor) {
-			if (ActiveMenu == Menu.Game) {
-				Time.timeScale = 1;			// (Locked) AND (Active) = Playable
+		if (_captureCursor) {
+			if (Screen.lockCursor) {
+				if (ActiveMenu == Menu.Game) {
+					Time.timeScale = 1;			// (Locked) AND (Active) = Playable
+				} else {
+					Screen.lockCursor = false;	// (Locked) AND (Not Active) = Not Playable (unlock cursor)
+					Time.timeScale = 0.0f;
+				}
 			} else {
-				Screen.lockCursor = false;	// (Locked) AND (Not Active) = Not Playable (unlock cursor)
-				Time.timeScale = 0.0f;
+				// (Not Locked) AND (Active) = To Lock Game.
+				// (Not Locked) AND (Not Active) = Unlock Game.
+				Screen.lockCursor = ActiveMenu == Menu.Game;
+				Time.timeScale = Screen.lockCursor ? 1.0f : 0.0f;
 			}
 		} else {
-			// (Not Locked) AND (Active) = To Lock Game.
-			// (Not Locked) AND (Not Active) = Unlock Game.
-			Screen.lockCursor = ActiveMenu == Menu.Game;
-			Time.timeScale = Screen.lockCursor ? 1.0f : 0.0f;
+			if (Screen.lockCursor) {
+				// Unlock the cursor
+				Screen.lockCursor = false;
+			} else {
+				Time.timeScale = ActiveMenu == Menu.Game ? 1.0f : 0.0f;
+			}
 		}
 
 		/*
@@ -48,9 +58,18 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	public bool CaptureCursor {
+		get { return _captureCursor;}
+		set { _captureCursor = value; }
+	}
+
 	public Menu ActiveMenu {
 		get { return _activeMenu;}
 		set { _activeMenu = value;}
+	}
+
+	public bool Active {
+		get { return _activeMenu == Menu.Game; }
 	}
 
 	public int Lives {
