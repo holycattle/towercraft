@@ -10,10 +10,13 @@ public class EndPortal : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		// Destroys the entity that enters it.
-		Destroy(other.transform.root.gameObject);
-
-		// Subtract from Life
-		_gameController.SubLife(1);
+		GameObject go = other.transform.root.gameObject;
+		
+		if(!go.name.Equals("Player", System.StringComparison.OrdinalIgnoreCase)) {
+			// Destroys the entity that enters it.
+			Destroy(go);
+			// Subtract from Life
+			_gameController.SubLife(1);
+		}
 	}
 }
