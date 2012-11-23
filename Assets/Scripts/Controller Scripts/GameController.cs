@@ -16,13 +16,16 @@ public class GameController : MonoBehaviour {
 	private int _livesLeft;
 	private int _money;
 			
-	//MessageController
-	MessageController Messenger;
+	// Message Controller
+	public MessageController Messenger;
 
 	void Awake() {
 		// Init Player Variables
 		_livesLeft = MAX_LIVES;
 		_money = 100;
+
+		// Initialize Messenger
+		Messenger = GetComponent<MessageController>();
 	}
 
 	void Update() {
