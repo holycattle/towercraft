@@ -10,22 +10,33 @@ public class ItemCollector : MonoBehaviour {
 	private const int GRIDHEIGHT = 32;
 	private const int SPACE = 4;
 
+	// Inventory Constants
+	private const int INV_TOWER = 0;
+	private const int INV_CRAFT = 1;
+	private const int INV_WEAPON = 2;
+	private const int NUM_TYPES = 3;
+	private static string[] INVENTORYTYPES = {"Tower Items", "Crafting Items", "Weapons"};
+
 	// Crafting Constants
-	private const int CRAFT_COMBINE = 0;
-	private const int CRAFT_CLONE = 1;
-	private const float COST_COMBINE = 0.9f;
-	private const float COST_CLONE = 1.1f;
-	private const int NUM_CRAFTABLES = 4;
+//	private const int CRAFT_COMBINE = 0;
+//	private const int CRAFT_CLONE = 1;
+//	private const float COST_COMBINE = 0.9f;
+//	private const float COST_CLONE = 1.1f;
+	private const int NUM_CRAFTABLES = 3;
 
 	// Game
 	protected GameController _game;
 
-	// Inventory
-	private Item[] inventory;
+	// Inventories
+	private int activeInv;
+	private Item[] activeInventory;
+	private TowerItem[] towerInventory;
+	private CraftableItem[] craftInventory;
+	private WeaponItem[] weaponInventory;
 
 	// GUI Elements
+	private Rect changeInventoryRect;
 	private Rect[] drawRects;
-	private Rect toCloneRect;
 	private Rect[] toDestroyRects;
 	private Rect cloneButtonRect;
 	private Rect modeChangeButtonRect;
@@ -33,14 +44,22 @@ public class ItemCollector : MonoBehaviour {
 
 	// Cloning / Combining
 	private int craftingMode;
-	private Item toClone;
-	private Item[] toDestroy;
+	private TowerItem toClone;
+	private Item[] craftingRecipe;
 
 	void Start() {
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 
-		inventory = new Item[WIDTH * HEIGHT];
+		// Init the inventories
+		towerInventory = new TowerItem[WIDTH * HEIGHT];
+		craftInventory = new CraftableItem[WIDTH * HEIGHT];
+		weaponInventory = new WeaponItem[WIDTH * HEIGHT];
+		activeInv = INV_TOWER;
+		activeInventory = towerInventory;
 
+		/*
+		 *	GUI Initialization
+		 */
 		// Init Rects for Inventory Items
 		drawRects = new Rect[WIDTH * HEIGHT];
 		int totalWidth = WIDTH * GRIDWIDTH + (WIDTH - 1) * SPACE;
@@ -53,8 +72,9 @@ public class ItemCollector : MonoBehaviour {
 			}
 		}
 
-		// Cloning Rectangles
-		toCloneRect = new Rect(sx + totalWidth + GRIDWIDTH, sy, GRIDWIDTH, GRIDHEIGHT);
+		changeInventoryRect = new Rect(sx, sy - (GRIDHEIGHT * 2 + SPACE), GRIDWIDTH, GRIDHEIGHT * 2);
+
+		// Crafting Rectangles
 		toDestroyRects = new Rect[NUM_CRAFTABLES];
 		for (int i = 0; i < NUM_CRAFTABLES; i++) {
 			toDestroyRects[i] = new Rect(sx + totalWidth + GRIDWIDTH, sy + (GRIDHEIGHT + SPACE) * (2 + i), GRIDWIDTH, GRIDHEIGHT);
@@ -62,22 +82,30 @@ public class ItemCollector : MonoBehaviour {
 		cloneButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy + (GRIDHEIGHT + SPACE) * HEIGHT, GRIDWIDTH, GRIDHEIGHT);
 		modeChangeButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy - (GRIDHEIGHT + SPACE), GRIDWIDTH, GRIDHEIGHT);
 		tooltipRect = new Rect(sx, sy + totalHeight + SPACE, GRIDWIDTH * 2, GRIDHEIGHT * 4);
-		
-		//deactivate Messenger engine for now
-		MessageController m = GetComponent<MessageController>();
-		m.enabled = false;
-		
-		Pickup(new Item(0, 4));
-		Pickup(new Item(0, 4));
-		Pickup(new Item(0, 4));
-		Pickup(new Item(1, 4));
-		Pickup(new Item(1, 4));
-		Pickup(new Item(1, 4));
-		Pickup(new Item(1, 4));
 
-		toDestroy = new Item[NUM_CRAFTABLES];
+		//deactivate Messenger engine for now
+		
+		_game.Messenger.enabled = false;
+
+		Pickup(new TowerItem(0, 4));
+		Pickup(new TowerItem(0, 4));
+		Pickup(new TowerItem(0, 4));
+		Pickup(new TowerItem(1, 4));
+		Pickup(new TowerItem(1, 4));
+		Pickup(new TowerItem(1, 4));
+		Pickup(new TowerItem(1, 4));
+		
+//		Pickup(new CraftableItem(0, 1));
+//		Pickup(new CraftableItem(1, 1));
+//		Pickup(new CraftableItem(2, 1));
+//		Pickup(new CraftableItem(0, 1));
+//		Pickup(new CraftableItem(1, 1));
+//		Pickup(new CraftableItem(2, 1));
+
+		craftingRecipe = new Item[NUM_CRAFTABLES];
 
 		UpdateInventory();
+		_game.Messenger.enabled = true; //enable messenger again
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -105,7 +133,7 @@ public class ItemCollector : MonoBehaviour {
 				_game.ActiveMenu = _game.ActiveMenu == Menu.Inventory ? Menu.Game : Menu.Inventory;
 				SetInventoryOpen(_game.ActiveMenu == Menu.Inventory);
 
-				craftingMode = CRAFT_COMBINE;
+				activeInv = INV_TOWER;
 			}
 		}
 	}
@@ -119,111 +147,104 @@ public class ItemCollector : MonoBehaviour {
 //			int height = HEIGHT * GRIDHEIGHT + (HEIGHT - 1) * SPACE;
 
 			// Draw Mode Swap Button
-			if (GUI.Button(modeChangeButtonRect, craftingMode == CRAFT_CLONE ? "Clone Mode" : "Combine Mode")) {
-				craftingMode = (craftingMode + 1) % 2;
-				if (craftingMode == CRAFT_CLONE) {
-
-				} else if (craftingMode == CRAFT_COMBINE) {
-					Pickup(toClone);
-					toClone = null;
-				}
-			}
+//			if (GUI.Button(modeChangeButtonRect, craftingMode == CRAFT_CLONE ? "Clone Mode" : "Combine Mode")) {
+//				craftingMode = (craftingMode + 1) % 2;
+//				if (craftingMode == CRAFT_CLONE) {
+//
+//				} else if (craftingMode == CRAFT_COMBINE) {
+//					Pickup(toClone);
+//					toClone = null;
+//				}
+//			}
 
 			// Draw Inventory
 			for (int i = 0; i < WIDTH * HEIGHT; i++) {
-				if (inventory[i] == null)
+				if (activeInventory[i] == null) {
+					GUI.Button(drawRects[i], "");
 					continue;
-				if (GUI.Button(drawRects[i], new GUIContent(inventory[i].Name, inventory[i].Tooltip))) {
-					if (craftingMode == CRAFT_COMBINE) {
-						// Combine Mode
-						if (Pickup(toDestroy, inventory[i])) {
-							Remove(inventory[i]);
-						}
-					} else if (craftingMode == CRAFT_CLONE) {
-						// Clone Mode
-						if (toClone == null) {
-							toClone = inventory[i];
-							Remove(inventory[i]);
-						} else {
-							if (Pickup(toDestroy, inventory[i])) {
-								Remove(inventory[i]);
-							}
-						}
+				}
+
+				if (GUI.Button(drawRects[i], new GUIContent(activeInventory[i].GetName(), activeInventory[i].GetTooltip()))) {
+					if (Pickup(craftingRecipe, activeInventory[i])) {
+						Remove(activeInventory[i]);
 					}
 				}
 			}
 			GUI.Label(tooltipRect, GUI.tooltip);
 
 			// Draw ToClone
-			if (craftingMode == CRAFT_CLONE) {
-				if (GUI.Button(toCloneRect, toClone == null ? "" : toClone.Name)) {
-					Pickup(toClone);
-					toClone = null;
-				}
-			}
+//			if (craftingMode == CRAFT_CLONE) {
+//				if (GUI.Button(toCloneRect, toClone == null ? "" : toClone.GetName())) {
+//					Pickup(toClone);
+//					toClone = null;
+//				}
+//			}
 
 			// Draw ToDestroy
-			for (int i = 0; i < toDestroy.Length; i++) {
-				if (toDestroy[i] == null)
+			for (int i = 0; i < craftingRecipe.Length; i++) {
+				if (craftingRecipe[i] == null)
 					continue;
-				if (GUI.Button(toDestroyRects[i], toDestroy[i].Name)) {
-					Pickup(toDestroy[i]);
-					toDestroy[i] = null;
+				if (GUI.Button(toDestroyRects[i], craftingRecipe[i].GetName())) {
+					Pickup(craftingRecipe[i]);
+					craftingRecipe[i] = null;
 				}
 			}
 
 			// Clone Button
-			if (craftingMode == CRAFT_CLONE) {
-				if (GUI.Button(cloneButtonRect, toClone == null ? "" : toClone.GetTowerComponent().level + "<< == >>" + SumDestroyCost())) {
-					if (toClone.GetTowerComponent().level <= SumDestroyCost()) {
-						Pickup(new Item(ComponentGenerator.Get().TowerClone(toClone.GetTowerComponent())));
-						toDestroy = new Item[NUM_CRAFTABLES];
-					}
-				}
-			} else if (craftingMode == CRAFT_COMBINE) {
-				if (GUI.Button(cloneButtonRect, "COMBINE")) {
-					if (CountInventory(toDestroy) >= 2) {
-						Pickup(new Item(ComponentGenerator.Get().GenerateComponent(Random.Range(0, BaseTower.TOWER_COMPLETE), SumDestroyCost())));
-						toDestroy = new Item[NUM_CRAFTABLES];
-					}
-				}
+//			if (craftingMode == CRAFT_CLONE) {
+//				if (GUI.Button(cloneButtonRect, toClone == null ? "" : toClone.GetTowerComponent().level + "<< == >>" + SumDestroyCost())) {
+//					if (toClone.GetTowerComponent().level <= SumDestroyCost()) {
+//						Pickup(new Item(ComponentGenerator.Get().TowerClone(toClone.GetTowerComponent())));
+//						craftingRecipe = new Item[NUM_CRAFTABLES];
+//					}
+//				}
+//			} else if (craftingMode == CRAFT_COMBINE) {
+			if (GUI.Button(changeInventoryRect, INVENTORYTYPES[activeInv])) {
+				activeInv = (activeInv + 1) % NUM_TYPES;
+				SetActiveInventory(activeInv);
 			}
+//			}
 		}
 	}
 
-	private int SumDestroyCost() {
-		int cost = 0;
-		for (int i= 0; i < toDestroy.Length; i++) {
-			if (toDestroy[i] != null) {
-				cost += toDestroy[i].GetTowerComponent().level;
-			}
+	private void SetActiveInventory(int i) {
+		activeInv = i;
+		switch (i) {
+			case INV_TOWER:
+				activeInventory = towerInventory;
+				break;
+			case INV_CRAFT:
+				activeInventory = craftInventory;
+				break;
+			case INV_WEAPON :
+				activeInventory = weaponInventory;
+				break;
 		}
-		return cost;
 	}
 
 	private void SetInventoryOpen(bool setted) {
 		if (!setted) {
 			Pickup(toClone);
-			foreach (Item i in toDestroy) {
+			foreach (Item i in craftingRecipe) {
 				Pickup(i);
 			}
 			toClone = null;
-			toDestroy = new Item[NUM_CRAFTABLES];
+			craftingRecipe = new Item[NUM_CRAFTABLES];
 			UpdateInventory();
 		}
 	}
 
 	private void UpdateInventory() {
-		SortInventory();
+		Sort(activeInventory);
 	}
 
 	public TowerComponent[] GetGameObjects(int type) {
 		List<TowerComponent> objects = new List<TowerComponent>();
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] != null) {
+		for (int i = 0; i < towerInventory.Length; i++) {
+			if (towerInventory[i] != null) {
 //				Debug.Log("Checking: " + inventory[i].GetTowerComponent().componentName + " > " + inventory[i].GetTowerComponent().componentType);
-				if (inventory[i].GetTowerComponent().componentType == type) {
-					objects.Add(inventory[i].GetTowerComponent());
+				if (((TowerItem)towerInventory[i]).GetTowerComponent().componentType == type) {
+					objects.Add(((TowerItem)towerInventory[i]).GetTowerComponent());
 				}
 			}
 		}
@@ -232,7 +253,7 @@ public class ItemCollector : MonoBehaviour {
 	}
 
 	public bool Pickup(Item it) {
-		bool p = Pickup(inventory, it);
+		bool p = Pickup(towerInventory, it);
 		UpdateInventory();
 		return p;
 	}
@@ -244,7 +265,7 @@ public class ItemCollector : MonoBehaviour {
 		for (int i = 0; i < list.Length; i++) {
 			if (list[i] == null) {
 				list[i] = it;
-				_game.Messenger.ItemMessage(it.GetTowerComponent().componentName);
+				_game.Messenger.ItemMessage(it.GetName());
 				
 				return true;
 			}
@@ -253,15 +274,15 @@ public class ItemCollector : MonoBehaviour {
 	}
 
 	public void Remove(Item it) {
-		this.Remove(inventory, it);
+		this.Remove(towerInventory, it);
 		UpdateInventory();
 	}
 
 	public void Remove(TowerComponent t) {
-		for (int i = 0; i < inventory.Length; i++) {
-			if (inventory[i] != null) {
-				if (inventory[i].GetTowerComponent() == t) {
-					inventory[i] = null;
+		for (int i = 0; i < towerInventory.Length; i++) {
+			if (towerInventory[i] != null) {
+				if (((TowerItem)towerInventory[i]).GetTowerComponent() == t) {
+					towerInventory[i] = null;
 					SortInventory();
 					return;
 				}
@@ -274,14 +295,14 @@ public class ItemCollector : MonoBehaviour {
 			return;
 		for (int i = 0; i < list.Length; i++) {
 			if (it == list[i]) {
-				inventory[i] = null;
+				towerInventory[i] = null;
 				return;
 			}
 		}
 	}
 
 	public bool CanPickup() {
-		return CanPickup(inventory);
+		return CanPickup(towerInventory);
 	}
 
 	private bool CanPickup(Item[] list) {
@@ -294,7 +315,7 @@ public class ItemCollector : MonoBehaviour {
 	}
 
 	public int CountInventory() {
-		return CountInventory(inventory);
+		return CountInventory(towerInventory);
 	}
 
 	private int CountInventory(Item[] list) {
@@ -307,21 +328,41 @@ public class ItemCollector : MonoBehaviour {
 		return counter;
 	}
 
+	public void Sort(Item[] list) {
+		// Note: Using Bubble Sort (xD)
+		for (int i = 0; i < list.Length; i++) {
+			for (int j  = 0; j < list.Length - 1; j++) {
+				if (list[j] == null) {
+					// j is greater = Swap
+					list[j] = list[j + 1];
+					list[j + 1] = null;
+				} else if (list[j + 1] == null) {
+					// Do Nothing
+				} else if (list[j + 1].isLessThan(list[j])) {
+					// j is greater = Swap
+					Item it = list[j];
+					list[j] = list[j + 1];
+					list[j + 1] = it;
+				}
+			}
+		}
+	}
+
 	public void SortInventory() {
 		// Note: Using Bubble Sort (xD)
-		for (int i = 0; i < inventory.Length; i++) {
-			for (int j  = 0; j < inventory.Length - 1; j++) {
-				if (inventory[j] == null) {
+		for (int i = 0; i < towerInventory.Length; i++) {
+			for (int j  = 0; j < towerInventory.Length - 1; j++) {
+				if (towerInventory[j] == null) {
 					// j is greater = Swap
-					inventory[j] = inventory[j + 1];
-					inventory[j + 1] = null;
-				} else if (inventory[j + 1] == null) {
+					towerInventory[j] = towerInventory[j + 1];
+					towerInventory[j + 1] = null;
+				} else if (towerInventory[j + 1] == null) {
 					// Do Nothing
-				} else if (inventory[j].GetTowerComponent().componentType > inventory[j + 1].GetTowerComponent().componentType) {
+				} else if (((TowerItem)towerInventory[j]).GetTowerComponent().componentType > ((TowerItem)towerInventory[j + 1]).GetTowerComponent().componentType) {
 					// j is greater = Swap
-					Item it = inventory[j];
-					inventory[j] = inventory[j + 1];
-					inventory[j + 1] = it;
+//					Item it = towerInventory[j];
+//					towerInventory[j] = towerInventory[j + 1];
+//					towerInventory[j + 1] = it;
 				}
 			}
 		}

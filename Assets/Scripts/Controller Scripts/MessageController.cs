@@ -22,7 +22,7 @@ public class MessageController : MonoBehaviour {
 	}
 	
 	void Update() {
-		if(ItemAnnouncement)
+		if (ItemAnnouncement)
 			delta += 1.0f * Time.deltaTime;
 	}
 	
@@ -31,16 +31,20 @@ public class MessageController : MonoBehaviour {
 		GUI.skin = messageSkin;
 		GUI.skin.label.alignment = TextAnchor.UpperCenter;
 
-		if(ItemAnnouncement) {
+		if (ItemAnnouncement) {
 			AnnounceItem();
 		}
 	}
 	
 	public void ItemMessage(string itemName) {
-		if(delta == 0) {
-			message += PICKUP_MESSAGE + itemName;
-		} else {
-			message += "\n" + PICKUP_MESSAGE + itemName;
+		if(this.enabled == true) {
+			if (delta == 0) {
+				message += PICKUP_MESSAGE + itemName;
+				delta = 0;
+			} else {
+				message += "\n" + PICKUP_MESSAGE + itemName;
+				delta = 0;
+			}
 		}
 		
 		ItemAnnouncement = true;
@@ -49,14 +53,14 @@ public class MessageController : MonoBehaviour {
 	private void AnnounceItem() {
 		int w = 400;
 		int h = 300;
-		Rect rect = new Rect((Screen.width - w)/2, (Screen.height-h)/2, w, h);
+		Rect rect = new Rect((Screen.width - w) / 2, (Screen.height - h) / 2, w, h);
 		GUI.Label(rect, message);
 		
 		//remove text after TEXT_DURATION seconds
-		if(delta >= TEXT_DURATION) {
+		if (delta >= TEXT_DURATION) {
 			ItemAnnouncement = false;
 			message = "";
-			delta = 0;	
+			delta = 0;
 		}
 	}
 }

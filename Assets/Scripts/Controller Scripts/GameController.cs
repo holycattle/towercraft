@@ -16,19 +16,21 @@ public class GameController : MonoBehaviour {
 	private int _livesLeft;
 	private int _money;
 			
-	//MessageController
+	// Message Controller
 	public MessageController Messenger;
 	
 	void Start() {
-		//initialize Messenger
 		Messenger = GetComponent<MessageController>();
-		//Messenger.ItemMessage("Hello world!");
+		Messenger.enabled = true;
 	}
-	
+
 	void Awake() {
 		// Init Player Variables
 		_livesLeft = MAX_LIVES;
 		_money = 100;
+
+		// Initialize Messenger
+		Messenger = GetComponent<MessageController>();
 	}
 
 	void Update() {

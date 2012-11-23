@@ -49,7 +49,6 @@ public class ComponentGenerator {
 			stems[i] = ((GameObject)loadedStems[i]).GetComponent<TowerStem>();
 		}
 
-
 		Debug.Log("ComponentGenerator: " + _towerParts[0].Length + "/" + _towerParts[1].Length);
 	}
 
@@ -58,6 +57,8 @@ public class ComponentGenerator {
 			_cgen = new ComponentGenerator();
 		return _cgen;
 	}
+
+	
 
 	public TowerComponent GenerateComponent(int type, int cost) {
 		if (type < 0 || type >= BaseTower.TOWER_COMPLETE)
@@ -98,7 +99,7 @@ public class ComponentGenerator {
 				gSpinner.transform.parent = gSpin.transform;
 			}
 
-			TowerComponent t = g.GetComponent<TowerComponent>();
+			TowerTurret t = g.GetComponent<TowerTurret>();
 			t.componentName = chMissile + "|" + chBarrel + "|" + chSpinner;
 			t.componentType = BaseTower.TOWER_TURRET;
 			t.level = cost;
@@ -136,11 +137,11 @@ public class ComponentGenerator {
 			t.componentType = BaseTower.TOWER_BASE;
 			t.level = cost;
 
-			int amt = Random.Range(0, cost);
-			t.attributes.Add(new ModifyingAttribute(Stat.Range, 1 + amt));
-			if (cost - amt > 0) {
-				t.attributes.Add(new ModifyingAttribute(Stat.Damage, cost - amt));
-			}
+//			int amt = Random.Range(0, cost);
+//			t.attributes.Add(new ModifyingAttribute(Stat.Range, 1 + amt));
+//			if (cost - amt > 0) {
+//				t.attributes.Add(new ModifyingAttribute(Stat.Damage, cost - amt));
+//			}
 
 			g.SetActiveRecursively(false);
 //			Debug.Log("Base After Count: " + t.attributes.Count);
@@ -154,9 +155,13 @@ public class ComponentGenerator {
 		// Instantiate the Game Object
 		TowerComponent towerInstance = GameObject.Instantiate(t, buildSpot, Quaternion.identity) as TowerComponent;
 
-		// Copy the PREFAB's ModifyingAttributes to the INSTANCE
-		foreach (ModifyingAttribute m in t.attributes) {
-			towerInstance.attributes.Add(m);
+		if (t.componentType == BaseTower.TOWER_BASE) {
+			// Do Nothing.
+		} else if (t.componentType == BaseTower.TOWER_TURRET) {
+			// Copy the PREFAB's ModifyingAttributes to the INSTANCE
+			foreach (ModifyingAttribute m in ((TowerTurret) t).attributes) {
+				((TowerTurret)towerInstance).attributes.Add(m);
+			}
 		}
 
 		towerInstance.gameObject.SetActiveRecursively(false);
