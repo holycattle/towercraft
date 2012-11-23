@@ -62,7 +62,11 @@ public class ItemCollector : MonoBehaviour {
 		cloneButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy + (GRIDHEIGHT + SPACE) * HEIGHT, GRIDWIDTH, GRIDHEIGHT);
 		modeChangeButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy - (GRIDHEIGHT + SPACE), GRIDWIDTH, GRIDHEIGHT);
 		tooltipRect = new Rect(sx, sy + totalHeight + SPACE, GRIDWIDTH * 2, GRIDHEIGHT * 4);
-
+		
+		//deactivate Messenger engine for now
+		MessageController m = GetComponent<MessageController>();
+		m.enabled = false;
+		
 		Pickup(new Item(0, 4));
 		Pickup(new Item(0, 4));
 		Pickup(new Item(0, 4));
@@ -234,11 +238,14 @@ public class ItemCollector : MonoBehaviour {
 	}
 
 	private bool Pickup(Item[] list, Item it) {
-		if (it == null)
+		if (it == null) {
 			return true;
+		}
 		for (int i = 0; i < list.Length; i++) {
 			if (list[i] == null) {
 				list[i] = it;
+				_game.Messenger.ItemMessage(it.GetTowerComponent().componentName);
+				
 				return true;
 			}
 		}
