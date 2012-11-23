@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class WeaponController : MonoBehaviour {
+	// Constants
+	public const int TOOL_BUILDER = 0;
+	public const int TOOL_WEAPON = 1;
 	private Vector2 SCREEN_CENTER = new Vector2(Screen.width / 2, Screen.height / 2);
 	private string OnMouseEnter = "InputMouseEnter";
 	private string OnMouseExit = "InputMouseExit";
@@ -16,6 +19,7 @@ public class WeaponController : MonoBehaviour {
 	// Player Components
 	private GameObject[] weapons;
 	private int _activeTool;
+	private bool _weaponSwapLock;
 
 	// HUD Components
 	// -> TODO: Get the array version of this to work. "Unsupported int type vector" error
@@ -27,6 +31,7 @@ public class WeaponController : MonoBehaviour {
 	public Texture2D crosshair2;
 	public Texture2D crosshair3;
 	private Rect[] crosshairRect;
+	public bool drawCrosshair;
 
 	// Gun Movement (User Defined)
 	private float verticalImpulse = 0.06f;
@@ -69,8 +74,9 @@ public class WeaponController : MonoBehaviour {
 		for (int i = 0; i < crosshairRect.Length; i++) {
 			crosshairRect[i] = new Rect(Screen.width / 2 - crosshair0.width / 2, Screen.height / 2 - crosshair0.height / 2, crosshair0.width, crosshair0.height);
 		}
+		drawCrosshair = true;
 
-		iTween.Init(gameObject);
+//		iTween.Init(gameObject);
 //		iTween.ShakePosition(gameObject, iTween.Hash("amount", new Vector3(1, 1, 1), "time", 20));
 
 		// Idle Movement
@@ -85,7 +91,9 @@ public class WeaponController : MonoBehaviour {
 	}
 
 	void OnGUI() {
-		GUI.backgroundColor = Color.grey;
+		if (!drawCrosshair)
+			return;
+
 		GUI.Box(new Rect(0, 120, 128, 30), "Bullets: " + ActiveTool.bullets);
 
 		GUI.DrawTexture(crosshairRect[0], crosshair0);
@@ -97,17 +105,23 @@ public class WeaponController : MonoBehaviour {
 	void FixedUpdate() {
 		if (_game.ActiveMenu == Menu.Game) {
 			/*
-			 * -----Keyboard Presses-----
+			 *	Keyboard Presses
 			 */
-			// Changing of Active Weapon
-			if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKey(KeyCode.Alpha1)) {			// TODO: Why do you have to use both GetKey + GetKeyDown?
-				SetActiveWeapon(0);
-			} else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKey(KeyCode.Alpha2)) {
-				SetActiveWeapon(1);
+
+			if (!_weaponSwapLock) {
+				/*
+				 *	Changing of Active Weapon
+				 */
+				// TODO: Why do you have to use both GetKey + GetKeyDown?
+				if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKey(KeyCode.Alpha1)) {
+					SetActiveWeapon(0);
+				} else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKey(KeyCode.Alpha2)) {
+					SetActiveWeapon(1);
+				}
 			}
 
 			/*
-			 * ----Mouse Clicks-----
+			 *	Mouse CLicks
 			 */
 			// Firing of Gun
 			GameObject rayCastedObject = RaycastGameObject();
@@ -173,7 +187,13 @@ public class WeaponController : MonoBehaviour {
 
 	private GameObject RaycastGameObject() {
 		// Builds a ray from camera point of view to the mouse position
-		Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER);
+		Ray ray;
+
+		if (_game.CaptureCursor) {
+			ray = Camera.main.ScreenPointToRay(SCREEN_CENTER);
+		} else {
+			ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		}
 		RaycastHit hit;
 
 		// Casts the ray and get the first game object hit
@@ -217,6 +237,11 @@ public class WeaponController : MonoBehaviour {
 		_activeTool = i;
 		weapons[_activeTool].SetActiveRecursively(true);
 		ActiveTool.WhenEquipped();
+	}
+
+	public bool WeaponSwapLock {
+		get { return _weaponSwapLock;}
+		set { _weaponSwapLock = value;}
 	}
 
 	public float CurrentRecoil {
