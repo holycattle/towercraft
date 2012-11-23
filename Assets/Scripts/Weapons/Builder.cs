@@ -54,11 +54,6 @@ public class Builder : GameTool {
 	protected override void OnGUI() {
 		base.OnGUI();
 		if (_game.ActiveMenu == Menu.Builder) {
-			if(_displayArray.Length == 0) {
-				
-				return;
-			}
-			
 			for (int i = 0; i < _displayArray.Length; i++) {
 				if (GUI.Button(buttonRects[i], _displayArray[i].componentName)) {
 //					Debug.Log("Display Array: " + _displayArray[i].componentName + " > " + _displayArray[i].attributes.Count);
@@ -158,6 +153,14 @@ public class Builder : GameTool {
 //			targettedGrid.SetSelected(true);
 
 			_displayArray = _inventory.GetGameObjects(_activeMenu);
+			
+			if(_displayArray.Length == 0) {
+				_game.ActiveMenu = Menu.Game;
+				Screen.lockCursor = false;
+				Time.timeScale = 0.0f;
+				_game.Messenger.WarningMessage("No items in your inventory.");
+				return;	
+			}
 
 			// Generate Rectangles
 			Vector2 center = new Vector2(Screen.width / 2, Screen.height / 2);

@@ -32,13 +32,19 @@ public class MessageController : MonoBehaviour {
 		GUI.skin.label.alignment = TextAnchor.UpperCenter;
 
 		if (ItemAnnouncement) {
+			GUI.skin.label.normal.textColor = new Color(0f, 50f, 0f, 5f);
 			AnnounceItem();
+		} else {
+			//warning message with font color red
+			GUI.skin.label.normal.textColor = new Color(50f, 0f, 0f, 5f);
+			AnnounceWarning();
 		}
 	}
 	
 	public void ItemMessage(string itemName) {
 		if(this.enabled == true) {
 			if (delta == 0) {
+				message = "";
 				message += PICKUP_MESSAGE + itemName;
 				delta = 0;
 			} else {
@@ -50,7 +56,32 @@ public class MessageController : MonoBehaviour {
 		ItemAnnouncement = true;
 	}
 	
+	public void WarningMessage(string warning) {
+		ItemAnnouncement = false;
+		message = "";
+		if(this.enabled == true) {
+			if (delta == 0) {
+				message = warning;
+				delta = 0;
+			}
+		}
+	}
+	
 	private void AnnounceItem() {
+		int w = 400;
+		int h = 300;
+		Rect rect = new Rect((Screen.width - w) / 2, (Screen.height - h) / 2, w, h);
+		GUI.Label(rect, message);
+		
+		//remove text after TEXT_DURATION seconds
+		if (delta >= TEXT_DURATION) {
+			ItemAnnouncement = false;
+			message = "";
+			delta = 0;
+		}
+	}
+	
+	private void AnnounceWarning() {
 		int w = 400;
 		int h = 300;
 		Rect rect = new Rect((Screen.width - w) / 2, (Screen.height - h) / 2, w, h);
