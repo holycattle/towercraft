@@ -14,6 +14,15 @@ public class GameController : MonoBehaviour {
 	// Game Variables
 	private int _livesLeft;
 	private int _money;
+	
+	//MessageController
+	MessageController Messenger;
+	
+	void Start() {
+		//for testing the messaging system
+		//Messenger = GetComponent<MessageController>();
+		//Messenger.ItemMessage("Hello world!");
+	}
 
 	void Awake() {
 		// Init Player Variables

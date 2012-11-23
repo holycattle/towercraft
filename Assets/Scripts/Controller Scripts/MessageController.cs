@@ -4,10 +4,15 @@ using System.Collections;
 public class MessageController : MonoBehaviour {
 	private bool ItemAnnouncement = false;
 	private string message;
+	public GUISkin messageSkin;
+	
+	void Start() {
+		//fix this later
+		//messageSkin = (GUISkin)Resources.Load("Fonts/AnonymousSkin");
+	}
 	
 	void OnGUI() {
-		GUISkin AnonymousSkin = (GUISkin)Resources.Load("AnonymousSkin");
-		GUI.skin = AnonymousSkin;
+		GUI.skin = messageSkin;
 		if(ItemAnnouncement) {
 			AnnounceItem(message);
 		}
