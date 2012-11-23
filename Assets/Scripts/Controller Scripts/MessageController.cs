@@ -43,7 +43,7 @@ public class MessageController : MonoBehaviour {
 				delta = 0;
 			} else {
 				message += "\n" + PICKUP_MESSAGE + itemName;
-				delta = 0;
+				delta = 0.1f; //just to make sure that it doesn't revert to 0; fixes newline bug
 			}
 		}
 		
