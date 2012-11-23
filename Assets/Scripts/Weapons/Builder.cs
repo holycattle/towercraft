@@ -48,7 +48,7 @@ public class Builder : GameTool {
 		if (_game.ActiveMenu == Menu.Builder) {
 			for (int i = 0; i < _displayArray.Length; i++) {
 				if (GUI.Button(buttonRects[i], _displayArray[i].componentName)) {
-					Debug.Log("Display Array: " + _displayArray[i].componentName + " > " + _displayArray[i].attributes.Count);
+//					Debug.Log("Display Array: " + _displayArray[i].componentName + " > " + _displayArray[i].attributes.Count);
 					_game.ActiveMenu = Menu.Game;
 
 					BaseTower currentTower = targettedGrid.Tower;
@@ -63,7 +63,7 @@ public class Builder : GameTool {
 						// Swap Mode
 						TowerComponent t = currentTower.SwapComponent(_displayArray[i]);
 						if (t != null) {
-							_inventory.Pickup(new Item(t));
+							_inventory.Pickup(new TowerItem(t));
 						}
 					}
 					_inventory.Remove(_displayArray[i]);
