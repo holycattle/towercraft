@@ -42,7 +42,7 @@ public class MessageController : MonoBehaviour {
 	}
 	
 	public void ItemMessage(string itemName) {
-		if(this.enabled == true) {
+		if (this.enabled == true) {
 			if (delta == 0) {
 				message = "";
 				message += PICKUP_MESSAGE + itemName;

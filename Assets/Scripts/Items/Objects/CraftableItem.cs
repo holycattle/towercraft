@@ -29,4 +29,24 @@ public class CraftableItem : Item {
 	public int Modifier {
 		get { return _stat; }
 	}
+
+	public override string GetName() {
+		string s = "";
+		switch (_type) {
+			case PART_DAMAGE:
+				s += "Energizer";
+				break;
+			case PART_RANGE:
+				s += "Stem";
+				break;
+			case PART_ROF:
+				s += "Capacitor";
+				break;
+		}
+		return s;
+	}
+
+	public override string GetTooltip() {
+		return GetName() + "\nLevel: " + _stat;
+	}
 }
