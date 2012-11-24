@@ -82,14 +82,6 @@ public class BaseEnemy : MonoBehaviour {
 		Vector3 targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
 		float dist = Vector3.Distance(targetPos, transform.position);
 
-//		if (!isAnimating) {
-//			iTween.MoveTo(gameObject, iTween.Hash("position", targetPos, "speed", moveSpeed, "easetype", "linear", "oncomplete", "StopAnimation"));
-//			iTween.RotateTo(gameObject, iTween.Hash("rotation", Quaternion.LookRotation(targetPos - transform.position).eulerAngles, "time", 0));
-//			isAnimating = true;
-
-//			_activePoint++;
-//		}
-
 		if (dist < moveSpeed * Time.deltaTime) {
 			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
 //			iTween.RotateTo(gameObject, iTween.Hash("rotation", Quaternion.LookRotation(targetPos - transform.position).eulerAngles, "time", turnTime));

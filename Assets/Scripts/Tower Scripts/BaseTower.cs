@@ -16,8 +16,8 @@ public class BaseTower : MonoBehaviour {
 
 	// Tower Stat Multipliers
 	public const int MULT_DAMAGE = 1;
-	public const int MULT_RANGE = 8;
-	public const int MULT_FIRINGRANGE = 1;
+	public const int MULT_RANGE = 8;		// 1-8 = L1, 9-16 = L2
+	public const int MULT_FIRINGRATE = 1;
 
 	// Tower Parts
 	private TowerComponent[] _towerComponents;
@@ -228,22 +228,44 @@ public class BaseTower : MonoBehaviour {
 		return GetNextComponentPosition(GetNextComponent());
 	}
 
+	/*
+	 *	STATIC FUNCTIONS
+	 */
+	public static int JiggleStat(int amt, float jiggle) {
+		int min = Mathf.Max(1, Mathf.FloorToInt(amt * (1 - jiggle)));
+		int max = Mathf.Max(1, Mathf.CeilToInt(amt * (1 + jiggle)));
+		return UnityEngine.Random.Range(min, max);
+	}
+
+	public static int GenerateStat(Stat s, int level) {
+		switch (s) {
+			case Stat.Damage:
+				return UnityEngine.Random.Range((level - 1) * MULT_DAMAGE, level * MULT_DAMAGE) + 1;
+			case Stat.Range:
+				return UnityEngine.Random.Range((level - 1) * MULT_RANGE, level * MULT_RANGE) + 1;
+			case Stat.FiringRate:
+				return UnityEngine.Random.Range((level - 1) * MULT_FIRINGRATE, level * MULT_FIRINGRATE) + 1;
+		}
+		return 0;
+	}
+	
 	public static int CalculateStatLevel(Stat s, int amt) {
 		switch (s) {
 			case Stat.Damage:
-				return Math.Max(1, (int)Math.Ceiling((float)amt / BaseTower.MULT_DAMAGE));
+				return ((amt - 1) / MULT_DAMAGE) + 1;
 			case Stat.Range:
-				return Math.Max(1, (int)Math.Ceiling((float)amt / BaseTower.MULT_RANGE));
+				return ((amt - 1) / MULT_RANGE) + 1;
 			case Stat.FiringRate:
-				return  Math.Max(1, (int)Math.Ceiling((float)amt / BaseTower.MULT_FIRINGRANGE));
+				return ((amt - 1) / MULT_FIRINGRATE) + 1;
+
 		}
 		return 0;
 	}
 }
 
 public enum Stat {
-	Range,
 	Damage,
+	Range,
 	FiringRate,
 	SplashRange
 }

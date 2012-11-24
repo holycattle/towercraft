@@ -84,13 +84,13 @@ public class ItemCollector : MonoBehaviour {
 
 		// Deactivate Messenger: So there aren't any messages
 		_game.Messenger.enabled = false;
-		Pickup(new TowerItem(0, 2));
-		Pickup(new TowerItem(0, 2));
-		Pickup(new TowerItem(0, 2));
-		Pickup(new TowerItem(1, 2));
-		Pickup(new TowerItem(1, 2));
-		Pickup(new TowerItem(1, 2));
-		Pickup(new TowerItem(1, 2));
+		Pickup(new TowerItem(0, 6));
+		Pickup(new TowerItem(0, 6));
+		Pickup(new TowerItem(0, 6));
+		Pickup(new TowerItem(1, 6));
+		Pickup(new TowerItem(1, 6));
+		Pickup(new TowerItem(1, 6));
+		Pickup(new TowerItem(1, 6));
 
 		Pickup(new CraftableItem(0, 1));
 		Pickup(new CraftableItem(1, 1));

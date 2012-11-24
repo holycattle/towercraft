@@ -104,7 +104,6 @@ public class ComponentGenerator {
 		 *	Stats Generation
 		 */
 		TowerTurret t = g.GetComponent<TowerTurret>();
-
 		int[] actualStats = new int[CraftableItem.PART_MAX];
 		for (int i = 0; i < actualStats.Length; i++) {
 			actualStats[i] =
@@ -117,7 +116,7 @@ public class ComponentGenerator {
 
 		t.componentName = t.GenerateName();
 		t.componentType = BaseTower.TOWER_TURRET;
-		t.level = t.CalculateCost();
+		t.level = t.CalculateLevel();
 
 		g.SetActiveRecursively(false);
 		return t;
@@ -166,15 +165,24 @@ public class ComponentGenerator {
 			 *	Stats Generation
 			 */
 			TowerTurret t = g.GetComponent<TowerTurret>();
-			int amt = Random.Range(0, cost);
-			t.attributes.Add(new ModifyingAttribute(Stat.Damage, (1 + amt) * BaseTower.MULT_DAMAGE));
-			if (cost - amt > 0) {
-				t.attributes.Add(new ModifyingAttribute(Stat.Range, (1 + cost - amt) * BaseTower.MULT_RANGE));
-			}
+			int s_dmg = Random.Range(1, cost - 1);
+			cost -= s_dmg;
+			int s_range = Random.Range(1, cost);
+			cost -= s_range;
+			int s_firingRate = cost;
+
+			float jiggleAmount = 0.2f;
+			s_dmg = BaseTower.JiggleStat(BaseTower.GenerateStat(Stat.Damage, s_dmg), jiggleAmount);
+			s_range = BaseTower.JiggleStat(s_range * BaseTower.MULT_RANGE, jiggleAmount);
+			s_firingRate = BaseTower.JiggleStat(BaseTower.GenerateStat(Stat.FiringRate, s_firingRate), jiggleAmount);
+
+			t.attributes.Add(new ModifyingAttribute(Stat.Damage, s_dmg));
+			t.attributes.Add(new ModifyingAttribute(Stat.Range, s_range));
+			t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, s_firingRate));
 
 			t.componentName = t.GenerateName();
 			t.componentType = BaseTower.TOWER_TURRET;
-			t.level = t.CalculateCost();
+			t.level = t.CalculateLevel();
 
 			g.SetActiveRecursively(false);
 			return t;

@@ -31,7 +31,7 @@ public class CraftableItem : Item {
 				break;
 			case PART_ROF:
 				craftableName += "Capacitor";
-				_stat = cost * BaseTower.MULT_FIRINGRANGE;
+				_stat = cost * BaseTower.MULT_FIRINGRATE;
 				break;
 		}
 

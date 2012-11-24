@@ -13,6 +13,7 @@ public class TowerTurret : TowerComponent {
 
 	public override string GetTooltipString() {
 		string s = "---" + componentName + "---\n";
+		s += "Level: " + CalculateLevel() + "\n";
 
 		for (int i = 0; i < System.Enum.GetValues(typeof(Stat)).Length; i++) {
 			s += ((Stat)i).ToString() + ": ";
@@ -62,7 +63,7 @@ public class TowerTurret : TowerComponent {
 		return s;
 	}
 
-	public int CalculateCost() {
+	public int CalculateLevel() {
 		int total = 0;
 		foreach (ModifyingAttribute m in attributes) {
 			total += BaseTower.CalculateStatLevel(m.stat, m.amount);

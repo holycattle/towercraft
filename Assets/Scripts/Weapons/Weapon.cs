@@ -12,9 +12,14 @@ public class Weapon : GameTool {
 	public GameObject bullet;
 	private ParticleEmitter emitter;
 
-	//
+	// Gun Stats
+	public int damage;
+	public int range;
+	public int firingRate;
+	public int accuracy;
+
+	// Gun Variables
 	private float _fireInterval = 0.1f;
-	private int damage = 1;
 	private float _timeTillFire;
 
 	// GUI Information
@@ -32,6 +37,12 @@ public class Weapon : GameTool {
 
 		emitter = GetComponentInChildren<ParticleEmitter>();
 		emitter.emit = false;
+
+		// Set Default Variables
+		damage = 1;
+		range = 64;
+		firingRate = 4;
+//		accuracy =
 	}
 
 	protected override void OnGUI() {
@@ -60,7 +71,7 @@ public class Weapon : GameTool {
 	private void TryToFire(GameObject g) {
 		if (_timeTillFire <= 0) {
 			// Raycast
-			int maxInaccuracy = (int)(_weapon.CurrentRecoil * WeaponController.CROSSHAIR_OFFSET);
+			int maxInaccuracy = (int)(CurrentRecoil * WeaponController.CROSSHAIR_OFFSET);
 //			Debug.Log("Max Inaccuracy: " + maxInaccuracy);
 			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER +
 				new Vector3(Random.Range(-maxInaccuracy, maxInaccuracy), Random.Range(-maxInaccuracy, maxInaccuracy), 0));
@@ -71,7 +82,7 @@ public class Weapon : GameTool {
 				// Damage Game Object
 				BaseEnemy b = hit.transform.gameObject.GetComponent<BaseEnemy>();
 				if (b != null) {
-					b.AddLife(-damage);	// Collided with enemy, otherwise collided with terrain
+//					b.AddLife(-damage);	// Collided with enemy, otherwise collided with terrain
 					_targetted = b;
 				}
 
@@ -81,9 +92,9 @@ public class Weapon : GameTool {
 				Instantiate(sparks, hit.point, Quaternion.LookRotation(bounced));
 
 				// Gun Projectile
-//				GameObject b = Instantiate(bullet, transform.position, Quaternion.LookRotation(hit.point - transform.position)) as GameObject;
-//				b.GetComponent<Rigidbody>().velocity = (hit.point - transform.position).normalized * 128;
-//				Physics.IgnoreCollision(b.collider, transform.root.collider);
+				GameObject proj = Instantiate(bullet, transform.position, Quaternion.LookRotation(hit.point - transform.position)) as GameObject;
+				proj.GetComponent<Rigidbody>().velocity = (hit.point - transform.position).normalized * 64;
+				Physics.IgnoreCollision(proj.collider, transform.root.collider);
 			}
 			_timeTillFire += _fireInterval;
 			bullets--;
@@ -91,11 +102,13 @@ public class Weapon : GameTool {
 				bullets = 30;
 
 			emitter.Emit(1);
-			_weapon.Recoil();
+			Recoil();
 		}
 	}
 
-	void Update() {
+	protected override void Update() {
+		base.Update();
+
 		if (_timeTillFire > 0) {
 			_timeTillFire -= Time.deltaTime;
 			if (_timeTillFire <= 0)
