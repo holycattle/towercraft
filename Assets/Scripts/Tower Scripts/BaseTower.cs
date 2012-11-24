@@ -14,6 +14,11 @@ public class BaseTower : MonoBehaviour {
 	public const int STAT_RANGE = 1;
 	public const int STAT_FIRINGRANGE = 2;
 
+	// Tower Stat Multipliers
+	public const int MULT_DAMAGE = 1;
+	public const int MULT_RANGE = 8;
+	public const int MULT_FIRINGRANGE = 1;
+
 	// Tower Parts
 	private TowerComponent[] _towerComponents;
 
@@ -124,7 +129,7 @@ public class BaseTower : MonoBehaviour {
 		firingInterval = 1f;
 
 		// Set Collider Range
-		GetComponent<SphereCollider>().radius = stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE;
+		GetComponent<SphereCollider>().radius = stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE / MULT_RANGE;
 
 		isFiring = true;
 
@@ -221,6 +226,18 @@ public class BaseTower : MonoBehaviour {
 
 	private Vector3 GetNextComponentPosition() {
 		return GetNextComponentPosition(GetNextComponent());
+	}
+
+	public static int CalculateStatLevel(Stat s, int amt) {
+		switch (s) {
+			case Stat.Damage:
+				return Math.Max(1, (int)Math.Ceiling((float)amt / BaseTower.MULT_DAMAGE));
+			case Stat.Range:
+				return Math.Max(1, (int)Math.Ceiling((float)amt / BaseTower.MULT_RANGE));
+			case Stat.FiringRate:
+				return  Math.Max(1, (int)Math.Ceiling((float)amt / BaseTower.MULT_FIRINGRANGE));
+		}
+		return 0;
 	}
 }
 

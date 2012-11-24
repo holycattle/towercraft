@@ -13,7 +13,7 @@ public class MessageController : MonoBehaviour {
 	
 	void Start() {
 		delta = 0;
-		TEXT_DURATION = 3f;
+		TEXT_DURATION = 1.5f;
 		//fadingTime = 3f;
 		//timeDelta = 0;
 		//alphaContainer = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -59,7 +59,7 @@ public class MessageController : MonoBehaviour {
 	public void WarningMessage(string warning) {
 		ItemAnnouncement = false;
 		message = "";
-		if(this.enabled == true) {
+		if (this.enabled == true) {
 			if (delta == 0) {
 				message = warning;
 				delta = 0;

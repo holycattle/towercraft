@@ -9,7 +9,7 @@ public class SpawnScheme {
 	private const int MAX_SPEED = 12;
 	
 	//maxHealth coefficient and multiplier
-	private const int HEALTH_COEFF = 30; //this determines the scale of the HP
+	private const int HEALTH_COEFF = 64; //this determines the scale of the HP
 	private const float HEALTH_MULTIPLIER = 0.2f; //every wave, health increases by current_health * HEALTH_MULTIPLIER
 	
 	private LevelController _levelController;
@@ -22,7 +22,7 @@ public class SpawnScheme {
 		_spawnScheme = new List<MobSpawn>();
 
 		moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
-		moveSpeed = 10;
+//		moveSpeed = 10;
 		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
 	}

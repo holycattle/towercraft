@@ -58,7 +58,70 @@ public class ComponentGenerator {
 		return _cgen;
 	}
 
-	
+	public TowerTurret UpgradeTurret(CraftableItem[] parts, TowerTurret t) {
+		return null;
+	}
+
+	public TowerTurret GenerateTurret(CraftableItem[] parts) {
+		/*
+		 *	Parts Generation
+		 */
+		int chStem = Random.Range(0, stems.Length);
+		int chMissile = Random.Range(0, missileSources.Length);
+		int chBarrel = Random.Range(0, barrels.Length);
+		int chSpinner = Random.Range(0, spinningParts.Length);
+		// Turret Base
+		GameObject g = GameObject.Instantiate(turretBase, buildSpot, Quaternion.identity) as GameObject;
+
+		// Stem
+		TowerStem tStem = GameObject.Instantiate(stems[chStem], buildSpot, Quaternion.identity) as TowerStem;
+		tStem.transform.parent = g.transform;
+		Vector3 stemOffest = tStem.baseNextComponentPosition;
+
+		// Spinner Base
+		GameObject gSpin = GameObject.Instantiate(spinningBase, buildSpot + stemOffest, Quaternion.identity) as GameObject;
+		gSpin.transform.parent = g.transform;
+
+		// Missile
+		GameObject gMiss = GameObject.Instantiate((GameObject)missileSources[chMissile], buildSpot + stemOffest, Quaternion.identity) as GameObject;
+		gMiss.transform.parent = g.transform;
+		gMiss.name = "MissileSource";
+
+		// Barrel
+		GameObject gBarr = GameObject.Instantiate((GameObject)barrels[chBarrel], buildSpot + stemOffest, Quaternion.identity) as GameObject;
+		gBarr.transform.parent = gMiss.transform;	// Barrel is a CHILD of missileSource
+
+		// Spinning Thing
+		int numSpinners = Random.Range(2, 7);	// 2 - 6 possible spinners
+		float angle = (360 / numSpinners) * Mathf.Deg2Rad;
+		for (int i = 0; i < numSpinners; i++) {
+			Vector3 offset = new Vector3(Mathf.Cos(i * angle) * 2, 1, Mathf.Sin(i * angle) * 2);
+			GameObject gSpinner = GameObject.Instantiate((GameObject)spinningParts[chSpinner], buildSpot + stemOffest + offset, Quaternion.identity) as GameObject;
+			gSpinner.transform.parent = gSpin.transform;
+		}
+
+		/*
+		 *	Stats Generation
+		 */
+		TowerTurret t = g.GetComponent<TowerTurret>();
+
+		int[] actualStats = new int[CraftableItem.PART_MAX];
+		for (int i = 0; i < actualStats.Length; i++) {
+			actualStats[i] =
+				Random.Range((int)Mathf.Max(1, (int)Mathf.Floor(parts[i].Modifier * (1 - CraftableItem.CRAFT_RANDOMNESS))),
+					(int)Mathf.Ceil(parts[i].Modifier * (1 + CraftableItem.CRAFT_RANDOMNESS)));
+		}
+		t.attributes.Add(new ModifyingAttribute(Stat.Damage, actualStats[CraftableItem.PART_DAMAGE]));
+		t.attributes.Add(new ModifyingAttribute(Stat.Range, actualStats[CraftableItem.PART_RANGE]));
+		t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, actualStats[CraftableItem.PART_ROF]));
+
+		t.componentName = t.GenerateName();
+		t.componentType = BaseTower.TOWER_TURRET;
+		t.level = t.CalculateCost();
+
+		g.SetActiveRecursively(false);
+		return t;
+	}
 
 	public TowerComponent GenerateComponent(int type, int cost) {
 		if (type < 0 || type >= BaseTower.TOWER_COMPLETE)
@@ -99,41 +162,28 @@ public class ComponentGenerator {
 				gSpinner.transform.parent = gSpin.transform;
 			}
 
+			/*
+			 *	Stats Generation
+			 */
 			TowerTurret t = g.GetComponent<TowerTurret>();
-			t.componentName = chMissile + "|" + chBarrel + "|" + chSpinner;
-			t.componentType = BaseTower.TOWER_TURRET;
-			t.level = cost;
-
 			int amt = Random.Range(0, cost);
-			t.attributes.Add(new ModifyingAttribute(Stat.Damage, 1 + amt));
+			t.attributes.Add(new ModifyingAttribute(Stat.Damage, (1 + amt) * BaseTower.MULT_DAMAGE));
 			if (cost - amt > 0) {
-				t.attributes.Add(new ModifyingAttribute(Stat.Range, cost - amt));
+				t.attributes.Add(new ModifyingAttribute(Stat.Range, (1 + cost - amt) * BaseTower.MULT_RANGE));
 			}
+
+			t.componentName = t.GenerateName();
+			t.componentType = BaseTower.TOWER_TURRET;
+			t.level = t.CalculateCost();
 
 			g.SetActiveRecursively(false);
 			return t;
-//		} else if (type == BaseTower.TOWER_STEM) {
-//			GameObject g = GameObject.Instantiate(_towerParts[type][Random.Range(0, _towerParts[type].Length)].gameObject, buildSpot, Quaternion.identity) as GameObject;
-//
-//			TowerComponent t = g.GetComponent<TowerComponent>();
-//			t.componentName = "Stem o' Matic";
-//			t.componentType = BaseTower.TOWER_STEM;
-//			t.level = cost;
-//
-//			int amt = Random.Range(0, cost);
-//			t.attributes.Add(new ModifyingAttribute(Stat.Range, 1 + amt));
-//			if (cost - amt > 0) {
-//				t.attributes.Add(new ModifyingAttribute(Stat.Damage, cost - amt));
-//			}
-//
-//			g.SetActiveRecursively(false);
-////			Debug.Log("Tee After Count: " + t.attributes.Count);
-//			return t;
 		} else if (type == BaseTower.TOWER_BASE) {
-			GameObject g = GameObject.Instantiate(_towerParts[type][Random.Range(0, _towerParts[type].Length)].gameObject, buildSpot, Quaternion.identity) as GameObject;
+			int part = Random.Range(0, _towerParts[type].Length);
+			GameObject g = GameObject.Instantiate(_towerParts[type][part].gameObject, buildSpot, Quaternion.identity) as GameObject;
 
 			TowerComponent t = g.GetComponent<TowerComponent>();
-			t.componentName = "Baseometer";
+			t.componentName = _towerParts[type][part].gameObject.name;
 			t.componentType = BaseTower.TOWER_BASE;
 			t.level = cost;
 

@@ -12,6 +12,7 @@ public class BaseEnemy : MonoBehaviour {
 	private PlayerController _player;
 	private static GameObject ITEM_PREFAB;
 	private static GameObject HEALTH_PREFAB;
+	private static GameObject CRAFTABLE_PREFAB;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
 	public MobType type;
@@ -57,6 +58,8 @@ public class BaseEnemy : MonoBehaviour {
 			ITEM_PREFAB = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
 		if (HEALTH_PREFAB == null)
 			HEALTH_PREFAB = Resources.Load("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
+		if (CRAFTABLE_PREFAB == null)
+			CRAFTABLE_PREFAB = Resources.Load("Prefabs/Items/Craftable", typeof(GameObject)) as GameObject;
 
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
@@ -156,13 +159,17 @@ public class BaseEnemy : MonoBehaviour {
 	}
 
 	public void Kill() {
-		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
+//		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
 		Destroy(this.transform.root.gameObject);
 
-		if (Random.Range(0, 10) < 6) {
+		if (Random.Range(0, 3) == 2)
+			return;
+		if (Random.Range(0, 10) < 3) {
 			Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity);
-		} else if (Random.Range(0, 10) < 10) {
+		} else if (Random.Range(0, 10) < 6) {
 			Instantiate(ITEM_PREFAB, transform.position, Quaternion.identity);
+		} else {
+			Instantiate(CRAFTABLE_PREFAB, transform.position, Quaternion.identity);
 		}
 	}
 

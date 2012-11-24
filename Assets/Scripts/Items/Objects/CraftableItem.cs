@@ -3,6 +3,7 @@ using System.Collections;
 
 public class CraftableItem : Item {
 	// Constants
+	public const float CRAFT_RANDOMNESS = 0.2f;
 	public const int PART_DAMAGE = 0;
 	public const int PART_RANGE = 1;
 	public const int PART_ROF = 2;	// ROF = Rate of Fire
@@ -11,11 +12,31 @@ public class CraftableItem : Item {
 	// Values
 	public string craftableName;
 	private int _type;		// Type of Craftable Item
+	private int _level;
 	private int _stat = 0;	// Modifier Value
 
 	public CraftableItem (int type, int cost) : base(ITEM_CRAFT) {
 		_type = type;
-		_stat = cost;
+		_level = cost;
+
+		craftableName = "";
+		switch (_type) {
+			case PART_DAMAGE:
+				craftableName += "Energizer";
+				_stat = cost * BaseTower.MULT_DAMAGE;
+				break;
+			case PART_RANGE:
+				craftableName += "Stem";
+				_stat = cost * BaseTower.MULT_RANGE;
+				break;
+			case PART_ROF:
+				craftableName += "Capacitor";
+				_stat = cost * BaseTower.MULT_FIRINGRANGE;
+				break;
+		}
+
+
+		craftableName += " - v" + Random.Range(1, 10) + "." + Random.Range(100, 1000);
 	}
 
 	public override bool isLessThan(Item t) {
@@ -31,22 +52,23 @@ public class CraftableItem : Item {
 	}
 
 	public override string GetName() {
-		string s = "";
-		switch (_type) {
-			case PART_DAMAGE:
-				s += "Energizer";
-				break;
-			case PART_RANGE:
-				s += "Stem";
-				break;
-			case PART_ROF:
-				s += "Capacitor";
-				break;
-		}
-		return s;
+		return craftableName;
 	}
 
 	public override string GetTooltip() {
-		return GetName() + "\nLevel: " + _stat;
+		string s = GetName() + "\nLevel: " + _level + "\n";
+		switch (_type) {
+			case PART_DAMAGE:
+				s += "Damage: ";
+				break;
+			case PART_RANGE:
+				s += "Range: ";
+				break;
+			case PART_ROF:
+				s += "Firing Rate: ";
+				break;
+		}
+		s += _stat;
+		return s;
 	}
 }
