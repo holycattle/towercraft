@@ -15,7 +15,7 @@ public class BaseTower : MonoBehaviour {
 	public const int STAT_FIRINGRANGE = 2;
 
 	// Tower Stat Multipliers
-	public const int MULT_DAMAGE = 1;
+	public const int MULT_DAMAGE = 2;
 	public const int MULT_RANGE = 8;		// 1-8 = L1, 9-16 = L2
 	public const int MULT_FIRINGRATE = 1;
 

@@ -22,15 +22,14 @@ public class WeaponController : MonoBehaviour {
 	private bool _weaponSwapLock;
 
 	// HUD Components
-	// -> TODO: Get the array version of this to work. "Unsupported int type vector" error
-	public const int CROSSHAIR_OFFSET = 32;		// Screen units (also used for gun inaccuracy)
-	private int[] X_OFFSET = {-1, 1, 1, -1};
-	private int[] Y_OFFSET = {-1, -1, 1, 1};
-	public Texture2D crosshair0;
-	public Texture2D crosshair1;
-	public Texture2D crosshair2;
-	public Texture2D crosshair3;
-	private Rect[] crosshairRect;
+//	public const int CROSSHAIR_OFFSET = 32;		// Screen units (also used for gun inaccuracy)
+//	private int[] X_OFFSET = {-1, 1, 1, -1};
+//	private int[] Y_OFFSET = {-1, -1, 1, 1};
+//	public Texture2D crosshair0;
+//	public Texture2D crosshair1;
+//	public Texture2D crosshair2;
+//	public Texture2D crosshair3;
+//	private Rect[] crosshairRect;
 	public bool drawCrosshair;
 
 	// Gun Movement (User Defined)
@@ -57,17 +56,14 @@ public class WeaponController : MonoBehaviour {
 		}
 
 		_activeTool = 0;
+		SetActiveWeapon(0);
+		SetActiveWeapon(1);
 		SetActiveWeapon(_activeTool);
 
 		// Gun Movement
 		baseRotation = transform.rotation.eulerAngles;
 		basePosition = transform.localPosition;
 
-		// HUD Components
-		crosshairRect = new Rect[4];
-		for (int i = 0; i < crosshairRect.Length; i++) {
-			crosshairRect[i] = new Rect(Screen.width / 2 - crosshair0.width / 2, Screen.height / 2 - crosshair0.height / 2, crosshair0.width, crosshair0.height);
-		}
 		drawCrosshair = true;
 
 //		iTween.Init(gameObject);
@@ -90,10 +86,10 @@ public class WeaponController : MonoBehaviour {
 
 		GUI.Box(new Rect(0, 120, 128, 30), "Bullets: " + ActiveTool.bullets);
 
-		GUI.DrawTexture(crosshairRect[0], crosshair0);
-		GUI.DrawTexture(crosshairRect[1], crosshair1);
-		GUI.DrawTexture(crosshairRect[2], crosshair2);
-		GUI.DrawTexture(crosshairRect[3], crosshair3);
+//		GUI.DrawTexture(crosshairRect[0], crosshair0);
+//		GUI.DrawTexture(crosshairRect[1], crosshair1);
+//		GUI.DrawTexture(crosshairRect[2], crosshair2);
+//		GUI.DrawTexture(crosshairRect[3], crosshair3);
 	}
 
 	void FixedUpdate() {
@@ -152,12 +148,6 @@ public class WeaponController : MonoBehaviour {
 												basePosition.y + _currentImpulse * verticalImpulse,
 												basePosition.z);
 //		transform.localRotation = Quaternion.Euler(transform.localRotation.x - currentRecoil * upwardRecoil, transform.localRotation.y, transform.localRotation.z);
-
-		// Update position of crosshair
-		int offset = (int)(ActiveTool.CurrentRecoil * CROSSHAIR_OFFSET);
-		for (int i = 0; i < crosshairRect.Length; i++) {
-			crosshairRect[i].center = SCREEN_CENTER + new Vector2(X_OFFSET[i], Y_OFFSET[i]) * offset;
-		}
 	}
 
 	private void WeaponRotation() {
@@ -217,6 +207,8 @@ public class WeaponController : MonoBehaviour {
 
 	public void SetActiveWeapon(int i) {
 		if (i < 0 || i >= 2)
+			return;
+		if (_activeTool == i)
 			return;
 
 		foreach (GameObject g in weapons) {

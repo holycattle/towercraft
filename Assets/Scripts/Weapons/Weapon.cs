@@ -19,7 +19,7 @@ public class Weapon : GameTool {
 	public int accuracy;
 
 	// Gun Variables
-	private float _fireInterval = 0.1f;
+	private float _fireInterval;
 	private float _timeTillFire;
 
 	// GUI Information
@@ -42,7 +42,12 @@ public class Weapon : GameTool {
 		damage = 1;
 		range = 64;
 		firingRate = 4;
-//		accuracy =
+		accuracy = 10;
+		RecalculateStats();
+	}
+
+	private void RecalculateStats() {
+		_fireInterval = 1.0f / firingRate;
 	}
 
 	protected override void OnGUI() {
@@ -71,7 +76,7 @@ public class Weapon : GameTool {
 	private void TryToFire(GameObject g) {
 		if (_timeTillFire <= 0) {
 			// Raycast
-			int maxInaccuracy = (int)(CurrentRecoil * WeaponController.CROSSHAIR_OFFSET);
+			int maxInaccuracy = (int)(CurrentRecoil * crosshairOffset);
 //			Debug.Log("Max Inaccuracy: " + maxInaccuracy);
 			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER +
 				new Vector3(Random.Range(-maxInaccuracy, maxInaccuracy), Random.Range(-maxInaccuracy, maxInaccuracy), 0));
@@ -87,13 +92,22 @@ public class Weapon : GameTool {
 				}
 
 				// Calculate Rotation Vector
-				Vector3 path = transform.position - hit.point;
-				Vector3 bounced = 2 * hit.normal * Vector3.Dot(hit.normal, path) - path;
-				Instantiate(sparks, hit.point, Quaternion.LookRotation(bounced));
+//				Vector3 path = transform.position - hit.point;
+//				Vector3 bounced = 2 * hit.normal * Vector3.Dot(hit.normal, path) - path;
+//				Instantiate(sparks, hit.point, Quaternion.LookRotation(bounced));
 
 				// Gun Projectile
 				GameObject proj = Instantiate(bullet, transform.position, Quaternion.LookRotation(hit.point - transform.position)) as GameObject;
 				proj.GetComponent<Rigidbody>().velocity = (hit.point - transform.position).normalized * 64;
+				proj.GetComponent<Bullet>().damage = damage;
+				proj.GetComponent<Bullet>().range = range;
+				Physics.IgnoreCollision(proj.collider, transform.root.collider);
+			} else {
+				// Gun Projectile
+				GameObject proj = Instantiate(bullet, transform.position, Quaternion.LookRotation(transform.forward)) as GameObject;
+				proj.GetComponent<Rigidbody>().velocity = (transform.forward).normalized * 64;
+				proj.GetComponent<Bullet>().damage = damage;
+				proj.GetComponent<Bullet>().range = range;
 				Physics.IgnoreCollision(proj.collider, transform.root.collider);
 			}
 			_timeTillFire += _fireInterval;

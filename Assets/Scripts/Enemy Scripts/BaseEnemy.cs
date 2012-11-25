@@ -18,23 +18,26 @@ public class BaseEnemy : MonoBehaviour {
 	public MobType type;
 	public float moveSpeed;
 	public int maxLife;
-	private int _life;					// Current Life
-	public int moneyReward;
 	public int waveCost;
+	public GameObject[] drops;
 	private int damage = 2;
 	private int accuracy = (int)(0.25f * 100);
 	private float firingInterval = 1f;
 	private float range = 32;
 
-	// Movement
-//	private float turnTime;
-	private float turnSpeed;			// Defines how long it takes to turn 90 degrees.
-	private float totalTurn;			// [0, 1] How far I have turned.
-	private Quaternion originalRot;		// Rotation if totalturn == 0
-//	private bool isAnimating;
+	// Vary-ables
+	private int _life;					// Current Life
 
 	// Attacking
 	private float _timeTillFire;
+
+	/*
+	 *	Movement
+	 */
+	// Rotation
+	private float turnSpeed;			// Defines how long it takes to turn 90 degrees.
+	private float totalTurn;			// [0, 1] How far I have turned.
+	private Quaternion originalRot;		// Rotation if totalturn == 0
 
 	// Path Following
 	private List<Vector2> _path;	// List of waypoints to follow
@@ -64,11 +67,6 @@ public class BaseEnemy : MonoBehaviour {
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
 	}
-
-//	public void StopAnimation() {
-//		Debug.Log("Stop Animating");
-//		isAnimating = false;
-//	}
 
 	void Update() {
 		/*
@@ -153,6 +151,14 @@ public class BaseEnemy : MonoBehaviour {
 	public void Kill() {
 //		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
 		Destroy(this.transform.root.gameObject);
+
+		if (drops != null) {
+			foreach (GameObject g in drops) {
+				if (g != null) {
+					Instantiate(g, transform.position, Quaternion.identity);
+				}
+			}
+		}
 
 		if (Random.Range(0, 3) == 2)
 			return;
