@@ -49,7 +49,7 @@ public class ComponentGenerator {
 			stems[i] = ((GameObject)loadedStems[i]).GetComponent<TowerStem>();
 		}
 
-		Debug.Log("ComponentGenerator: " + _towerParts[0].Length + "/" + _towerParts[1].Length);
+		Debug.Log("ComponentGenerator: " + _towerParts[0].Length + "/" + _towerParts[1].Length + " / S:" + stems.Length);
 	}
 
 	public static ComponentGenerator Get() {

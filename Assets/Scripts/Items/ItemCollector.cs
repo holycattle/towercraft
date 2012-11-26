@@ -23,8 +23,9 @@ public class ItemCollector : MonoBehaviour {
 //	private const float COST_CLONE = 1.1f;
 	private const int NUM_CRAFTABLES = 3;
 
-	// Game
+	// References
 	protected GameController _game;
+	protected Weapon _gun;
 
 	// Inventories
 	private int activeInv;
@@ -48,6 +49,7 @@ public class ItemCollector : MonoBehaviour {
 
 	void Start() {
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
+		_gun = GameObject.Find("Player").GetComponentInChildren<Weapon>();
 
 		// Init the inventories
 		towerInventory = new TowerItem[WIDTH * HEIGHT];
@@ -134,7 +136,7 @@ public class ItemCollector : MonoBehaviour {
 				_game.ActiveMenu = _game.ActiveMenu == Menu.Inventory ? Menu.Game : Menu.Inventory;
 				SetInventoryOpen(_game.ActiveMenu == Menu.Inventory);
 
-				activeInv = INV_TOWER;
+				SetActiveInventory(INV_TOWER);
 			}
 		}
 	}
@@ -161,54 +163,58 @@ public class ItemCollector : MonoBehaviour {
 				}
 
 				if (GUI.Button(drawRects[i], new GUIContent(activeInventory[i].GetName(), activeInventory[i].GetTooltip()))) {
-					if (activeInv == INV_CRAFT) {
-						CraftableItem c = ((CraftableItem)activeInventory[i]);
-						if (craftingRecipe[c.CraftableType] == null) {
-							craftingRecipe[c.CraftableType] = c;
-							Remove(c);
-						} else {
-							Pickup(craftingRecipe[c.CraftableType]);
-							craftingRecipe[c.CraftableType] = c;
-							Remove(c);
-						}
-
-//						switch (((CraftableItem)activeInventory[i]).CraftableType) {
-//							case CraftableItem.PART_DAMAGE:
-//								craftingRecipe[CraftableItem.PART_DAMAGE] = activeInventory[i];
-//								break;
-//							case CraftableItem.PART_RANGE:
-//								craftingRecipe[CraftableItem.PART_RANGE] = activeInventory[i];
-//								break;
-//							case CraftableItem.PART_ROF:
-//								craftingRecipe[CraftableItem.PART_ROF] = activeInventory[i];
-//								break;
-//						}
-//						Remove(activeInventory[i]);
-					} else if (activeInv == INV_TOWER) {
-
+					switch (activeInv) {
+						case INV_CRAFT:
+							CraftableItem c = ((CraftableItem)activeInventory[i]);
+							if (craftingRecipe[c.CraftableType] == null) {
+								// If there is no item CraftableType slot, then ADD
+								craftingRecipe[c.CraftableType] = c;
+								Remove(c);
+							} else {
+								// Else, SWAP the clicked with the one in the slot
+								Pickup(craftingRecipe[c.CraftableType]);
+								craftingRecipe[c.CraftableType] = c;
+								Remove(c);
+							}
+							break;
+						case INV_TOWER:
+							break;
+						case INV_WEAPON:
+							WeaponItem w = ((WeaponItem)activeInventory[i]);
+							if (CanPickup(_gun.equippedWeapons)) {
+								Pickup(_gun.equippedWeapons, w);
+								Remove(activeInventory, w);
+								_gun.RecalculateStats();
+							}
+							break;
 					}
-
-//					if (Pickup(craftingRecipe, activeInventory[i])) {
-//						Remove(activeInventory[i]);
-//					}
 				}
 			}
 
-			// Draw ToClone
-//			if (GUI.Button(toCloneRect, toClone == null ? "" : toClone.GetName())) {
-//				Pickup(toClone);
-//				toClone = null;
-//			}
-
-			// Draw Crafting Recipe
-			for (int i = 0; i < craftingRecipe.Length; i++) {
-				if (craftingRecipe[i] == null) {
-					GUI.Button(craftingRects[i], "");
-					continue;
+			if (activeInv == INV_WEAPON) {
+				// Draw Equipped Weapons
+				for (int i = 0; i < _gun.equippedWeapons.Length; i++) {
+					if (_gun.equippedWeapons[i] == null) {
+						GUI.Button(craftingRects[i], "");
+						continue;
+					}
+					if (GUI.Button(craftingRects[i], new GUIContent(_gun.equippedWeapons[i].GetName(), _gun.equippedWeapons[i].GetTooltip()))) {
+						Pickup(activeInventory, _gun.equippedWeapons[i]);
+						_gun.equippedWeapons[i] = null;
+						_gun.RecalculateStats();
+					}
 				}
-				if (GUI.Button(craftingRects[i], new GUIContent(craftingRecipe[i].GetName(), craftingRecipe[i].GetTooltip()))) {
-					Pickup(craftingRecipe[i]);
-					craftingRecipe[i] = null;
+			} else {
+				// Draw Crafting Recipe
+				for (int i = 0; i < craftingRecipe.Length; i++) {
+					if (craftingRecipe[i] == null) {
+						GUI.Button(craftingRects[i], "");
+						continue;
+					}
+					if (GUI.Button(craftingRects[i], new GUIContent(craftingRecipe[i].GetName(), craftingRecipe[i].GetTooltip()))) {
+						Pickup(craftingRecipe[i]);
+						craftingRecipe[i] = null;
+					}
 				}
 			}
 

@@ -49,10 +49,7 @@ public class BaseEnemy : MonoBehaviour {
 		_offset = new Vector2(Random.Range(-MOV_OFFSET, MOV_OFFSET), Random.Range(-MOV_OFFSET, MOV_OFFSET));
 		_life = maxLife;
 
-		// Set Turn Speed
-		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
-//		turnTime = (Mathf.Sqrt(2) * LevelController.TILE_SIZE) / moveSpeed;
-//		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
+		UpdateStats();
 
 		originalRot = transform.rotation;
 
@@ -133,6 +130,13 @@ public class BaseEnemy : MonoBehaviour {
 		}
 	}
 
+	public void UpdateStats() {
+		// Set Turn Speed
+		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
+//		turnTime = (Mathf.Sqrt(2) * LevelController.TILE_SIZE) / moveSpeed;
+//		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
+	}
+
 	public void PathUpdate() {
 		_path = _level.RecalculatePath(GridPosition);
 		_activePoint = 2;
@@ -189,6 +193,14 @@ public class BaseEnemy : MonoBehaviour {
 
 	public int WaveCost {
 		get { return waveCost; }
+	}
+
+	public float MoveSpeed {
+		get { return moveSpeed; }
+		set {
+			this.moveSpeed = value;
+			UpdateStats();
+		}
 	}
 
 	public List<Vector2> MotionPath {
