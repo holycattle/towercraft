@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour {
 	// Bullet Stats
 	public int damage = 1;
 	public int range = 32;
-
+	
 	// Starting Position
 	private Vector3 _startingPos;
 
