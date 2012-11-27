@@ -4,7 +4,7 @@ using System.Collections;
 public class Slow : Ailment {
 
 	private float slowPercentage = 0.5f;
-	private float initMoveSpeed;
+	private float deltaMoveSpeed;
 
 	protected override void Start() {
 		base.Start();
@@ -12,13 +12,12 @@ public class Slow : Ailment {
 	}
 
 	protected override void BeginStatus() {
-		initMoveSpeed = _enemy.MoveSpeed;
-		_enemy.MoveSpeed = Mathf.Max(0.5f, (int)(initMoveSpeed * slowPercentage));
+		deltaMoveSpeed = Mathf.Max(0.5f, (int)(deltaMoveSpeed * slowPercentage));
+		_enemy.MoveSpeed -= deltaMoveSpeed;
 	}
 
 	protected override void EndStatus() {
-		_enemy.MoveSpeed = initMoveSpeed;
-		_enemy.UpdateStats();
+		_enemy.MoveSpeed += deltaMoveSpeed;
 		base.EndStatus();
 	}
 }

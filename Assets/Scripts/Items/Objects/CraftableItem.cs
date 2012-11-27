@@ -19,19 +19,21 @@ public class CraftableItem : Item {
 		_type = type;
 		_level = cost;
 
+		_stat = 1;
+
 		craftableName = "";
 		switch (_type) {
 			case PART_DAMAGE:
 				craftableName += "Energizer";
-				_stat = cost * BaseTower.MULT_DAMAGE;
+//				_stat = cost * BaseTower.MULT_DAMAGE;
 				break;
 			case PART_RANGE:
 				craftableName += "Stem";
-				_stat = cost * BaseTower.MULT_RANGE;
+//				_stat = cost * BaseTower.MULT_RANGE;
 				break;
 			case PART_ROF:
 				craftableName += "Capacitor";
-				_stat = cost * BaseTower.MULT_FIRINGRATE;
+//				_stat = cost * BaseTower.MULT_FIRINGRATE;
 				break;
 		}
 

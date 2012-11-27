@@ -70,6 +70,7 @@ public class ComponentGenerator {
 		int chMissile = Random.Range(0, missileSources.Length);
 		int chBarrel = Random.Range(0, barrels.Length);
 		int chSpinner = Random.Range(0, spinningParts.Length);
+
 		// Turret Base
 		GameObject g = GameObject.Instantiate(turretBase, buildSpot, Quaternion.identity) as GameObject;
 
@@ -165,16 +166,22 @@ public class ComponentGenerator {
 			 *	Stats Generation
 			 */
 			TowerTurret t = g.GetComponent<TowerTurret>();
-			int s_dmg = Random.Range(1, cost - 1);
-			cost -= s_dmg;
-			int s_range = Random.Range(1, cost);
-			cost -= s_range;
-			int s_firingRate = cost;
 
-			float jiggleAmount = 0.2f;
-			s_dmg = BaseTower.JiggleStat(BaseTower.GenerateStat(Stat.Damage, s_dmg), jiggleAmount);
-			s_range = BaseTower.JiggleStat(s_range * BaseTower.MULT_RANGE, jiggleAmount);
-			s_firingRate = BaseTower.JiggleStat(BaseTower.GenerateStat(Stat.FiringRate, s_firingRate), jiggleAmount);
+			// Range
+			float s_range;
+			s_range = BaseTower.JiggleStat(BaseTower.BASE_RANGE, 0.15f);
+			s_range = Mathf.Round(s_range * 100) / 100f;
+
+			// Determine DPS for the current level
+			float dps = cost;	// TODO: CHANGE TO FORMULA
+			float DPSMULT = 2f;
+
+			// Damage
+			int s_dmg = Random.Range(1, (int)(dps * DPSMULT));	// Multiply to allow for FiringRate : (0, 1]
+
+			// Firing Rate
+			float s_firingRate = Mathf.Round((dps * 100) / s_dmg) / 100f;
+
 
 			t.attributes.Add(new ModifyingAttribute(Stat.Damage, s_dmg));
 			t.attributes.Add(new ModifyingAttribute(Stat.Range, s_range));

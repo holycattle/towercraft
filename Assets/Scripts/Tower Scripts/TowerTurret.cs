@@ -17,7 +17,7 @@ public class TowerTurret : TowerComponent {
 
 		for (int i = 0; i < System.Enum.GetValues(typeof(Stat)).Length; i++) {
 			s += ((Stat)i).ToString() + ": ";
-			int amt = 0;
+			float amt = 0;
 			foreach (ModifyingAttribute m in attributes) {
 				if (m.stat == ((Stat)i)) {
 					amt += m.amount;
@@ -30,6 +30,8 @@ public class TowerTurret : TowerComponent {
 	}
 
 	public string GenerateName() {
+		return ">>";
+
 		string[] guns = {"Turret", "Buster"};
 		string[] s_damage = {"Powerful", "Potent", "Strengthy"};			// Damage
 		string[] s_range = {"All-Seeing", "Remote"};					// Range
@@ -39,12 +41,12 @@ public class TowerTurret : TowerComponent {
 
 		Stat max = Stat.Damage;
 		int level = 0;
-		foreach (ModifyingAttribute m in attributes) {
-			if (BaseTower.CalculateStatLevel(m.stat, m.amount) > level) {
-				max = m.stat;
-				level = BaseTower.CalculateStatLevel(m.stat, m.amount);
-			}
-		}
+//		foreach (ModifyingAttribute m in attributes) {
+//			if (BaseTower.CalculateStatLevel(m.stat, m.amount) > level) {
+//				max = m.stat;
+//				level = BaseTower.CalculateStatLevel(m.stat, m.amount);
+//			}
+//		}
 
 		switch (max) {
 			case Stat.Damage:
@@ -66,7 +68,7 @@ public class TowerTurret : TowerComponent {
 	public int CalculateLevel() {
 		int total = 0;
 		foreach (ModifyingAttribute m in attributes) {
-			total += BaseTower.CalculateStatLevel(m.stat, m.amount);
+//			total += BaseTower.CalculateStatLevel(m.stat, m.amount);
 		}
 		return total;
 	}
