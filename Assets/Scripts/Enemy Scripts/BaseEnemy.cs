@@ -12,28 +12,32 @@ public class BaseEnemy : MonoBehaviour {
 	private PlayerController _player;
 	private static GameObject ITEM_PREFAB;
 	private static GameObject HEALTH_PREFAB;
+	private static GameObject CRAFTABLE_PREFAB;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
 	public MobType type;
 	public float moveSpeed;
 	public int maxLife;
-	private int _life;					// Current Life
-	public int moneyReward;
 	public int waveCost;
+	public GameObject[] drops;
 	private int damage = 2;
 	private int accuracy = (int)(0.25f * 100);
 	private float firingInterval = 1f;
 	private float range = 32;
 
-	// Movement
-//	private float turnTime;
-	private float turnSpeed;			// Defines how long it takes to turn 90 degrees.
-	private float totalTurn;			// [0, 1] How far I have turned.
-	private Quaternion originalRot;		// Rotation if totalturn == 0
-//	private bool isAnimating;
+	// Vary-ables
+	private int _life;					// Current Life
 
 	// Attacking
 	private float _timeTillFire;
+
+	/*
+	 *	Movement
+	 */
+	// Rotation
+	private float turnSpeed;			// Defines how long it takes to turn 90 degrees.
+	private float totalTurn;			// [0, 1] How far I have turned.
+	private Quaternion originalRot;		// Rotation if totalturn == 0
 
 	// Path Following
 	private List<Vector2> _path;	// List of waypoints to follow
@@ -45,10 +49,7 @@ public class BaseEnemy : MonoBehaviour {
 		_offset = new Vector2(Random.Range(-MOV_OFFSET, MOV_OFFSET), Random.Range(-MOV_OFFSET, MOV_OFFSET));
 		_life = maxLife;
 
-		// Set Turn Speed
-		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
-//		turnTime = (Mathf.Sqrt(2) * LevelController.TILE_SIZE) / moveSpeed;
-//		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
+		UpdateStats();
 
 		originalRot = transform.rotation;
 
@@ -57,15 +58,12 @@ public class BaseEnemy : MonoBehaviour {
 			ITEM_PREFAB = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
 		if (HEALTH_PREFAB == null)
 			HEALTH_PREFAB = Resources.Load("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
+		if (CRAFTABLE_PREFAB == null)
+			CRAFTABLE_PREFAB = Resources.Load("Prefabs/Items/Craftable", typeof(GameObject)) as GameObject;
 
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
 	}
-
-//	public void StopAnimation() {
-//		Debug.Log("Stop Animating");
-//		isAnimating = false;
-//	}
 
 	void Update() {
 		/*
@@ -78,14 +76,6 @@ public class BaseEnemy : MonoBehaviour {
 
 		Vector3 targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
 		float dist = Vector3.Distance(targetPos, transform.position);
-
-//		if (!isAnimating) {
-//			iTween.MoveTo(gameObject, iTween.Hash("position", targetPos, "speed", moveSpeed, "easetype", "linear", "oncomplete", "StopAnimation"));
-//			iTween.RotateTo(gameObject, iTween.Hash("rotation", Quaternion.LookRotation(targetPos - transform.position).eulerAngles, "time", 0));
-//			isAnimating = true;
-
-//			_activePoint++;
-//		}
 
 		if (dist < moveSpeed * Time.deltaTime) {
 			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
@@ -140,6 +130,13 @@ public class BaseEnemy : MonoBehaviour {
 		}
 	}
 
+	public void UpdateStats() {
+		// Set Turn Speed
+		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
+//		turnTime = (Mathf.Sqrt(2) * LevelController.TILE_SIZE) / moveSpeed;
+//		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
+	}
+
 	public void PathUpdate() {
 		_path = _level.RecalculatePath(GridPosition);
 		_activePoint = 2;
@@ -156,13 +153,25 @@ public class BaseEnemy : MonoBehaviour {
 	}
 
 	public void Kill() {
-		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
+//		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
 		Destroy(this.transform.root.gameObject);
 
-		if (Random.Range(0, 10) < 6) {
+		if (drops != null) {
+			foreach (GameObject g in drops) {
+				if (g != null) {
+					Instantiate(g, transform.position, Quaternion.identity);
+				}
+			}
+		}
+
+		if (Random.Range(0, 3) == 2)
+			return;
+		if (Random.Range(0, 10) < 3) {
 			Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity);
-		} else if (Random.Range(0, 10) < 10) {
+		} else if (Random.Range(0, 10) < 6) {
 			Instantiate(ITEM_PREFAB, transform.position, Quaternion.identity);
+		} else {
+			Instantiate(CRAFTABLE_PREFAB, transform.position, Quaternion.identity);
 		}
 	}
 
@@ -184,6 +193,14 @@ public class BaseEnemy : MonoBehaviour {
 
 	public int WaveCost {
 		get { return waveCost; }
+	}
+
+	public float MoveSpeed {
+		get { return moveSpeed; }
+		set {
+			this.moveSpeed = value;
+			UpdateStats();
+		}
 	}
 
 	public List<Vector2> MotionPath {

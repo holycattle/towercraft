@@ -25,8 +25,8 @@ public class Builder : GameTool {
 	// Laser Sight
 	private LineRenderer laserSight;
 	
-	void Update() {
-		if(Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1)) {
+	protected override void Update() {
+		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1)) {
 			_game.ActiveMenu = Menu.Game;
 			Screen.lockCursor = false;
 			Time.timeScale = 0.0f;
@@ -154,7 +154,7 @@ public class Builder : GameTool {
 
 			_displayArray = _inventory.GetGameObjects(_activeMenu);
 			
-			if(_displayArray.Length == 0) {
+			if (_displayArray.Length == 0) {
 				_game.ActiveMenu = Menu.Game;
 				Screen.lockCursor = false;
 				Time.timeScale = 0.0f;

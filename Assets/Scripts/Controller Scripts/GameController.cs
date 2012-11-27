@@ -14,9 +14,9 @@ public class GameController : MonoBehaviour {
 
 	// Game Variables
 	private int _livesLeft;
-	private int _money;
-			
+
 	// Message Controller
+	[HideInInspector]
 	public MessageController Messenger;
 	
 	void Start() {
@@ -27,7 +27,6 @@ public class GameController : MonoBehaviour {
 	void Awake() {
 		// Init Player Variables
 		_livesLeft = MAX_LIVES;
-		_money = 100;
 
 		// Initialize Messenger
 		Messenger = GetComponent<MessageController>();
@@ -87,10 +86,6 @@ public class GameController : MonoBehaviour {
 		get { return _livesLeft; }
 	}
 
-	public int Money {
-		get { return _money; }
-	}
-
 	public void AddLife(int life) {
 		_livesLeft += life;
 		if (_livesLeft < 0) {
@@ -105,24 +100,6 @@ public class GameController : MonoBehaviour {
 			// YOU LOSE!
 			_livesLeft = 0;
 		}
-	}
-
-	public bool AddMoney(int money) {
-		_money += money;
-		if (_money < 0) {
-			_money -= money;
-			return false;
-		}
-		return true;
-	}
-
-	public bool SubMoney(int money) {
-		_money -= money;
-		if (_money < 0) {
-			_money += money;
-			return false;
-		}
-		return true;
 	}
 }
 

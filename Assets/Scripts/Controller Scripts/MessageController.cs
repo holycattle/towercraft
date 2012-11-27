@@ -13,7 +13,7 @@ public class MessageController : MonoBehaviour {
 	
 	void Start() {
 		delta = 0;
-		TEXT_DURATION = 3f;
+		TEXT_DURATION = 1.5f;
 		//fadingTime = 3f;
 		//timeDelta = 0;
 		//alphaContainer = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -32,11 +32,11 @@ public class MessageController : MonoBehaviour {
 		GUI.skin.label.alignment = TextAnchor.UpperCenter;
 
 		if (ItemAnnouncement) {
-			GUI.skin.label.normal.textColor = new Color(0f, 50f, 0f, 5f);
+			GUI.skin.label.normal.textColor = new Color(0f, 0.8f, 0f, 0.96875f);
 			AnnounceItem();
 		} else {
 			//warning message with font color red
-			GUI.skin.label.normal.textColor = new Color(50f, 0f, 0f, 5f);
+			GUI.skin.label.normal.textColor = new Color(1f, 0f, 0f, 0.96875f);
 			AnnounceWarning();
 		}
 	}
@@ -59,7 +59,7 @@ public class MessageController : MonoBehaviour {
 	public void WarningMessage(string warning) {
 		ItemAnnouncement = false;
 		message = "";
-		if(this.enabled == true) {
+		if (this.enabled == true) {
 			if (delta == 0) {
 				message = warning;
 				delta = 0;

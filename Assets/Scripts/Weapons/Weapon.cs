@@ -5,6 +5,13 @@ public class Weapon : GameTool {
 	private const int LIFE_WIDTH = 160;
 	private const int LIFE_HEIGHT = 50;
 	private Vector3 SCREEN_CENTER = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+	private const int NUM_WEAPONEQUIPS = 2;
+
+	// Default Constants
+	public const int DEFAULT_DAMAGE = 1;
+	public const int DEFAULT_RANGE = 64;
+	public const int DEFAULT_FIRINGRATE = 4;
+	public const int DEFAULT_ACCURACY = 10;
 
 	//
 	public GameObject sparks;
@@ -12,9 +19,17 @@ public class Weapon : GameTool {
 	public GameObject bullet;
 	private ParticleEmitter emitter;
 
-	//
-	private float _fireInterval = 0.1f;
-	private int damage = 1;
+	// Equipped Modifiers
+	public WeaponItem[] equippedWeapons;
+
+	// Gun Stats
+	public int damage;
+	public int range;
+	public int firingRate;
+	public int accuracy;
+
+	// Gun Variables
+	private float _fireInterval;
 	private float _timeTillFire;
 
 	// GUI Information
@@ -32,6 +47,29 @@ public class Weapon : GameTool {
 
 		emitter = GetComponentInChildren<ParticleEmitter>();
 		emitter.emit = false;
+
+		equippedWeapons = new WeaponItem[NUM_WEAPONEQUIPS];
+
+		// Initialize Stats
+		RecalculateStats();
+	}
+
+	public void RecalculateStats() {
+		damage = DEFAULT_DAMAGE;
+		range = DEFAULT_RANGE;
+		firingRate = DEFAULT_FIRINGRATE;
+		accuracy = DEFAULT_ACCURACY;
+
+		for (int i = 0; i < equippedWeapons.Length; i++) {
+			if (equippedWeapons[i] != null) {
+				damage += equippedWeapons[i].damage;
+				range += equippedWeapons[i].range;
+				firingRate += equippedWeapons[i].firingRate;
+				accuracy += equippedWeapons[i].accuracy;
+			}
+		}
+
+		_fireInterval = 1.0f / firingRate;
 	}
 
 	protected override void OnGUI() {
@@ -60,7 +98,7 @@ public class Weapon : GameTool {
 	private void TryToFire(GameObject g) {
 		if (_timeTillFire <= 0) {
 			// Raycast
-			int maxInaccuracy = (int)(_weapon.CurrentRecoil * WeaponController.CROSSHAIR_OFFSET);
+			int maxInaccuracy = (int)(CurrentRecoil * crosshairOffset);
 //			Debug.Log("Max Inaccuracy: " + maxInaccuracy);
 			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER +
 				new Vector3(Random.Range(-maxInaccuracy, maxInaccuracy), Random.Range(-maxInaccuracy, maxInaccuracy), 0));
@@ -71,19 +109,28 @@ public class Weapon : GameTool {
 				// Damage Game Object
 				BaseEnemy b = hit.transform.gameObject.GetComponent<BaseEnemy>();
 				if (b != null) {
-					b.AddLife(-damage);	// Collided with enemy, otherwise collided with terrain
+//					b.AddLife(-damage);	// Collided with enemy, otherwise collided with terrain
 					_targetted = b;
 				}
 
 				// Calculate Rotation Vector
-				Vector3 path = transform.position - hit.point;
-				Vector3 bounced = 2 * hit.normal * Vector3.Dot(hit.normal, path) - path;
-				Instantiate(sparks, hit.point, Quaternion.LookRotation(bounced));
+//				Vector3 path = transform.position - hit.point;
+//				Vector3 bounced = 2 * hit.normal * Vector3.Dot(hit.normal, path) - path;
+//				Instantiate(sparks, hit.point, Quaternion.LookRotation(bounced));
 
 				// Gun Projectile
-//				GameObject b = Instantiate(bullet, transform.position, Quaternion.LookRotation(hit.point - transform.position)) as GameObject;
-//				b.GetComponent<Rigidbody>().velocity = (hit.point - transform.position).normalized * 128;
-//				Physics.IgnoreCollision(b.collider, transform.root.collider);
+				GameObject proj = Instantiate(bullet, transform.position, Quaternion.LookRotation(hit.point - transform.position)) as GameObject;
+				proj.GetComponent<Rigidbody>().velocity = (hit.point - transform.position).normalized * 64;
+				proj.GetComponent<Bullet>().damage = damage;
+				proj.GetComponent<Bullet>().range = range;
+				Physics.IgnoreCollision(proj.collider, transform.root.collider);
+			} else {
+				// Gun Projectile
+				GameObject proj = Instantiate(bullet, transform.position, Quaternion.LookRotation(transform.forward)) as GameObject;
+				proj.GetComponent<Rigidbody>().velocity = (transform.forward).normalized * 64;
+				proj.GetComponent<Bullet>().damage = damage;
+				proj.GetComponent<Bullet>().range = range;
+				Physics.IgnoreCollision(proj.collider, transform.root.collider);
 			}
 			_timeTillFire += _fireInterval;
 			bullets--;
@@ -91,11 +138,13 @@ public class Weapon : GameTool {
 				bullets = 30;
 
 			emitter.Emit(1);
-			_weapon.Recoil();
+			Recoil();
 		}
 	}
 
-	void Update() {
+	protected override void Update() {
+		base.Update();
+
 		if (_timeTillFire > 0) {
 			_timeTillFire -= Time.deltaTime;
 			if (_timeTillFire <= 0)

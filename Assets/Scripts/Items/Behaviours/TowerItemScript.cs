@@ -8,7 +8,7 @@ public class TowerItemScript : PickupableScript {
 		base.Start();
 
 		if (item == null) {
-			item = new TowerItem(Random.Range(0, BaseTower.TOWER_COMPLETE), Random.Range(2, 10));
+			item = new TowerItem(Random.Range(0, BaseTower.TOWER_COMPLETE), Random.Range(3, 10));
 		}
 	}
 

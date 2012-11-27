@@ -20,12 +20,12 @@ public class ItemCollector : MonoBehaviour {
 	// Crafting Constants
 //	private const int CRAFT_COMBINE = 0;
 //	private const int CRAFT_CLONE = 1;
-	private const float CLONE_OFFSET = 0.2f;
 //	private const float COST_CLONE = 1.1f;
 	private const int NUM_CRAFTABLES = 3;
 
-	// Game
+	// References
 	protected GameController _game;
+	protected Weapon _gun;
 
 	// Inventories
 	private int activeInv;
@@ -45,10 +45,11 @@ public class ItemCollector : MonoBehaviour {
 	// Cloning / Combining
 	private int craftingMode;
 	private TowerItem toClone;
-	private Item[] craftingRecipe;
+	private CraftableItem[] craftingRecipe;
 
 	void Start() {
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
+		_gun = GameObject.Find("Player").GetComponentInChildren<Weapon>();
 
 		// Init the inventories
 		towerInventory = new TowerItem[WIDTH * HEIGHT];
@@ -83,16 +84,15 @@ public class ItemCollector : MonoBehaviour {
 //		modeChangeButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy - (GRIDHEIGHT + SPACE), GRIDWIDTH, GRIDHEIGHT);
 		tooltipRect = new Rect(sx, sy + totalHeight + GRIDHEIGHT, GRIDWIDTH * 2, GRIDHEIGHT * 4);
 
-		//deactivate Messenger engine for now
+		// Deactivate Messenger: So there aren't any messages
 		_game.Messenger.enabled = false;
-
-		Pickup(new TowerItem(0, 4));
-		Pickup(new TowerItem(0, 4));
-		Pickup(new TowerItem(0, 4));
-		Pickup(new TowerItem(1, 4));
-		Pickup(new TowerItem(1, 4));
-		Pickup(new TowerItem(1, 4));
-		Pickup(new TowerItem(1, 4));
+		Pickup(new TowerItem(0, 6));
+		Pickup(new TowerItem(0, 6));
+		Pickup(new TowerItem(0, 6));
+		Pickup(new TowerItem(1, 6));
+		Pickup(new TowerItem(1, 6));
+		Pickup(new TowerItem(1, 6));
+		Pickup(new TowerItem(1, 6));
 
 		Pickup(new CraftableItem(0, 1));
 		Pickup(new CraftableItem(1, 1));
@@ -100,11 +100,15 @@ public class ItemCollector : MonoBehaviour {
 		Pickup(new CraftableItem(0, 1));
 		Pickup(new CraftableItem(1, 1));
 		Pickup(new CraftableItem(2, 1));
+		_game.Messenger.enabled = true; //enable messenger again
 
-		craftingRecipe = new Item[CraftableItem.PART_MAX];
+		craftingRecipe = new CraftableItem[CraftableItem.PART_MAX];
+
+		Sort(towerInventory);
+		Sort(craftInventory);
+		Sort(weaponInventory);
 
 		UpdateInventory();
-		_game.Messenger.enabled = true; //enable messenger again
 	}
 
 	void OnTriggerEnter(Collider other) {
@@ -132,7 +136,7 @@ public class ItemCollector : MonoBehaviour {
 				_game.ActiveMenu = _game.ActiveMenu == Menu.Inventory ? Menu.Game : Menu.Inventory;
 				SetInventoryOpen(_game.ActiveMenu == Menu.Inventory);
 
-				activeInv = INV_TOWER;
+				SetActiveInventory(INV_TOWER);
 			}
 		}
 	}
@@ -159,54 +163,71 @@ public class ItemCollector : MonoBehaviour {
 				}
 
 				if (GUI.Button(drawRects[i], new GUIContent(activeInventory[i].GetName(), activeInventory[i].GetTooltip()))) {
-					if (activeInv == INV_CRAFT) {
-						switch (((CraftableItem)activeInventory[i]).CraftableType) {
-							case CraftableItem.PART_DAMAGE:
-								craftingRecipe[CraftableItem.PART_DAMAGE] = activeInventory[i];
-								break;
-							case CraftableItem.PART_RANGE:
-								craftingRecipe[CraftableItem.PART_RANGE] = activeInventory[i];
-								break;
-							case CraftableItem.PART_ROF:
-								craftingRecipe[CraftableItem.PART_ROF] = activeInventory[i];
-								break;
-						}
-						Remove(activeInventory[i]);
-					} else if (activeInv == INV_TOWER) {
-
+					switch (activeInv) {
+						case INV_CRAFT:
+							CraftableItem c = ((CraftableItem)activeInventory[i]);
+							if (craftingRecipe[c.CraftableType] == null) {
+								// If there is no item CraftableType slot, then ADD
+								craftingRecipe[c.CraftableType] = c;
+								Remove(c);
+							} else {
+								// Else, SWAP the clicked with the one in the slot
+								Pickup(craftingRecipe[c.CraftableType]);
+								craftingRecipe[c.CraftableType] = c;
+								Remove(c);
+							}
+							break;
+						case INV_TOWER:
+							break;
+						case INV_WEAPON:
+							WeaponItem w = ((WeaponItem)activeInventory[i]);
+							if (CanPickup(_gun.equippedWeapons)) {
+								Pickup(_gun.equippedWeapons, w);
+								Remove(activeInventory, w);
+								_gun.RecalculateStats();
+							}
+							break;
 					}
-
-//					if (Pickup(craftingRecipe, activeInventory[i])) {
-//						Remove(activeInventory[i]);
-//					}
 				}
 			}
 
-			// Draw ToClone
-//			if (GUI.Button(toCloneRect, toClone == null ? "" : toClone.GetName())) {
-//				Pickup(toClone);
-//				toClone = null;
-//			}
-
-			// Draw Crafting Recipe
-			for (int i = 0; i < craftingRecipe.Length; i++) {
-				if (craftingRecipe[i] == null) {
-					GUI.Button(craftingRects[i], "");
-					continue;
+			if (activeInv == INV_WEAPON) {
+				// Draw Equipped Weapons
+				for (int i = 0; i < _gun.equippedWeapons.Length; i++) {
+					if (_gun.equippedWeapons[i] == null) {
+						GUI.Button(craftingRects[i], "");
+						continue;
+					}
+					if (GUI.Button(craftingRects[i], new GUIContent(_gun.equippedWeapons[i].GetName(), _gun.equippedWeapons[i].GetTooltip()))) {
+						Pickup(activeInventory, _gun.equippedWeapons[i]);
+						_gun.equippedWeapons[i] = null;
+						_gun.RecalculateStats();
+					}
 				}
-				if (GUI.Button(craftingRects[i], new GUIContent(craftingRecipe[i].GetName(), craftingRecipe[i].GetTooltip()))) {
-					Pickup(craftingRecipe[i]);
-					craftingRecipe[i] = null;
+			} else {
+				// Draw Crafting Recipe
+				for (int i = 0; i < craftingRecipe.Length; i++) {
+					if (craftingRecipe[i] == null) {
+						GUI.Button(craftingRects[i], "");
+						continue;
+					}
+					if (GUI.Button(craftingRects[i], new GUIContent(craftingRecipe[i].GetName(), craftingRecipe[i].GetTooltip()))) {
+						Pickup(craftingRecipe[i]);
+						craftingRecipe[i] = null;
+					}
 				}
 			}
 
+			/*
+			 *	Craft Button
+			 */
 			if (CraftComplete()) {
 				if (GUI.Button(cloneButtonRect, new GUIContent("Build", CraftPreviewString()))) {
-					// Do Someting
+					Pickup(towerInventory, new TowerItem(ComponentGenerator.Get().GenerateTurret(craftingRecipe)));
+					craftingRecipe = new CraftableItem[CraftableItem.PART_MAX];
 				}
 			} else {
 //				GUI.enabled = false;
-				// Build Button
 				if (GUI.Button(cloneButtonRect, new GUIContent("Build", CraftPreviewString()))) {
 				}
 //				GUI.enabled = true;
@@ -232,7 +253,8 @@ public class ItemCollector : MonoBehaviour {
 					s += "Rate of Fire: [";
 					break;
 			}
-			s += (int)Mathf.Floor(i.Modifier * (1 - CLONE_OFFSET)) + " - " + (int)Mathf.Ceil(i.Modifier * (1 + CLONE_OFFSET)) + "]\n";
+			s += (int)Mathf.Max(1, Mathf.Floor(i.Modifier * (1 - CraftableItem.CRAFT_RANDOMNESS)))
+				+ " - " + (int)Mathf.Ceil(i.Modifier * (1 + CraftableItem.CRAFT_RANDOMNESS)) + "]\n";
 		}
 		return s;
 	}
@@ -267,7 +289,7 @@ public class ItemCollector : MonoBehaviour {
 				Pickup(i);
 			}
 			toClone = null;
-			craftingRecipe = new Item[NUM_CRAFTABLES];
+			craftingRecipe = new CraftableItem[NUM_CRAFTABLES];
 			UpdateInventory();
 		}
 	}
@@ -326,7 +348,7 @@ public class ItemCollector : MonoBehaviour {
 	}
 
 	public void Remove(Item it) {
-		this.Remove(towerInventory, it);
+		this.Remove(activeInventory, it);
 		UpdateInventory();
 	}
 
@@ -347,7 +369,7 @@ public class ItemCollector : MonoBehaviour {
 			return;
 		for (int i = 0; i < list.Length; i++) {
 			if (it == list[i]) {
-				towerInventory[i] = null;
+				list[i] = null;
 				return;
 			}
 		}
