@@ -19,11 +19,11 @@ public class SpawnScheme {
 	private float _timeSinceLastSpawn;
 	protected float moveSpeed;
 
-	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost) {
+	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost, int m) {
 		_levelController = gameController;
 		_spawnScheme = new List<MobSpawn>();
 
-		moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
+		moveSpeed = m;
 		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
 	}

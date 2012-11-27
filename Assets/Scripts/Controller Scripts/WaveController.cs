@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour {
+	private const int MIN_SPEED = 2;
+	private const int MAX_SPEED = 12;
+	
 	private const int WAVESTART_COST = 128;
 	private const float WAVE_INCREASE = 1.5f;
 	private const int WAVE_INTERVAL = 10; // In seconds
@@ -43,8 +46,11 @@ public class WaveController : MonoBehaviour {
 	}
 
 	private void NextWave() {
+		//generate moveSpeed here instead
+		int nextWaveMoveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
+		
 		// Create the Spawn Scheme
-		_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost);
+		_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
 
 		_waveNumber++;
 		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);

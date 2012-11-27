@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Assorted : SpawnScheme {
 
-	public Assorted (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
+	public Assorted (LevelController gameController, GameObject[] mobs, int cost, int m) : base(gameController, mobs, cost, m) {
 		// Create the Scheme
 		GameObject g = null;
 		MobType enemyType = determineEnemyType();
