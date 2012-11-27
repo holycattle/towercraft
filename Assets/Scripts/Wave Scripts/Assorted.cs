@@ -4,6 +4,7 @@ using System.Collections;
 public class Assorted : SpawnScheme {
 
 	public Assorted (LevelController gameController, GameObject[] mobs, int cost, int m) : base(gameController, mobs, cost, m) {
+		/*
 		// Create the Scheme
 		GameObject g = null;
 		MobType enemyType = determineEnemyType();
@@ -31,14 +32,7 @@ public class Assorted : SpawnScheme {
 				enemyType = MobType.Speedster;
 			else
 				enemyType = MobType.Tank;*/
-			enemyType = determineEnemyType();
-		}
+			/*enemyType = determineEnemyType();
+		}*/
 	}
-	
-	private int genRandomIntervalFactor() {
-		//max should be the least movement speed of a mob type
-		//fix this later because this is Assorted
-		return UnityEngine.Random.Range(0, 2);
-	}
-
 }

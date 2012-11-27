@@ -56,29 +56,8 @@ public class SpawnScheme {
 		return false;
 	}
 	
-	public int GetMIN_SPEED {
-		get { return MIN_SPEED;}
-	}
-	
-	public int GetMAX_SPEED {
-		get { return MAX_SPEED;}
-	}
-	
-	public int GetMED_SPEED { //get median speed
-		get { return MAX_SPEED / MIN_SPEED;}
-	}
-	
 	public int GetINTERVAL_COEFF {
 		get { return INTERVAL_COEFF; }
-	}
-	
-	public MobType determineEnemyType() {
-		if (moveSpeed >= GetMIN_SPEED && moveSpeed < GetMIN_SPEED + 3) {
-			return MobType.Tank;
-		} else if (moveSpeed >= GetMIN_SPEED + 3 && moveSpeed < GetMIN_SPEED + 6) {
-			return MobType.Creepling;
-		} else
-			return MobType.Speedster;
 	}
 	
 	protected class MobSpawn {

@@ -3,6 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour {
+	private const int SPEEDSTER = 0;
+	private const int CREEPLING = 1;
+	private const int TANK = 2;
+	private const int ASSORTED = 3;
+	private const int CLUSTER = 4; //to be implemented
+	
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
 	
@@ -44,13 +50,57 @@ public class WaveController : MonoBehaviour {
 			}
 		}
 	}
+	
+	public int GetMIN_SPEED {
+		get { return MIN_SPEED;}
+	}
+	
+	public int GetMAX_SPEED {
+		get { return MAX_SPEED;}
+	}
+	
+	public int GetMED_SPEED { //get median speed
+		get { return MAX_SPEED / MIN_SPEED;}
+	}
+	
+	private int determineEnemyType(int moveSpeed) {
+		if(moveSpeed == MIN_SPEED - 2)
+			return CLUSTER;
+		else if(moveSpeed == MIN_SPEED - 1)
+			return ASSORTED;
+		
+		if (moveSpeed >= GetMIN_SPEED && moveSpeed < GetMIN_SPEED + 3) {
+			return TANK;
+		} else if (moveSpeed >= GetMIN_SPEED + 3 && moveSpeed < GetMIN_SPEED + 6) {
+			return CREEPLING;
+		} else
+			return SPEEDSTER;
+	}
 
 	private void NextWave() {
-		//generate moveSpeed here instead
-		int nextWaveMoveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
-		
-		// Create the Spawn Scheme
-		_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
+		//generate moveSpeed here instead; change min range to MIN_SPEED - 2 once ASSORTED and CLUSTER have been implemented
+		int nextWaveMoveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED); //special cases: MIN_SPEED - 2 == CLUSTER, MIN_SPEED - 1 == ASSORTED
+
+		// Create the Spawn Scheme		
+		switch(determineEnemyType(GetMED_SPEED)) { //change this later to randomly go through all enemy types
+			case TANK:
+				//not implemented yet
+				break;
+			case CREEPLING:
+				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
+				break;
+			case SPEEDSTER:
+				//not implemented yet
+				break;
+			case ASSORTED:
+				//not implemented yet
+				//to-do: if nextWaveMoveSpeed == MIN_SPEED - 2 or nextWaveMoveSpeed == MIN_SPEED - 1, do special case
+				break;
+			case CLUSTER:
+				//to-do: if nextWaveMoveSpeed == MIN_SPEED - 2 or nextWaveMoveSpeed == MIN_SPEED - 1, do special case
+				//not implemented yet
+				break;
+		}
 
 		_waveNumber++;
 		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
