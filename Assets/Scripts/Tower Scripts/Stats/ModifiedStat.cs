@@ -2,7 +2,7 @@ using System.Collections.Generic;// For List<>
 
 public class ModifiedStat : BaseStat {
 	private List<ModifyingAttribute> _mods;	// List of attributes that modify this stat.
-	private int _modValue;					// Amount added to the baseValue from the modifiers
+	private float _modValue;					// Amount added to the baseValue from the modifiers
 	
 	public ModifiedStat () {
 		_mods = new List<ModifyingAttribute>();
@@ -28,7 +28,7 @@ public class ModifiedStat : BaseStat {
 		}
 	}
 	
-	public int AdjustedBaseValue {
+	public float AdjustedBaseValue {
 		get { return BaseValue + _modValue; }
 	}
 	
@@ -40,9 +40,9 @@ public class ModifiedStat : BaseStat {
 
 public struct ModifyingAttribute {
 	public Stat stat;
-	public int amount;
+	public float amount;
 
-	public ModifyingAttribute (Stat s, int a) {
+	public ModifyingAttribute (Stat s, float a) {
 		stat = s;
 		amount = a;
 	}

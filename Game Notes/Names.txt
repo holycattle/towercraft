@@ -1,0 +1,52 @@
+-------TURRETS-------
+Names:
+	Turret
+	Array
+
+Splash Damage Turrets
+    Airburst
+    
+Burn Turrets
+    Incendiary = Splash
+    Thermite = Point
+
+Slow Turrets
+    Impedimentary
+    Cryogenic
+
+Stun Turrets
+    Stasis
+
+Long Range Turrets
+	ER
+	Extended Range
+
+High Damage Turrets
+	Advanced
+	Prototype
+	Overcharged
+	Energized
+
+High ROF Turrets
+	Capacitor
+
+-------GUNS-------
+Accurate Guns
+	Pre-Sighted
+
+High ROF Guns
+	Repeater
+	Capacitor (Array)
+
+High DMG Guns
+	Overcharged
+	Energized
+
+Long Range Guns
+	ER
+	Extended Range
+
+Names for Gun Parts 
+	Barrel
+	Receiver
+	Mechanism

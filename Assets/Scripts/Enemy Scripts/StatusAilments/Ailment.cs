@@ -33,8 +33,9 @@ public class Ailment : MonoBehaviour {
 	}
 
 	public static void AddRandomStatusAilment(BaseEnemy b) {
-		string[] loadable = {"Burn", "Slow"};
-		string s = loadable[Random.Range(0, loadable.Length)];
+		string[] loadable = {"Burn", "Slow", "Stun"};
+//		string s = loadable[Random.Range(0, loadable.Length)];
+		string s = "Stun";
 		GameObject ailment = Resources.Load("Prefabs/StatusAilments/" + s, typeof(GameObject)) as GameObject;
 		AddStatusAilment(b, ailment);
 	}

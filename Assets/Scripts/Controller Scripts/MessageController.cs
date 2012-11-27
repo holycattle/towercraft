@@ -7,8 +7,8 @@ public class MessageController : MonoBehaviour {
 	public const int MSG_PICKUP = 0;
 	public const int MSG_WARNING = 1;
 	public const int BOX_WIDTH = 400;
-	public const int BOX_HEIGHT = 40;
-	public const int MAX_NUM_MSG = 6;
+	public const int BOX_HEIGHT = 25;
+	public const int MAX_NUM_MSG = 8;
 	public const float DEFAULT_TEXT_DURATION = 3f;
 	public const float STARTPOS = 0.1f;	// [0, 1] How far down in the screen you start drawing
 	private const string PICKUP_MESSAGE = "Picked up ";
@@ -24,9 +24,8 @@ public class MessageController : MonoBehaviour {
 		//fadingTime = 3f;
 		//timeDelta = 0;
 		//alphaContainer = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-		//fix this later
-		//messageSkin = (GUISkin)Resources.Load("Assets/Fonts/AnonymousSkin", typeof(GUISkin));
 
+		messageSkin = Resources.Load("Fonts/AnonymousSkin", typeof(GUISkin)) as GUISkin;
 		messages = new List<Message>();
 	}
 	
@@ -66,7 +65,7 @@ public class MessageController : MonoBehaviour {
 
 		GUI.skin = null;
 	}
-	
+
 	public void ItemMessage(string itemName) {
 		if (this.enabled == true) {
 			string msg = PICKUP_MESSAGE + itemName;
