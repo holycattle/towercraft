@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class Creepling : SpawnScheme {
-	private const int INTERVAL_COEFF = 12;
 
 	public Creepling (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
 		// Create the Scheme

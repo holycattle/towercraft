@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class Assorted : SpawnScheme {
-	private const int INTERVAL_COEFF = 12;
 
 	public Assorted (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
 		// Create the Scheme

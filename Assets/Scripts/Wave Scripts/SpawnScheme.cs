@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 
 public class SpawnScheme {
+	private const int INTERVAL_COEFF = 12;
 	//moveSpeed range - to be tweaked later on
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
