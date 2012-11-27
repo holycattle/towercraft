@@ -5,6 +5,7 @@ using System;
 
 public class SpawnScheme {
 	private const int INTERVAL_COEFF = 12;
+	
 	//moveSpeed range - to be tweaked later on
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
@@ -55,18 +56,22 @@ public class SpawnScheme {
 		return false;
 	}
 	
-	public static int GetMIN_SPEED {
+	public int GetMIN_SPEED {
 		get { return MIN_SPEED;}
 	}
 	
-	public static int GetMAX_SPEED {
+	public int GetMAX_SPEED {
 		get { return MAX_SPEED;}
 	}
 	
-	public static int GetMED_SPEED { //get median speed
+	public int GetMED_SPEED { //get median speed
 		get { return MAX_SPEED / MIN_SPEED;}
 	}
-
+	
+	public int GetINTERVAL_COEFF {
+		get { return INTERVAL_COEFF; }
+	}
+	
 	protected class MobSpawn {
 		private GameObject _mobToSpawn; // Mob to spawn at this instance
 		private float _waitTime;		// How much time to wait before spawning this mob

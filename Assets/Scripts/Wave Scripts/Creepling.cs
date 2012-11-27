@@ -18,8 +18,8 @@ public class Creepling : SpawnScheme {
 				}
 			}
 
-			float interval = (1f / moveSpeed) * INTERVAL_COEFF;
-//			Debug.Log("Spawn Interval = " + interval.ToString());
+			float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF) - genRandomIntervalFactor();
+			Debug.Log("Spawn Interval = " + interval.ToString());
 //			interval = 16f;
 			_spawnScheme.Add(new MobSpawn(g, interval));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;
@@ -41,5 +41,10 @@ public class Creepling : SpawnScheme {
 			return MobType.Creepling;
 		} else
 			return MobType.Speedster;
+	}
+	
+	private int genRandomIntervalFactor() {
+		//max should be the least movement speed of a mob type
+		return UnityEngine.Random.Range(0, 2);
 	}
 }

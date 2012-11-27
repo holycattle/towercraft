@@ -18,8 +18,8 @@ public class Assorted : SpawnScheme {
 				}
 			}
 
-			float interval = (1f / moveSpeed) * INTERVAL_COEFF;
-//			Debug.Log("Spawn Interval = " + interval.ToString());
+			float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF) - genRandomIntervalFactor();
+			Debug.Log("Spawn Interval = " + interval.ToString());
 //			interval = 16f;
 			_spawnScheme.Add(new MobSpawn(g, interval));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;
@@ -32,6 +32,12 @@ public class Assorted : SpawnScheme {
 			else
 				enemyType = MobType.Tank;
 		}
+	}
+	
+	private int genRandomIntervalFactor() {
+		//max should be the least movement speed of a mob type
+		//fix this later because this is Assorted
+		return UnityEngine.Random.Range(0, 2);
 	}
 	
 	private MobType determineEnemyType() {
