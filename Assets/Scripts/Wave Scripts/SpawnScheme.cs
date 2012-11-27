@@ -72,6 +72,15 @@ public class SpawnScheme {
 		get { return INTERVAL_COEFF; }
 	}
 	
+	public MobType determineEnemyType() {
+		if (moveSpeed >= GetMIN_SPEED && moveSpeed < GetMIN_SPEED + 3) {
+			return MobType.Tank;
+		} else if (moveSpeed >= GetMIN_SPEED + 3 && moveSpeed < GetMIN_SPEED + 6) {
+			return MobType.Creepling;
+		} else
+			return MobType.Speedster;
+	}
+	
 	protected class MobSpawn {
 		private GameObject _mobToSpawn; // Mob to spawn at this instance
 		private float _waitTime;		// How much time to wait before spawning this mob
