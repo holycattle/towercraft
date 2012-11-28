@@ -97,6 +97,15 @@ public class Weapon : GameTool {
 
 	private void TryToFire(GameObject g) {
 		if (_timeTillFire <= 0) {
+			//check if there's ammo left
+			if (bullets == 0) {
+				//if there are bullets in inventory, reload
+				//bullets = 30;
+				//else display warning message and do nothing afterwards
+				_game.Messenger.WarningMessage("No more ammo left.");
+				return;
+			}
+			
 			// Raycast
 			int maxInaccuracy = (int)(CurrentRecoil * crosshairOffset);
 //			Debug.Log("Max Inaccuracy: " + maxInaccuracy);
@@ -134,8 +143,6 @@ public class Weapon : GameTool {
 			}
 			_timeTillFire += _fireInterval;
 			bullets--;
-			if (bullets == 0)
-				bullets = 30;
 
 			emitter.Emit(1);
 			Recoil();
