@@ -2,37 +2,54 @@ using UnityEngine;
 using System.Collections;
 
 public class Assorted : SpawnScheme {
-
-	public Assorted (LevelController gameController, GameObject[] mobs, int cost, int m) : base(gameController, mobs, cost, m) {
-		/*
+	MobType enemyType;
+	int costLeft = 0;
+	public Assorted (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
 		// Create the Scheme
-		GameObject g = null;
-		MobType enemyType = determineEnemyType();
+		costLeft = cost;
 
-		while (cost > 0) {
+	}
+	
+	public override bool Update() {
+		moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
+		MobType enemyType = determineEnemyType();
+		if(costLeft > 0) {
 			// Choose which mob to spawn.
-			g = null;
-			foreach (GameObject tg in mobs) {
-				if (tg.GetComponent<BaseEnemy>().type == enemyType) {
-					g = tg;
-					break;
-				}
+			GameObject g = null;
+			g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
+
+			float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF);
+			Debug.Log("Spawn Interval = " + interval.ToString());
+
+			_spawnScheme.Add(new MobSpawn(g, interval));
+			costLeft -= g.GetComponent<BaseEnemy>().WaveCost;
+		}
+		
+		if (_spawnScheme.Count > 0) {
+			while (_spawnScheme[0].WaitTime <= _timeSinceLastSpawn) {
+				Vector3 offset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
+				GameObject g = _spawnScheme[0].Spawn(getLevelController().mobSpawnPoint + offset, Quaternion.identity);
+
+				BaseEnemy m = g.GetComponent<BaseEnemy>();
+				//random moveSpeed generated from constructor
+				
+				m.moveSpeed = moveSpeed;
+				
+				//procedurally assign new Enemy entity maxLife based on moveSpeed
+				WaveController waveController = getLevelController().GetComponent<WaveController>();
+				m.maxLife = (int)(((1f / moveSpeed) * HEALTH_COEFF) * (1 + (waveController.waveNumber * HEALTH_MULTIPLIER)));
+				
+				m.MotionPath = getLevelController().MotionPath; //set enemy path to path determined by A* search
+
+				_timeSinceLastSpawn -= _spawnScheme[0].WaitTime;
+				_spawnScheme.RemoveAt(0);
 			}
 
-			float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF) - genRandomIntervalFactor();
-			Debug.Log("Spawn Interval = " + interval.ToString());
-//			interval = 16f;
-			_spawnScheme.Add(new MobSpawn(g, interval));
-			cost -= g.GetComponent<BaseEnemy>().WaveCost;
+			_timeSinceLastSpawn += Time.deltaTime;
 
-			// Cycle through mob types
-			/*if (enemyType == MobType.Tank)
-				enemyType = MobType.Creepling;
-			else if (enemyType == MobType.Creepling)
-				enemyType = MobType.Speedster;
-			else
-				enemyType = MobType.Tank;*/
-			/*enemyType = determineEnemyType();
-		}*/
+			return true;
+		}
+		return false;
+		
 	}
 }
