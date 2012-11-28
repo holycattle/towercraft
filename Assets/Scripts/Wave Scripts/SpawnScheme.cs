@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System;
 
 public class SpawnScheme {
-	public int spawnSemaphore = 0; //0 == spawning locked; 1 == spawning unlocked 
-	
 	private const int INTERVAL_COEFF = 12;
 	
 	//moveSpeed range - to be tweaked later on
@@ -28,8 +26,11 @@ public class SpawnScheme {
 		//Debug.Log("SpawnScheme mob type 0 = " + mobs[0].ToString());
 		//initialize mobTable - see WaveController parameters in Unity Editor for details of what each "mobs" index represent
 		mobTable["Creepling"] = mobs[1];
-		mobTable["Tank"] = mobs[2];
-		mobTable["Speedster"] = mobs[3];
+		Debug.Log("Creepling = " + mobTable["Creepling"].ToString());
+		mobTable["Tank"] = mobs[3];
+		Debug.Log("Tank = " + mobTable["Tank"].ToString());
+		mobTable["Speedster"] = mobs[2];
+		Debug.Log("Speedster = " + mobTable["Speedster"].ToString());
 
 		_levelController = gameController;
 		_spawnScheme = new List<MobSpawn>();
@@ -95,10 +96,17 @@ public class SpawnScheme {
 	protected class MobSpawn {
 		private GameObject _mobToSpawn; // Mob to spawn at this instance
 		private float _waitTime;		// How much time to wait before spawning this mob
+		public float moveSpeed;
 
 		public MobSpawn (GameObject g, float wait) {
 			_mobToSpawn = g;
 			_waitTime = wait;
+		}
+		
+		public MobSpawn (GameObject g, float wait, float m) {
+			_mobToSpawn = g;
+			_waitTime = wait;
+			moveSpeed = m;
 		}
 
 		public GameObject Spawn(Vector3 v, Quaternion q) {
