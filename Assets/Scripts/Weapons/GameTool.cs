@@ -15,7 +15,6 @@ public class GameTool : MonoBehaviour {
 	protected GameController _game;
 	protected WeaponController _weapon;
 	protected LevelController _level;
-	public int bullets;
 
 	// GUI Elements
 	private int[] X_OFFSET = {-1, 1, 1, -1};
@@ -39,8 +38,6 @@ public class GameTool : MonoBehaviour {
 		_weapon = GameObject.Find("Player").GetComponentInChildren<WeaponController>();
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
-
-		bullets = 0;
 	}
 
 	protected virtual void Start() {
@@ -65,6 +62,9 @@ public class GameTool : MonoBehaviour {
 	}
 
 	protected virtual void OnGUI() {
+		if (!_weapon.drawCrosshair)
+			return;
+
 		GUI.DrawTexture(crosshairRect[0], crosshair[0]);
 		GUI.DrawTexture(crosshairRect[1], crosshair[1]);
 		GUI.DrawTexture(crosshairRect[2], crosshair[2]);

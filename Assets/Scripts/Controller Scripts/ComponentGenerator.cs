@@ -10,6 +10,7 @@ public class ComponentGenerator {
 
 	// Turret Constants
 	private Vector3 buildSpot = new Vector3(0, 50, 0);
+	private Transform partsRoot;
 
 	// Turret Parts
 	private GameObject turretBase;
@@ -50,6 +51,8 @@ public class ComponentGenerator {
 		}
 
 		Debug.Log("ComponentGenerator: " + _towerParts[0].Length + "/" + _towerParts[1].Length + " / S:" + stems.Length);
+
+		partsRoot = GameObject.Find("[Root]Parts").transform;
 	}
 
 	public static ComponentGenerator Get() {
@@ -120,6 +123,7 @@ public class ComponentGenerator {
 		t.level = t.CalculateLevel();
 
 		g.SetActiveRecursively(false);
+		t.transform.parent = partsRoot;
 		return t;
 	}
 
@@ -192,6 +196,7 @@ public class ComponentGenerator {
 			t.level = t.CalculateLevel();
 
 			g.SetActiveRecursively(false);
+			t.transform.parent = partsRoot;
 			return t;
 		} else if (type == BaseTower.TOWER_BASE) {
 			int part = Random.Range(0, _towerParts[type].Length);
@@ -209,6 +214,7 @@ public class ComponentGenerator {
 //			}
 
 			g.SetActiveRecursively(false);
+			t.transform.parent = partsRoot;
 //			Debug.Log("Base After Count: " + t.attributes.Count);
 			return t;
 		}
