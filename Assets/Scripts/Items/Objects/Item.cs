@@ -5,6 +5,7 @@ public class Item {
 	public const int ITEM_TOWER = 0;
 	public const int ITEM_CRAFT = 1;
 	public const int ITEM_WEAPON = 2;
+	public const int ITEM_AMMO = 3;
 
 	// Item Variables
 	public int itemType;

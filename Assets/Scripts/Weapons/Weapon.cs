@@ -100,7 +100,7 @@ public class Weapon : GameTool {
 			//check if there's ammo left
 			if (bullets == 0) {
 				//if there are bullets in inventory, reload
-				//bullets = 30;
+					//bullets = 30;
 				//else display warning message and do nothing afterwards
 				_game.Messenger.WarningMessage("No more ammo left.");
 				return;
