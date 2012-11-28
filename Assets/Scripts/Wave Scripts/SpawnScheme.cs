@@ -27,9 +27,9 @@ public class SpawnScheme {
 	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost) {
 		//Debug.Log("SpawnScheme mob type 0 = " + mobs[0].ToString());
 		//initialize mobTable - see WaveController parameters in Unity Editor for details of what each "mobs" index represent
-		mobTable["Creepling"] = mobs[0];
-		mobTable["Tank"] = mobs[1];
-		mobTable["Speedster"] = mobs[2];
+		mobTable["Creepling"] = mobs[1];
+		mobTable["Tank"] = mobs[2];
+		mobTable["Speedster"] = mobs[3];
 
 		_levelController = gameController;
 		_spawnScheme = new List<MobSpawn>();
