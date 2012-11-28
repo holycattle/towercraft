@@ -4,31 +4,42 @@ using System.Collections.Generic;
 using System;
 
 public class SpawnScheme {
+	public int spawnSemaphore = 0; //0 == spawning locked; 1 == spawning unlocked 
+	
 	private const int INTERVAL_COEFF = 12;
 	
 	//moveSpeed range - to be tweaked later on
-	private const int MIN_SPEED = 2;
-	private const int MAX_SPEED = 12;
+	public const int MIN_SPEED = 2;
+	public const int MAX_SPEED = 12;
 	
 	//maxHealth coefficient and multiplier
-	private const int HEALTH_COEFF = 64; //this determines the scale of the HP
-	private const float HEALTH_MULTIPLIER = 0.2f; //every wave, health increases by current_health * HEALTH_MULTIPLIER
+	public const int HEALTH_COEFF = 64; //this determines the scale of the HP
+	public const float HEALTH_MULTIPLIER = 0.2f; //every wave, health increases by current_health * HEALTH_MULTIPLIER
 	
 	private LevelController _levelController;
 	protected List<MobSpawn> _spawnScheme;
-	private float _timeSinceLastSpawn;
+	public float _timeSinceLastSpawn;
 	protected float moveSpeed;
+	
+	public Hashtable mobTable = new Hashtable();
 
-	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost, int m) {
+	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost) {
+		//Debug.Log("SpawnScheme mob type 0 = " + mobs[0].ToString());
+		//initialize mobTable - see WaveController parameters in Unity Editor for details of what each "mobs" index represent
+		mobTable["Creepling"] = mobs[0];
+		mobTable["Tank"] = mobs[1];
+		mobTable["Speedster"] = mobs[2];
+
+		
 		_levelController = gameController;
 		_spawnScheme = new List<MobSpawn>();
 
-		moveSpeed = m;
+		moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
 		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
 	}
 	
-	public bool Update() {
+	public virtual bool Update() {
 		if (_spawnScheme.Count > 0) {
 			while (_spawnScheme.Count > 0 && _spawnScheme[0].WaitTime <= _timeSinceLastSpawn) {
 				Vector3 offset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
@@ -36,7 +47,7 @@ public class SpawnScheme {
 				GameObject g = _spawnScheme[0].Spawn(_levelController.mobSpawnPoint + offset, Quaternion.identity);
 
 				BaseEnemy m = g.GetComponent<BaseEnemy>();
-				//random moveSpeed
+				//random moveSpeed generated from constructor
 				m.moveSpeed = (int)moveSpeed;
 				
 				//procedurally assign new Enemy entity maxLife based on moveSpeed
@@ -55,9 +66,26 @@ public class SpawnScheme {
 		}
 		return false;
 	}
-	
+
+	public MobType determineEnemyType() {
+		if (moveSpeed >= MIN_SPEED && moveSpeed < MIN_SPEED + 3) {
+			return MobType.Tank;
+		} else if (moveSpeed >= MIN_SPEED + 3 && moveSpeed < MIN_SPEED + 6) {
+			return MobType.Creepling;
+		} else
+			return MobType.Speedster;
+	}
+
 	public int GetINTERVAL_COEFF {
 		get { return INTERVAL_COEFF; }
+	}
+	
+	public float GetTimeSinceLastSpawn {
+		get { return _timeSinceLastSpawn; }
+	}
+	
+	public LevelController getLevelController() {
+		return _levelController;
 	}
 	
 	protected class MobSpawn {

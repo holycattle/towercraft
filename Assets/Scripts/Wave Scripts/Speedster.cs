@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Speedster : SpawnScheme {
 
-	public Speedster (LevelController gameController, GameObject[] mobs, int cost, int m) : base(gameController, mobs, cost, m) {
+	public Speedster (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
 		// Create the Scheme
 		GameObject g = null;
 		MobType enemyType = MobType.Speedster;
@@ -11,12 +11,7 @@ public class Speedster : SpawnScheme {
 		while (cost > 0) {
 			// Choose which mob to spawn.
 			g = null;
-			foreach (GameObject tg in mobs) {
-				if (tg.GetComponent<BaseEnemy>().type == enemyType) {
-					g = tg;
-					break;
-				}
-			}
+			g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
 
 			float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF);
 			Debug.Log("Spawn Interval = " + interval.ToString());
