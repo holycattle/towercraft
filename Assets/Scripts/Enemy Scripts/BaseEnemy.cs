@@ -209,7 +209,7 @@ public class BaseEnemy : MonoBehaviour {
 }
 
 public enum MobType {
-	Basic,
+	//Basic,
 	Creepling,
 	Tank,
 	Speedster
