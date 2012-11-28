@@ -25,31 +25,26 @@ public class Assorted : SpawnScheme {
 			costLeft -= g.GetComponent<BaseEnemy>().WaveCost;
 		}
 		
-		if (_spawnScheme.Count > 0) {
-			while (_spawnScheme[0].WaitTime <= _timeSinceLastSpawn) {
-				Vector3 offset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
-				GameObject g = _spawnScheme[0].Spawn(getLevelController().mobSpawnPoint + offset, Quaternion.identity);
-
-				BaseEnemy m = g.GetComponent<BaseEnemy>();
-				//random moveSpeed generated from constructor
+		while (_spawnScheme.Count > 0 && _spawnScheme[0].WaitTime <= _timeSinceLastSpawn) {
+			Vector3 offset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
+			GameObject g = _spawnScheme[0].Spawn(getLevelController().mobSpawnPoint + offset, Quaternion.identity);
+			BaseEnemy m = g.GetComponent<BaseEnemy>();
+			//random moveSpeed generated from constructor
 				
-				m.moveSpeed = moveSpeed;
+			m.moveSpeed = moveSpeed;
 				
-				//procedurally assign new Enemy entity maxLife based on moveSpeed
-				WaveController waveController = getLevelController().GetComponent<WaveController>();
-				m.maxLife = (int)(((1f / moveSpeed) * HEALTH_COEFF) * (1 + (waveController.waveNumber * HEALTH_MULTIPLIER)));
-				
-				m.MotionPath = getLevelController().MotionPath; //set enemy path to path determined by A* search
-
-				_timeSinceLastSpawn -= _spawnScheme[0].WaitTime;
-				_spawnScheme.RemoveAt(0);
-			}
-
-			_timeSinceLastSpawn += Time.deltaTime;
-
-			return true;
+			//procedurally assign new Enemy entity maxLife based on moveSpeed
+			WaveController waveController = getLevelController().GetComponent<WaveController>();
+			m.maxLife = (int)(((1f / moveSpeed) * HEALTH_COEFF) * (1 + (waveController.waveNumber * HEALTH_MULTIPLIER)));
+			
+			m.MotionPath = getLevelController().MotionPath; //set enemy path to path determined by A* search
+			_timeSinceLastSpawn -= _spawnScheme[0].WaitTime;
+			_spawnScheme.RemoveAt(0);
 		}
-		return false;
+
+		_timeSinceLastSpawn += Time.deltaTime;
+
+		return true;
 		
 	}
 }
