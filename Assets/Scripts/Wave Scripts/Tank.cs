@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class Creepling : SpawnScheme {
+public class Tank : SpawnScheme {
 
-	public Creepling (LevelController gameController, GameObject[] mobs, int cost, int m) : base(gameController, mobs, cost, m) {
+	public Tank (LevelController gameController, GameObject[] mobs, int cost, int m) : base(gameController, mobs, cost, m) {
 		// Create the Scheme
 		GameObject g = null;
-		MobType enemyType = MobType.Creepling;
+		MobType enemyType = MobType.Speedster;
 		
 		while (cost > 0) {
 			// Choose which mob to spawn.
