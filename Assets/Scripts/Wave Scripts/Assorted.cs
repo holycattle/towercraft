@@ -33,7 +33,7 @@ public class Assorted : SpawnScheme {
 				
 			//procedurally assign new Enemy entity maxLife based on moveSpeed
 			WaveController waveController = getLevelController().GetComponent<WaveController>();
-			m.maxLife = (int)(((1f / moveSpeed) * HEALTH_COEFF) * (1 + (waveController.waveNumber * HEALTH_MULTIPLIER)));
+			m.maxLife = (int)(((1f / m.moveSpeed) * HEALTH_COEFF) * (1 + (waveController.waveNumber * HEALTH_MULTIPLIER)));
 			
 			m.MotionPath = getLevelController().MotionPath; //set enemy path to path determined by A* search
 			_timeSinceLastSpawn -= _spawnScheme[0].WaitTime;
