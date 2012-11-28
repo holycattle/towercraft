@@ -3,5 +3,6 @@
 *.pidb
 *.csproj
 *.unityproj
+*.unity
 Library/
 Temp/
