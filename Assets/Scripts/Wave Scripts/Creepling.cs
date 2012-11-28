@@ -7,6 +7,7 @@ public class Creepling : SpawnScheme {
 		// Create the Scheme
 		GameObject g = null;
 		MobType enemyType = MobType.Creepling;
+		moveSpeed = UnityEngine.Random.Range(MIN_SPEED+4, MIN_SPEED+6);
 		
 		while (cost > 0) {
 			// Choose which mob to spawn.

@@ -7,7 +7,7 @@ public class Speedster : SpawnScheme {
 		// Create the Scheme
 		GameObject g = null;
 		MobType enemyType = MobType.Speedster;
-		
+		moveSpeed = UnityEngine.Random.Range(MAX_SPEED-3, MAX_SPEED);
 		while (cost > 0) {
 			// Choose which mob to spawn.
 			g = null;

@@ -34,7 +34,7 @@ public class SpawnScheme {
 		_levelController = gameController;
 		_spawnScheme = new List<MobSpawn>();
 
-		moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
+		
 		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
 	}

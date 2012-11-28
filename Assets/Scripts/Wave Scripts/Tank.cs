@@ -6,8 +6,8 @@ public class Tank : SpawnScheme {
 	public Tank (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
 		// Create the Scheme
 		GameObject g = null;
-		MobType enemyType = MobType.Speedster;
-		
+		MobType enemyType = MobType.Tank;
+		moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MIN_SPEED+3);
 		while (cost > 0) {
 			// Choose which mob to spawn.
 			g = null;
