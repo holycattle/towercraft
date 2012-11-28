@@ -82,15 +82,15 @@ public class WaveController : MonoBehaviour {
 		int nextWaveMoveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED); //special cases: MIN_SPEED - 2 == CLUSTER, MIN_SPEED - 1 == ASSORTED
 
 		// Create the Spawn Scheme		
-		switch(determineEnemyType(GetMED_SPEED)) { //change this later to randomly go through all enemy types
+		switch(determineEnemyType(nextWaveMoveSpeed)) { //change this later to randomly go through all enemy types
 			case TANK:
-				//not implemented yet
+				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
 				break;
 			case CREEPLING:
 				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
 				break;
 			case SPEEDSTER:
-				//not implemented yet
+				_spawnScheme = new Speedster(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
 				break;
 			case ASSORTED:
 				//not implemented yet
