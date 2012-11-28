@@ -2,26 +2,24 @@ using UnityEngine;
 using System.Collections;
 
 public class Assorted : SpawnScheme {
-	MobType enemyType;
+	MobType newEnemyType;
 	int costLeft = 0;
 	public Assorted (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
-		// Create the Scheme
 		costLeft = cost;
-
 	}
 	
 	public override bool Update() {
 		moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
-		MobType enemyType = determineEnemyType();
 		if(costLeft > 0) {
+			newEnemyType = determineEnemyType();
 			// Choose which mob to spawn.
 			GameObject g = null;
-			g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
-
+			g = (GameObject)mobTable[newEnemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
+			Debug.Log("newEnemyType = " + newEnemyType.ToString() + " g = " + g.ToString() + " moveSpeed = " + moveSpeed);
 			float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF);
 			Debug.Log("Spawn Interval = " + interval.ToString());
 
-			_spawnScheme.Add(new MobSpawn(g, interval));
+			_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed));
 			costLeft -= g.GetComponent<BaseEnemy>().WaveCost;
 		}
 		
@@ -31,7 +29,7 @@ public class Assorted : SpawnScheme {
 			BaseEnemy m = g.GetComponent<BaseEnemy>();
 			//random moveSpeed generated from constructor
 				
-			m.moveSpeed = moveSpeed;
+			m.moveSpeed = _spawnScheme[0].moveSpeed;
 				
 			//procedurally assign new Enemy entity maxLife based on moveSpeed
 			WaveController waveController = getLevelController().GetComponent<WaveController>();
