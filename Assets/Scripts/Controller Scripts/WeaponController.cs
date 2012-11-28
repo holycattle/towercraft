@@ -80,17 +80,15 @@ public class WeaponController : MonoBehaviour {
 //			"looptype", iTween.LoopType.loop, "easetype", iTween.EaseType.linear));
 	}
 
-	void OnGUI() {
-		if (!drawCrosshair)
-			return;
-
-		GUI.Box(new Rect(0, 120, 128, 30), "Bullets: " + ActiveTool.bullets);
+//	void OnGUI() {
+//		if (!drawCrosshair)
+//			return;
 
 //		GUI.DrawTexture(crosshairRect[0], crosshair0);
 //		GUI.DrawTexture(crosshairRect[1], crosshair1);
 //		GUI.DrawTexture(crosshairRect[2], crosshair2);
 //		GUI.DrawTexture(crosshairRect[3], crosshair3);
-	}
+//	}
 
 	void FixedUpdate() {
 		if (_game.ActiveMenu == Menu.Game) {

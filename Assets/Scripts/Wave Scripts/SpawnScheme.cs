@@ -19,6 +19,9 @@ public class SpawnScheme {
 	private float _timeSinceLastSpawn;
 	protected float moveSpeed;
 
+	// Mob Root
+	public Transform mobRoot;
+
 	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost, int m) {
 		_levelController = gameController;
 		_spawnScheme = new List<MobSpawn>();
@@ -26,6 +29,8 @@ public class SpawnScheme {
 		moveSpeed = m;
 		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
+
+		mobRoot = GameObject.Find("[Root]Mobs").transform;
 	}
 	
 	public bool Update() {
@@ -33,7 +38,9 @@ public class SpawnScheme {
 			while (_spawnScheme.Count > 0 && _spawnScheme[0].WaitTime <= _timeSinceLastSpawn) {
 				Vector3 offset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
 
+				// Spawn the Mob and Set Parent
 				GameObject g = _spawnScheme[0].Spawn(_levelController.mobSpawnPoint + offset, Quaternion.identity);
+				g.transform.parent = mobRoot;
 
 				BaseEnemy m = g.GetComponent<BaseEnemy>();
 				//random moveSpeed

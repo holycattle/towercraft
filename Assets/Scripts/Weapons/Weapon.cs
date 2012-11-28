@@ -32,14 +32,18 @@ public class Weapon : GameTool {
 	private float _fireInterval;
 	private float _timeTillFire;
 
+	// Ammo/Reloading
+	private int magSize = 18;		// # Bullets per Magazine
+	private int _bullets;			// Current Magazine
+	private int _totalBullets;		// Total in Pack
+	private float reloadTime = 2;	// Secs to Reload
+	private float _reloadCounter;	// Secs currently Reloading
+
 	// GUI Information
 	private BaseEnemy _targetted;
 
 	protected override void Awake() {
 		base.Awake();
-
-		_timeTillFire = 0;
-		bullets = 30;
 	}
 
 	protected override void Start() {
@@ -52,6 +56,11 @@ public class Weapon : GameTool {
 
 		// Initialize Stats
 		RecalculateStats();
+
+		// Init Ammo/Shooting
+		_timeTillFire = 0;
+		_totalBullets = 60;
+		_bullets = magSize;
 	}
 
 	public void RecalculateStats() {
@@ -72,8 +81,34 @@ public class Weapon : GameTool {
 		_fireInterval = 1.0f / firingRate;
 	}
 
+	protected override void Update() {
+		base.Update();
+
+		if (_reloadCounter > 0) {
+			_reloadCounter -= Time.deltaTime;
+			if (_reloadCounter <= 0) {
+				_reloadCounter = 0;
+				ReloadBullets();
+			}
+		} else {
+			if (Input.GetKey(KeyCode.R) && _bullets < magSize) {
+				Reload();
+			}
+		}
+
+
+		if (_timeTillFire > 0) {
+			_timeTillFire -= Time.deltaTime;
+			if (_timeTillFire <= 0)
+				_timeTillFire = 0;
+		}
+	}
+
 	protected override void OnGUI() {
 		base.OnGUI();
+
+		// Draw Bullet Count
+		GUI.Box(new Rect(0, 120, 128, 30), "Bullets: " + _bullets + " / " + _totalBullets);
 
 		if (_targetted != null) {
 			GUI.TextArea(new Rect(Screen.width / 2 - LIFE_WIDTH / 2, 0, LIFE_WIDTH, LIFE_HEIGHT), _targetted.Name + "\n" + _targetted.Life + " / " + _targetted.maxLife);
@@ -96,19 +131,22 @@ public class Weapon : GameTool {
 	}
 
 	private void TryToFire(GameObject g) {
+		// Check if reloading
+		if (_reloadCounter > 0) {
+			// Currently Reloading
+			return;
+		}
+
+		// Check if there's ammo left.
+		if (_bullets == 0) {
+			// No More Ammo
+			Reload();
+			return;
+		}
+
 		if (_timeTillFire <= 0) {
-			//check if there's ammo left
-			if (bullets == 0) {
-				//if there are bullets in inventory, reload
-					//bullets = 30;
-				//else display warning message and do nothing afterwards
-				_game.Messenger.WarningMessage("No more ammo left.");
-				return;
-			}
-			
 			// Raycast
 			int maxInaccuracy = (int)(CurrentRecoil * crosshairOffset);
-//			Debug.Log("Max Inaccuracy: " + maxInaccuracy);
 			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER +
 				new Vector3(Random.Range(-maxInaccuracy, maxInaccuracy), Random.Range(-maxInaccuracy, maxInaccuracy), 0));
 			RaycastHit hit;
@@ -118,7 +156,6 @@ public class Weapon : GameTool {
 				// Damage Game Object
 				BaseEnemy b = hit.transform.gameObject.GetComponent<BaseEnemy>();
 				if (b != null) {
-//					b.AddLife(-damage);	// Collided with enemy, otherwise collided with terrain
 					_targetted = b;
 				}
 
@@ -142,20 +179,36 @@ public class Weapon : GameTool {
 				Physics.IgnoreCollision(proj.collider, transform.root.collider);
 			}
 			_timeTillFire += _fireInterval;
-			bullets--;
+			_bullets--;
 
 			emitter.Emit(1);
 			Recoil();
 		}
 	}
 
-	protected override void Update() {
-		base.Update();
+	public void AddAmmo(int i) {
+		_totalBullets += i;
+		_game.Messenger.ItemMessage("Picked up " + i + " Bullets!");
+	}
 
-		if (_timeTillFire > 0) {
-			_timeTillFire -= Time.deltaTime;
-			if (_timeTillFire <= 0)
-				_timeTillFire = 0;
+	private void Reload() {
+		if (_totalBullets > 0) {
+			_game.Messenger.WarningMessage("Reloading!");
+		} else {
+			_game.Messenger.WarningMessage("No more ammo left.");
+			return;
 		}
+		// Start Reload Timer
+		_reloadCounter = reloadTime;
+	}
+
+	private void ReloadBullets() {
+		_totalBullets += _bullets;
+		if (_totalBullets >= magSize) {
+			_bullets = magSize;
+		} else {
+			_bullets = _totalBullets;
+		}
+		_totalBullets -= _bullets;
 	}
 }

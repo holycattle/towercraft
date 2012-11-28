@@ -41,7 +41,7 @@ public class LevelController : MonoBehaviour {
 		minimap = GetComponent<MinimapScript>();
 
 		// Instantiate the Tiles and Path
-		GameObject gridParent = new GameObject("Grid Parent");
+		GameObject gridParent = new GameObject("[Root]Grid");
 		for (int y = 0; y < mapHeight; y++) {
 			for (int x = 0; x < mapWidth; x++) {
 				GameObject t = Instantiate(tilePrefab,

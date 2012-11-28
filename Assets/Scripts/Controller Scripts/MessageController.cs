@@ -110,7 +110,8 @@ public class MessageController : MonoBehaviour {
 //	}
 
 	public class Message {
-		private const int COLORCHANGES = 10;
+		private const float STARTCOLORCHANGE = 0.9f;	// How long during the interval until you start fading out
+		private const int COLORCHANGES = 10;			// # of colour changes
 		protected string msg;
 		protected int msgType;
 		public bool destroy; 		// Should destroy at the end of update loop?
@@ -150,7 +151,7 @@ public class MessageController : MonoBehaviour {
 		}
 
 		public void Update() {
-			if (Time.time >= startTime + (interval / COLORCHANGES) * move) {
+			if (Time.time >= startTime + STARTCOLORCHANGE * interval + ((1 - STARTCOLORCHANGE) * interval / COLORCHANGES) * move) {
 				move++;
 				c.a = c.a - (1.0f / COLORCHANGES) * move;
 			}
