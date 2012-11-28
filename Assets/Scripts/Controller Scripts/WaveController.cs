@@ -17,6 +17,7 @@ public class WaveController : MonoBehaviour {
 	private const int WAVE_INTERVAL = 10; // In seconds
 
 	public GameObject[] mobs; // Mobs to choose from.
+	//public Hashtable mobTable; 
 
 	private LevelController _gameController;
 	private SpawnScheme _spawnScheme;		// Current Wave Scheme
@@ -78,28 +79,28 @@ public class WaveController : MonoBehaviour {
 	}
 
 	private void NextWave() {
-		//generate moveSpeed here instead; change min range to MIN_SPEED - 2 once ASSORTED and CLUSTER have been implemented
-		int nextWaveMoveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED); //special cases: MIN_SPEED - 2 == CLUSTER, MIN_SPEED - 1 == ASSORTED
-
+		//major change: speed is generated inside SpawnScheme again
+		
 		// Create the Spawn Scheme		
-		switch(determineEnemyType(nextWaveMoveSpeed)) { //change this later to randomly go through all enemy types
+		switch(UnityEngine.Random.Range(SPEEDSTER, CLUSTER)) { //change this later to randomly go through all enemy types
 			case TANK:
-				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
+				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost);
 				break;
 			case CREEPLING:
-				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
+				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost);
 				break;
 			case SPEEDSTER:
-				_spawnScheme = new Speedster(_gameController, mobs, _nextWaveCost, nextWaveMoveSpeed);
+				_spawnScheme = new Speedster(_gameController, mobs, _nextWaveCost);
 				break;
-			case ASSORTED:
+			/*case ASSORTED:
 				//not implemented yet
+				_spawnScheme = new Assorted(_gameController, mobs, _nextWaveCost);
 				//to-do: if nextWaveMoveSpeed == MIN_SPEED - 2 or nextWaveMoveSpeed == MIN_SPEED - 1, do special case
 				break;
 			case CLUSTER:
 				//to-do: if nextWaveMoveSpeed == MIN_SPEED - 2 or nextWaveMoveSpeed == MIN_SPEED - 1, do special case
 				//not implemented yet
-				break;
+				break;*/
 		}
 
 		_waveNumber++;
