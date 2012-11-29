@@ -26,6 +26,7 @@ public class Assorted : SpawnScheme {
 		while (_spawnScheme.Count > 0 && _spawnScheme[0].WaitTime <= _timeSinceLastSpawn) {
 			Vector3 offset = new Vector3(UnityEngine.Random.Range(-1f, 1f), 0, UnityEngine.Random.Range(-1f, 1f));
 			GameObject g = _spawnScheme[0].Spawn(getLevelController().mobSpawnPoint + offset, Quaternion.identity);
+			g.transform.parent = mobRoot;
 			BaseEnemy m = g.GetComponent<BaseEnemy>();
 			//random moveSpeed generated from constructor
 				
