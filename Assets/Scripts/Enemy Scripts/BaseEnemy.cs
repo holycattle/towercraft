@@ -154,8 +154,9 @@ public class BaseEnemy : MonoBehaviour {
 
 	public void Kill() {
 //		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
-		Destroy(this.transform.root.gameObject);
-
+		//Destroy(this.transform.root.gameObject);
+		Destroy(this.transform.gameObject);
+		
 		if (drops != null) {
 			foreach (GameObject g in drops) {
 				if (g != null) {
