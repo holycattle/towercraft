@@ -20,17 +20,14 @@ public class SpawnScheme {
 	protected float moveSpeed;
 	
 	public Hashtable mobTable = new Hashtable();
-	public Transform mobRoot;
+	public Transform mobRoot = null;
 
 	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost) {
 		//Debug.Log("SpawnScheme mob type 0 = " + mobs[0].ToString());
 		//initialize mobTable - see WaveController parameters in Unity Editor for details of what each "mobs" index represent
 		mobTable["Creepling"] = mobs[1];
-		Debug.Log("Creepling = " + mobTable["Creepling"].ToString());
 		mobTable["Tank"] = mobs[3];
-		Debug.Log("Tank = " + mobTable["Tank"].ToString());
 		mobTable["Speedster"] = mobs[2];
-		Debug.Log("Speedster = " + mobTable["Speedster"].ToString());
 
 		_levelController = gameController;
 		_spawnScheme = new List<MobSpawn>();
