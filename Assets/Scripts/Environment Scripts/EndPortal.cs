@@ -10,8 +10,9 @@ public class EndPortal : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider other) {
-		GameObject go = other.transform.root.gameObject;
+		GameObject go = other.transform.parent.gameObject;
 		
+		Debug.Log("object that collided:" + go.ToString());
 		if(!go.name.Equals("Player", System.StringComparison.OrdinalIgnoreCase)) {
 			// Destroys the entity that enters it.
 			Destroy(go);
