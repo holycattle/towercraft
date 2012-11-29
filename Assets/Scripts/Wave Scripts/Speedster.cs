@@ -4,6 +4,8 @@ using System.Collections;
 public class Speedster : SpawnScheme {
 
 	public Speedster (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
+		Debug.Log("Scheme = Speedster");
+		
 		// Create the Scheme
 		GameObject g = null;
 		MobType enemyType = MobType.Speedster;

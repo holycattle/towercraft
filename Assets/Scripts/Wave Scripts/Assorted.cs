@@ -5,6 +5,7 @@ public class Assorted : SpawnScheme {
 	MobType newEnemyType;
 	int costLeft = 0;
 	public Assorted (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
+		Debug.Log("Scheme = Assorted");
 		costLeft = cost;
 	}
 	

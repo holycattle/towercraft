@@ -4,6 +4,7 @@ using System.Collections;
 public class Creepling : SpawnScheme {
 
 	public Creepling (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
+		Debug.Log("Scheme = Creepling");
 		// Create the Scheme
 		GameObject g = null;
 		MobType enemyType = MobType.Creepling;
