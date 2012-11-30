@@ -99,13 +99,13 @@ public class BaseTower : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Enemy") {
-			_enemiesInRange.Add(other.transform.root.gameObject);
+			_enemiesInRange.Add(other.transform.gameObject);
 		}
 	}
 
 	void OnTriggerExit(Collider other) {
 		if (other.gameObject.tag == "Enemy")
-			_enemiesInRange.Remove(other.transform.root.gameObject);
+			_enemiesInRange.Remove(other.transform.gameObject);
 	}
 
 	private void UpdateStats() {
