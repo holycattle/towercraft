@@ -73,9 +73,8 @@ public class WaveController : MonoBehaviour {
 	}
 
 	private void NextWave() {
-		//major change: speed is generated inside SpawnScheme again
-		
 		// Create the Spawn Scheme	//UnityEngine.Random.Range(SPEEDSTER, CLUSTER)
+		
 		switch(UnityEngine.Random.Range(SPEEDSTER, ASSORTED)) { //change this later to randomly go through all enemy types
 			case TANK:
 				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost);
@@ -87,9 +86,7 @@ public class WaveController : MonoBehaviour {
 				_spawnScheme = new Speedster(_gameController, mobs, _nextWaveCost);
 				break;
 			case ASSORTED:
-				//not implemented yet
 				_spawnScheme = new Assorted(_gameController, mobs, _nextWaveCost);
-				//to-do: if nextWaveMoveSpeed == MIN_SPEED - 2 or nextWaveMoveSpeed == MIN_SPEED - 1, do special case
 				break;
 		}
 

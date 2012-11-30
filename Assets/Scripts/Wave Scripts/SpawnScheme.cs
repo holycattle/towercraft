@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System;
 
 public class SpawnScheme {
-	private const int INTERVAL_COEFF = 12;
+	private const int INTERVAL_COEFF = 7;
 	
 	//moveSpeed range - to be tweaked later on
-	public const int MIN_SPEED = 2;
-	public const int MAX_SPEED = 12;
+	public const int MIN_SPEED = 3;
+	public const int MAX_SPEED = 13;
 	
 	//maxHealth coefficient and multiplier
-	public const int HEALTH_COEFF = 64; //this determines the scale of the HP
+	public const int HEALTH_COEFF = 200; //this determines the scale of the HP
 	public const float HEALTH_MULTIPLIER = 0.2f; //every wave, health increases by current_health * HEALTH_MULTIPLIER
 	
 	private LevelController _levelController;
