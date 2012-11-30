@@ -40,7 +40,7 @@ public class WaveController : MonoBehaviour {
 				if (GameObject.FindGameObjectWithTag("Enemy") == null) {
 					_waveActive = false;
 					_timeTillNextWave = WAVE_INTERVAL;
-				}
+				} else _waveNumber++; //add waveNumber
 			}
 		} else {
 			_timeTillNextWave -= Time.deltaTime;
@@ -90,7 +90,7 @@ public class WaveController : MonoBehaviour {
 				break;
 		}
 
-		_waveNumber++;
+		
 		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
 		_waveActive = true;
 	}
