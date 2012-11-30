@@ -7,7 +7,10 @@ public class Ailment : MonoBehaviour {
 	protected float interval;
 
 	protected virtual void Start() {
-		_enemy = transform.root.GetComponentInChildren<BaseEnemy>();
+		//_enemy = transform.root.GetComponentInChildren<BaseEnemy>();
+		_enemy = transform.parent.GetComponentInChildren<BaseEnemy>();
+		//transform.parent = _enemy.transform;
+		//Debug.Log(transform.parent.gameObject);
 		BeginStatus();
 	}
 
@@ -42,6 +45,6 @@ public class Ailment : MonoBehaviour {
 
 	public static void AddStatusAilment(BaseEnemy b, GameObject ailment) {
 		GameObject ail = Instantiate(ailment, b.transform.position, Quaternion.identity) as GameObject;
-		ail.transform.parent = b.transform.root;
+		ail.transform.parent = b.transform;
 	}
 }
