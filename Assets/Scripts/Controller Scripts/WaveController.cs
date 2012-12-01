@@ -7,10 +7,8 @@ public class WaveController : MonoBehaviour {
 	private const int CREEPLING = 1;
 	private const int TANK = 2;
 	private const int ASSORTED = 3;
-	
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
-	
 	private const int WAVESTART_COST = 128;
 	private const float WAVE_INCREASE = 1.5f;
 	private const int WAVE_INTERVAL = 10; // In seconds
@@ -40,7 +38,8 @@ public class WaveController : MonoBehaviour {
 				if (GameObject.FindGameObjectWithTag("Enemy") == null) {
 					_waveActive = false;
 					_timeTillNextWave = WAVE_INTERVAL;
-				} else _waveNumber++; //add waveNumber
+				} else
+					_waveNumber++; //add waveNumber
 			}
 		} else {
 			_timeTillNextWave -= Time.deltaTime;
@@ -73,26 +72,28 @@ public class WaveController : MonoBehaviour {
 	}
 
 	private void NextWave() {
-		// Create the Spawn Scheme	//UnityEngine.Random.Range(SPEEDSTER, CLUSTER)
-		
-		switch(UnityEngine.Random.Range(SPEEDSTER, ASSORTED)) { //change this later to randomly go through all enemy types
-			case TANK:
-				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost);
-				break;
-			case CREEPLING:
-				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost);
-				break;
-			case SPEEDSTER:
-				_spawnScheme = new Speedster(_gameController, mobs, _nextWaveCost);
-				break;
-			case ASSORTED:
-				_spawnScheme = new Assorted(_gameController, mobs, _nextWaveCost);
-				break;
-		}
-
-		
+		_waveNumber++;
 		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
 		_waveActive = true;
+
+		// Create the Spawn Scheme
+
+		// Note: Random.Range(x, y) Generates a random number from [x, y). Inclusive X, Exclusive Y.
+		switch (UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1)) { //change this later to randomly go through all enemy types
+//		switch (ASSORTED) {
+			case TANK:
+				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, _waveNumber);
+				break;
+			case CREEPLING:
+				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, _waveNumber);
+				break;
+			case SPEEDSTER:
+				_spawnScheme = new Speedster(_gameController, mobs, _nextWaveCost, _waveNumber);
+				break;
+			case ASSORTED:
+				_spawnScheme = new Assorted(_gameController, mobs, _nextWaveCost, _waveNumber);
+				break;
+		}
 	}
 	
 	public int waveNumber {

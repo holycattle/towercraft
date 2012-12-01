@@ -16,9 +16,10 @@ public class BaseEnemy : MonoBehaviour {
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
 	public MobType type;
-	public float moveSpeed;
+	private float moveSpeed;
 	public int maxLife;
 	public int waveCost;
+	public float level;
 	public GameObject[] drops;
 	private int damage = 2;
 	private int accuracy = (int)(0.25f * 100);

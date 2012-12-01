@@ -3,7 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class TowerTurret : TowerComponent {
+
+	// Turret Stats
 	public List<ModifyingAttribute> attributes;
+	public GameObject missile;	// Missile
+
+	// Tooltip
+	public string toolTipMessage;
 
 	protected override void Awake() {
 		base.Awake();
@@ -15,6 +21,7 @@ public class TowerTurret : TowerComponent {
 		string s = "---" + componentName + "---\n";
 		s += "Level: " + CalculateLevel() + "\n";
 
+		// Add Stat Messages
 		for (int i = 0; i < System.Enum.GetValues(typeof(Stat)).Length; i++) {
 			s += ((Stat)i).ToString() + ": ";
 			float amt = 0;
@@ -23,10 +30,11 @@ public class TowerTurret : TowerComponent {
 					amt += m.amount;
 				}
 			}
+			amt = (Mathf.Round(amt * 10f) / 10f);
 			s += amt + "\n";
 		}
 
-		return s;
+		return s + toolTipMessage;
 	}
 
 	public string GenerateName() {

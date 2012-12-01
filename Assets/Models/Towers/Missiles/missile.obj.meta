@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 524e34c27c8c0694ea84917006e6d000
+guid: c6bed2499d37005448159f74473646c9
 ModelImporter:
   fileIDToRecycleName:
-    4300000: Body.dys_prop_warby_spider_tank_01.mesh_02
+    4300000: Cylinder001
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,7 +20,7 @@ ModelImporter:
     clipAnimations: []
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: .25
     meshCompression: 0
     addColliders: 0
     swapUVChannels: 0
@@ -36,4 +36,27 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
-  textMetaNamesToFileIDs: {}
+  textMetaNamesToFileIDs:
+    //RootNode:
+      data:
+        first: 1
+        second: a2860100
+      data:
+        first: 4
+        second: 821a0600
+      data:
+        first: 111
+        second: 605fa900
+    Cylinder001:
+      data:
+        first: 1
+        second: a0860100
+      data:
+        first: 4
+        second: 801a0600
+      data:
+        first: 23
+        second: 60182300
+      data:
+        first: 33
+        second: a05a3200

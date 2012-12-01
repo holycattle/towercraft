@@ -3,24 +3,20 @@ using System.Collections;
 
 public class Creepling : SpawnScheme {
 
-	public Creepling (LevelController gameController, GameObject[] mobs, int cost) : base(gameController, mobs, cost) {
+	public Creepling (LevelController gameController, GameObject[] mobs, int cost, int waveNumber) : base(gameController, mobs, cost, waveNumber) {
 		Debug.Log("Scheme = Creepling");
+
 		// Create the Scheme
-		GameObject g = null;
 		MobType enemyType = MobType.Creepling;
-		moveSpeed = UnityEngine.Random.Range(MIN_SPEED+4, MIN_SPEED+6);
-		
+		float moveSpeed = UnityEngine.Random.Range(MIN_SPEED + 4, MIN_SPEED + 6);
+		int health = (int)(((1f / moveSpeed) * HEALTH_COEFF) * (1 + (waveNumber * HEALTH_MULTIPLIER)));
+		float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF);
+
 		while (cost > 0) {
 			// Choose which mob to spawn.
-			g = null;
-			g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
-
-			float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF);
-			Debug.Log("Spawn Interval = " + interval.ToString());
-//			interval = 16f;
-			_spawnScheme.Add(new MobSpawn(g, interval));
+			GameObject g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
+			_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;
-			Debug.Log(cost);
 		}
 	}
 }

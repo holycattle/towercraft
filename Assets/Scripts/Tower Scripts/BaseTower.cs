@@ -134,6 +134,9 @@ public class BaseTower : MonoBehaviour {
 		// Set Collider Range
 		GetComponent<SphereCollider>().radius = stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE;
 
+		// Load the Missile
+		missile = temp.missile;
+
 		isFiring = true;
 
 		// Debug Out all Stats

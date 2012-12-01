@@ -19,6 +19,7 @@ public class ComponentGenerator {
 	private Object[] missileSources;
 	private Object[] barrels;
 	private Object[] spinningParts;
+	private Object[] missiles;
 
 	public ComponentGenerator () {
 		string[] dirs = {"Base", "Turret"};
@@ -44,6 +45,7 @@ public class ComponentGenerator {
 		missileSources = Resources.LoadAll(s + "Missile Source", typeof(GameObject));
 		barrels = Resources.LoadAll(s + "Barrel", typeof(GameObject));
 		spinningParts = Resources.LoadAll(s + "Spinning", typeof(GameObject));
+		missiles = Resources.LoadAll(s + "Missiles", typeof(GameObject));
 		Object[] loadedStems = Resources.LoadAll(s + "Stems", typeof(GameObject));
 		stems = new TowerStem[loadedStems.Length];
 		for (int i = 0; i < loadedStems.Length; i++) {
@@ -133,9 +135,11 @@ public class ComponentGenerator {
 
 		if (type == BaseTower.TOWER_TURRET) {
 			int chStem = Random.Range(0, stems.Length);
-			int chMissile = Random.Range(0, missileSources.Length);
+			int chMissileSource = Random.Range(0, missileSources.Length);
 			int chBarrel = Random.Range(0, barrels.Length);
 			int chSpinner = Random.Range(0, spinningParts.Length);
+			int chMissile = Random.Range(0, missiles.Length);
+
 			// Turret Base
 			GameObject g = GameObject.Instantiate(turretBase, buildSpot, Quaternion.identity) as GameObject;
 
@@ -148,8 +152,8 @@ public class ComponentGenerator {
 			GameObject gSpin = GameObject.Instantiate(spinningBase, buildSpot + stemOffest, Quaternion.identity) as GameObject;
 			gSpin.transform.parent = g.transform;
 
-			// Missile
-			GameObject gMiss = GameObject.Instantiate((GameObject)missileSources[chMissile], buildSpot + stemOffest, Quaternion.identity) as GameObject;
+			// Missile Source
+			GameObject gMiss = GameObject.Instantiate((GameObject)missileSources[chMissileSource], buildSpot + stemOffest, Quaternion.identity) as GameObject;
 			gMiss.transform.parent = g.transform;
 			gMiss.name = "MissileSource";
 
@@ -183,13 +187,18 @@ public class ComponentGenerator {
 			// Damage
 			int s_dmg = Random.Range(1, (int)(dps * DPSMULT));	// Multiply to allow for FiringRate : (0, 1]
 
-			// Firing Rate
-			float s_firingRate = Mathf.Round((dps * 100) / s_dmg) / 100f;
+			// Firing Rate (# of bullets per second)
+			float s_firingRate = Mathf.Round((dps / s_dmg) * 10f) / 10f;
 
+			Debug.Log("DPS: " + dps + " / DMG: " + s_dmg + " / FR: " + s_firingRate);
 
 			t.attributes.Add(new ModifyingAttribute(Stat.Damage, s_dmg));
 			t.attributes.Add(new ModifyingAttribute(Stat.Range, s_range));
 			t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, s_firingRate));
+			t.missile = (GameObject)missiles[chMissile];
+			t.toolTipMessage = "DPS => " + (s_dmg * s_firingRate);
+
+			Debug.Log(":>" + t.toolTipMessage);
 
 			t.componentName = t.GenerateName();
 			t.componentType = BaseTower.TOWER_TURRET;
