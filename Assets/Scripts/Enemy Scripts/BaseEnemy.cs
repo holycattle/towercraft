@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class BaseEnemy : MonoBehaviour {
 	// Constants
 	public const float MOV_OFFSET = 2f;
+	public const int BURN_TYPE = 0;
+	public const int FREEZE_TYPE = 1;
+	public const int STUN_TYPE = 2;
 //	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
 
 	// References
