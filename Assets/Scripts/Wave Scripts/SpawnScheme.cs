@@ -97,7 +97,8 @@ public class SpawnScheme {
 		private float mobMoveSpeed;		// Mob's Move Speed
 		private int mobHealth;			// Mob's Health
 		private int mobLevel;			// Mob's Level
-
+		private int resistanceType;
+		private float resistanceAmt;
 		public MobSpawn (GameObject g, float wait, float mspd, int hp, int level, int resistanceType, float resistanceAmt) {
 			_mobToSpawn = g;
 			_waitTime = wait;
@@ -106,15 +107,8 @@ public class SpawnScheme {
 			mobMoveSpeed = mspd;
 			mobHealth = hp;
 			mobLevel = level;
-			
-			switch(resistanceType) {
-				case BaseEnemy.BURN_TYPE:
-					break;
-				case BaseEnemy.FREEZE_TYPE:
-					break;
-				case BaseEnemy.STUN_TYPE:
-					break;
-			}
+			this.resistanceType = resistanceType;
+			this.resistanceAmt = resistanceAmt;
 		}
 
 		public GameObject Spawn(Vector3 v, Quaternion q) {
@@ -125,6 +119,20 @@ public class SpawnScheme {
 			m.MoveSpeed = mobMoveSpeed;
 			m.maxLife = mobHealth;
 			m.level = mobLevel;
+			//resistanceType = BaseEnemy.BURN_TYPE;
+			//resistanceAmt = 1;
+			switch(resistanceType) {
+				//remove int typecast later
+				case BaseEnemy.BURN_TYPE:
+					m.heatResistance = (int)resistanceAmt;
+					break;
+				case BaseEnemy.FREEZE_TYPE:
+					m.slowResistance = (int)resistanceAmt;
+					break;
+				case BaseEnemy.STUN_TYPE:
+					m.stunResistance = (int)resistanceAmt;
+					break;
+			}
 			return g;
 		}
 	

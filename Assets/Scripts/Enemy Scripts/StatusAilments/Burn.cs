@@ -15,9 +15,12 @@ public class Burn : Ailment {
 		base.Update();
 
 		damageInterval -= Time.deltaTime;
-		if (damageInterval <= 0) {
-			_enemy.AddLife(-damage);
-			damageInterval += 1;
+		if(_enemy.heatResistance == 0) {
+			Debug.Log("Burned!");
+			if (damageInterval <= 0) {
+				_enemy.AddLife(-damage);
+				damageInterval += 1;
+			}
 		}
 	}
 }

@@ -12,12 +12,17 @@ public class Slow : Ailment {
 	}
 
 	protected override void BeginStatus() {
-		deltaMoveSpeed = Mathf.Max(0.5f, (int)(deltaMoveSpeed * slowPercentage));
-		_enemy.MoveSpeed -= deltaMoveSpeed;
+		if(_enemy.slowResistance == 0) {
+			Debug.Log("Slowed!");
+			deltaMoveSpeed = Mathf.Max(0.5f, (int)(deltaMoveSpeed * slowPercentage));
+			_enemy.MoveSpeed -= deltaMoveSpeed;
+		}
 	}
 
 	protected override void EndStatus() {
-		_enemy.MoveSpeed += deltaMoveSpeed;
-		base.EndStatus();
+		if(_enemy.slowResistance == 0) {
+			_enemy.MoveSpeed += deltaMoveSpeed;
+			base.EndStatus();
+		}
 	}
 }

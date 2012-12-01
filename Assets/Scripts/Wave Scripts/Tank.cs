@@ -16,7 +16,7 @@ public class Tank : SpawnScheme {
 		while (cost > 0) {
 			// Choose which mob to spawn.
 			GameObject g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
-			_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.FREEZE_TYPE, Random.Range(0f, 1f)));
+			_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.FREEZE_TYPE, UnityEngine.Random.Range(0, 1)));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;
 		}
 	}

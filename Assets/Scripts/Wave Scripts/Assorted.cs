@@ -17,11 +17,11 @@ public class Assorted : SpawnScheme {
 			GameObject g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
 			
 			if(enemyType == MobType.Tank) {
-				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.FREEZE_TYPE, Random.Range(0f, 1f)));
+				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.FREEZE_TYPE, Random.Range(0, 2)));
 			} else if(enemyType == MobType.Creepling) {
-				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.STUN_TYPE, Random.Range(0f, 1f)));
+				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.STUN_TYPE, Random.Range(0, 2)));
 			} else if(enemyType == MobType.Speedster) {
-				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.BURN_TYPE, Random.Range(0f, 1f)));
+				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.BURN_TYPE, Random.Range(0, 2)));
 			}
 			
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;

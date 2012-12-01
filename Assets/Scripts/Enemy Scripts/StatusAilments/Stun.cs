@@ -11,16 +11,21 @@ public class Stun : Ailment {
 	}
 
 	protected override void BeginStatus() {
-		deltaMoveSpeed = _enemy.MoveSpeed;
-		_enemy.MoveSpeed = 0;		// Setting this to 0.
+		if(_enemy.stunResistance == 0) {
+			deltaMoveSpeed = _enemy.MoveSpeed;
+			_enemy.MoveSpeed = 0;		// Setting this to 0.
+		}
 	}
 
 	protected override void Update() {
-		if (_enemy.MoveSpeed > 0) {
-			deltaMoveSpeed += _enemy.MoveSpeed;
-			_enemy.MoveSpeed -= _enemy.MoveSpeed;
+		if(_enemy.stunResistance == 0) {
+			Debug.Log("Stunned!");
+			if (_enemy.MoveSpeed > 0) {
+				deltaMoveSpeed += _enemy.MoveSpeed;
+				_enemy.MoveSpeed -= _enemy.MoveSpeed;
+			}
+			base.Update();
 		}
-		base.Update();
 	}
 
 	protected override void EndStatus() {
