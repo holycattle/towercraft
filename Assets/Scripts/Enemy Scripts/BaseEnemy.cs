@@ -5,6 +5,9 @@ using System.Collections.Generic;
 public class BaseEnemy : MonoBehaviour {
 	// Constants
 	public const float MOV_OFFSET = 2f;
+	public const int BURN_TYPE = 0;
+	public const int FREEZE_TYPE = 1;
+	public const int STUN_TYPE = 2;
 //	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
 
 	// References
@@ -25,6 +28,11 @@ public class BaseEnemy : MonoBehaviour {
 	private int accuracy = (int)(0.25f * 100);
 	private float firingInterval = 1f;
 	private float range = 32;
+	
+	//ailment resistance
+	public float heatResistance;
+	public float slowResistance;
+	public float stunResistance;
 
 	// Vary-ables
 	private int _life;					// Current Life

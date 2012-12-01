@@ -98,7 +98,7 @@ public class SpawnScheme {
 		private int mobHealth;			// Mob's Health
 		private int mobLevel;			// Mob's Level
 
-		public MobSpawn (GameObject g, float wait, float mspd, int hp, int level) {
+		public MobSpawn (GameObject g, float wait, float mspd, int hp, int level, int resistanceType, float resistanceAmt) {
 			_mobToSpawn = g;
 			_waitTime = wait;
 
@@ -106,6 +106,15 @@ public class SpawnScheme {
 			mobMoveSpeed = mspd;
 			mobHealth = hp;
 			mobLevel = level;
+			
+			switch(resistanceType) {
+				case BaseEnemy.BURN_TYPE:
+					break;
+				case BaseEnemy.FREEZE_TYPE:
+					break;
+				case BaseEnemy.STUN_TYPE:
+					break;
+			}
 		}
 
 		public GameObject Spawn(Vector3 v, Quaternion q) {
