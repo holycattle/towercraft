@@ -3,21 +3,15 @@ using System.Collections;
 
 public class WeaponItem : Item {
 
-	private string weaponName;
+	public const int DPS = 0;
+	public const int STAT = 1;
+	public string weaponName;
+	public int weaponType;
 
-	// Stat Modifiers
-	public int damage;
-	public int range;
-	public int firingRate;
-	public int accuracy;
+	public WeaponItem (int type) : base(ITEM_WEAPON) {
+		weaponType = type;
 
-	public WeaponItem () : base(ITEM_WEAPON) {
 		weaponName = "" + Random.Range(100, 999);
-
-		damage = 2;
-		range = 16;
-		firingRate = 4;
-		accuracy = 20;
 	}
 
 	public override bool isLessThan(Item t) {
@@ -26,13 +20,5 @@ public class WeaponItem : Item {
 
 	public override string GetName() {
 		return weaponName;
-	}
-
-	public override string GetTooltip() {
-		return weaponName + "\n" +
-			"Damage: +" + damage + "\n" +
-			"Range: +" + range + "\n" +
-			"Firing Rate: +" + firingRate + "\n" +
-			"Accuracy: +" + accuracy + "\n";
 	}
 }

@@ -193,7 +193,6 @@ public class ComponentGenerator {
 				string[] s = {"Burn", "Slow", "Stun"};
 				GameObject statEffect = Resources.Load("Prefabs/StatusAilments/" + s[i], typeof(GameObject)) as GameObject;
 				t.missile = Resources.Load("Prefabs/Towers/Turret Parts/MissilesStatus/" + s[i] + "Missile", typeof(GameObject)) as GameObject;
-				Debug.Log("tmissname: " + t.missile.name);
 				switch (i) {
 					case Ailment.BURN:
 						//statEffect.GetComponent<Burn>().damage = 2;

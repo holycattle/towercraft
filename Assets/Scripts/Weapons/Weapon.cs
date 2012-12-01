@@ -22,21 +22,27 @@ public class Weapon : GameTool {
 	// Equipped Modifiers
 	public WeaponItem[] equippedWeapons;
 
-	// Gun Stats
-	public int damage;
-	public int range;
-	public int firingRate;
-	public int accuracy;
+	/*
+	 *	Gun Stats (do not have to be manipulated in other classes)
+	 */
+	// DPS Stats
+	private int damage;
+	private float firingRate;
+	private int energyConsumption;
+	private GameObject statusEffect;
+	// Other Stats
+	private float range;
+//	private float accuracy;
+	private int magSize;		// # Bullets per Magazine
+	private float reloadTime = 2;	// Secs to Reload
 
 	// Gun Variables
 	private float _fireInterval;
 	private float _timeTillFire;
 
 	// Ammo/Reloading
-	private int magSize = 18;		// # Bullets per Magazine
 	private int _bullets;			// Current Magazine
 	private int _totalBullets;		// Total in Pack
-	private float reloadTime = 2;	// Secs to Reload
 	private float _reloadCounter;	// Secs currently Reloading
 
 	// GUI Information
@@ -53,6 +59,8 @@ public class Weapon : GameTool {
 		emitter.emit = false;
 
 		equippedWeapons = new WeaponItem[NUM_WEAPONEQUIPS];
+		equippedWeapons[WeaponItem.DPS] = new WeaponDPSItem(1);
+		equippedWeapons[WeaponItem.STAT] = new WeaponStatItem(1);
 
 		// Initialize Stats
 		RecalculateStats();
@@ -64,19 +72,16 @@ public class Weapon : GameTool {
 	}
 
 	public void RecalculateStats() {
-		damage = DEFAULT_DAMAGE;
-		range = DEFAULT_RANGE;
-		firingRate = DEFAULT_FIRINGRATE;
-		accuracy = DEFAULT_ACCURACY;
 
-		for (int i = 0; i < equippedWeapons.Length; i++) {
-			if (equippedWeapons[i] != null) {
-				damage += equippedWeapons[i].damage;
-				range += equippedWeapons[i].range;
-				firingRate += equippedWeapons[i].firingRate;
-				accuracy += equippedWeapons[i].accuracy;
-			}
-		}
+		damage = ((WeaponDPSItem)equippedWeapons[WeaponItem.DPS]).damage;
+		firingRate = ((WeaponDPSItem)equippedWeapons[WeaponItem.DPS]).firingRate;
+		statusEffect = ((WeaponDPSItem)equippedWeapons[WeaponItem.DPS]).statusEffect;
+		energyConsumption = ((WeaponDPSItem)equippedWeapons[WeaponItem.DPS]).energyConsumption;
+
+		magSize = ((WeaponStatItem)equippedWeapons[WeaponItem.STAT]).magSize;
+		reloadTime = ((WeaponStatItem)equippedWeapons[WeaponItem.STAT]).reloadTime;
+		range = ((WeaponStatItem)equippedWeapons[WeaponItem.STAT]).range;
+//		accuracy = ((WeaponStatItem)equippedWeapons[WeaponItem.STAT]).accuracy;
 
 		_fireInterval = 1.0f / firingRate;
 	}
@@ -138,8 +143,7 @@ public class Weapon : GameTool {
 		}
 
 		// Check if there's ammo left.
-		if (_bullets == 0) {
-			// No More Ammo
+		if (_bullets <= 0) {
 			Reload();
 			return;
 		}
@@ -169,6 +173,7 @@ public class Weapon : GameTool {
 				proj.GetComponent<Rigidbody>().velocity = (hit.point - transform.position).normalized * 64;
 				proj.GetComponent<Bullet>().damage = damage;
 				proj.GetComponent<Bullet>().range = range;
+				proj.GetComponent<Bullet>().statusAilment = statusEffect;
 				Physics.IgnoreCollision(proj.collider, transform.root.collider);
 			} else {
 				// Gun Projectile
@@ -176,10 +181,16 @@ public class Weapon : GameTool {
 				proj.GetComponent<Rigidbody>().velocity = (transform.forward).normalized * 64;
 				proj.GetComponent<Bullet>().damage = damage;
 				proj.GetComponent<Bullet>().range = range;
+				proj.GetComponent<Bullet>().statusAilment = statusEffect;
 				Physics.IgnoreCollision(proj.collider, transform.root.collider);
 			}
 			_timeTillFire += _fireInterval;
-			_bullets--;
+			_bullets -= energyConsumption;
+
+			// Check if there's ammo left.
+			if (_bullets <= 0) {
+				_bullets = 0;
+			}
 
 			emitter.Emit(1);
 			Recoil();

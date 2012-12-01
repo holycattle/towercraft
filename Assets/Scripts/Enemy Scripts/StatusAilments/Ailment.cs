@@ -6,7 +6,6 @@ public class Ailment : MonoBehaviour {
 	public const int BURN = 0;
 	public const int SLOW = 1;
 	public const int STUN = 2;
-	
 	protected BaseEnemy _enemy;
 	protected float interval;
 
@@ -41,8 +40,8 @@ public class Ailment : MonoBehaviour {
 
 	public static void AddRandomStatusAilment(BaseEnemy b) {
 		string[] loadable = {"Burn", "Slow", "Stun"};
-//		string s = loadable[Random.Range(0, loadable.Length)];
-		string s = "Stun";
+		string s = loadable[Random.Range(0, loadable.Length)];
+		
 		GameObject ailment = Resources.Load("Prefabs/StatusAilments/" + s, typeof(GameObject)) as GameObject;
 		AddStatusAilment(b, ailment);
 	}

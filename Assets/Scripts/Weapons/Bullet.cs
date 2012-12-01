@@ -6,9 +6,10 @@ public class Bullet : MonoBehaviour {
 	private static GameObject sparks;
 
 	// Bullet Stats
-	public int damage = 1;
-	public int range = 32;
-	
+	public int damage;
+	public float range;
+	public GameObject statusAilment;
+
 	// Starting Position
 	private Vector3 _startingPos;
 
@@ -31,8 +32,8 @@ public class Bullet : MonoBehaviour {
 		if (b != null) {
 			b.AddLife(-damage);
 
-			// Add Random Status Ailment
-			Ailment.AddRandomStatusAilment(b);
+			if (statusAilment != null)
+				Ailment.AddStatusAilment(b, statusAilment);
 		}
 
 		Vector3 path = _startingPos - transform.position;

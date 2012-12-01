@@ -103,6 +103,13 @@ public class ItemCollector : MonoBehaviour {
 		Pickup(new CraftableItem(0, 1));
 		Pickup(new CraftableItem(1, 1));
 		Pickup(new CraftableItem(2, 1));
+
+		Pickup(new WeaponDPSItem(1));
+		Pickup(new WeaponDPSItem(1));
+		Pickup(new WeaponDPSItem(1));
+		Pickup(new WeaponStatItem(1));
+		Pickup(new WeaponStatItem(1));
+		Pickup(new WeaponStatItem(1));
 		_game.Messenger.enabled = true; //enable messenger again
 
 		craftingRecipe = new CraftableItem[CraftableItem.PART_MAX];
@@ -184,11 +191,11 @@ public class ItemCollector : MonoBehaviour {
 							break;
 						case INV_WEAPON:
 							WeaponItem w = ((WeaponItem)activeInventory[i]);
-							if (CanPickup(_gun.equippedWeapons)) {
-								Pickup(_gun.equippedWeapons, w);
-								Remove(activeInventory, w);
-								_gun.RecalculateStats();
-							}
+							WeaponItem prevEquipped = _gun.equippedWeapons[w.weaponType];
+							_gun.equippedWeapons[w.weaponType] = w;
+							Remove(activeInventory, w);
+							Pickup(activeInventory, prevEquipped);
+							_gun.RecalculateStats();
 							break;
 					}
 				}
@@ -201,11 +208,7 @@ public class ItemCollector : MonoBehaviour {
 						GUI.Button(craftingRects[i], "");
 						continue;
 					}
-					if (GUI.Button(craftingRects[i], new GUIContent(_gun.equippedWeapons[i].GetName(), _gun.equippedWeapons[i].GetTooltip()))) {
-						Pickup(activeInventory, _gun.equippedWeapons[i]);
-						_gun.equippedWeapons[i] = null;
-						_gun.RecalculateStats();
-					}
+					GUI.Button(craftingRects[i], new GUIContent(_gun.equippedWeapons[i].GetName(), _gun.equippedWeapons[i].GetTooltip()));
 				}
 			} else {
 				// Draw Crafting Recipe

@@ -6,10 +6,9 @@ public class WeaponItemScript : PickupableScript {
 
 	protected override void Start() {
 		base.Start();
-
-		if (item == null) {
-			item = new WeaponItem();
-		}
+//		if (item == null) {
+//			item = new WeaponItem();
+//		}
 	}
 
 	public override void Pickup(ItemCollector ic) {

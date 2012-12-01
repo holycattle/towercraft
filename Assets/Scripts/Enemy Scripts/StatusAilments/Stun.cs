@@ -8,7 +8,7 @@ public class Stun : Ailment {
 
 	protected override void Start() {
 		base.Start();
-		Interval = LENGTH * _enemy.stunResistance;
+		Interval = LENGTH * (1 - _enemy.stunResistance);
 	}
 
 	protected override void BeginStatus() {
@@ -17,7 +17,6 @@ public class Stun : Ailment {
 	}
 
 	protected override void Update() {
-		Debug.Log("Stunned!");
 		if (_enemy.MoveSpeed > 0) {
 			deltaMoveSpeed += _enemy.MoveSpeed;
 			_enemy.MoveSpeed -= _enemy.MoveSpeed;
