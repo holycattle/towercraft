@@ -25,6 +25,11 @@ public class BaseEnemy : MonoBehaviour {
 	private int accuracy = (int)(0.25f * 100);
 	private float firingInterval = 1f;
 	private float range = 32;
+	
+	//ailment resistance
+	public float heatResistance;
+	public float slowResistance;
+	public float stunResistance;
 
 	// Vary-ables
 	private int _life;					// Current Life
