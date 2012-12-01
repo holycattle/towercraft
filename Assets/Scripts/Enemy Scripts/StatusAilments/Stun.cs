@@ -24,7 +24,6 @@ public class Stun : Ailment {
 	}
 
 	protected override void EndStatus() {
-		Debug.Log("Adding: " + deltaMoveSpeed + " to " + _enemy.MoveSpeed);
 		_enemy.MoveSpeed += deltaMoveSpeed;
 		base.EndStatus();
 	}

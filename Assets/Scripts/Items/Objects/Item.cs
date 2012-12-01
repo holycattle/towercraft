@@ -31,4 +31,17 @@ public class Item {
 	public int ItemType {
 		get { return itemType; }
 	}
+
+	public static void Instantiate(int type, Vector3 position, Quaternion rot) {
+		switch (type) {
+			case ITEM_TOWER:
+				break;
+			case ITEM_CRAFT:
+				break;
+			case ITEM_WEAPON:
+				break;
+			case ITEM_AMMO:
+				break;
+		}
+	}
 }

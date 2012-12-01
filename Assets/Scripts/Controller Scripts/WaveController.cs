@@ -38,8 +38,7 @@ public class WaveController : MonoBehaviour {
 				if (GameObject.FindGameObjectWithTag("Enemy") == null) {
 					_waveActive = false;
 					_timeTillNextWave = WAVE_INTERVAL;
-				} else
-					_waveNumber++; //add waveNumber
+				}
 			}
 		} else {
 			_timeTillNextWave -= Time.deltaTime;

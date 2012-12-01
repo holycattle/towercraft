@@ -19,7 +19,7 @@ public class BaseEnemy : MonoBehaviour {
 	private float moveSpeed;
 	public int maxLife;
 	public int waveCost;
-	public float level;
+	public int level;
 	public GameObject[] drops;
 	private int damage = 2;
 	private int accuracy = (int)(0.25f * 100);
@@ -134,8 +134,6 @@ public class BaseEnemy : MonoBehaviour {
 	public void UpdateStats() {
 		// Set Turn Speed
 		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
-//		turnTime = (Mathf.Sqrt(2) * LevelController.TILE_SIZE) / moveSpeed;
-//		Debug.Log("Move/Turn Speed Init: " + moveSpeed + " / " + turnSpeed);
 	}
 
 	public void PathUpdate() {
@@ -149,13 +147,7 @@ public class BaseEnemy : MonoBehaviour {
 			Kill();
 	}
 
-	public int Life {
-		get { return _life; }
-	}
-
 	public void Kill() {
-//		GameObject.Find(" GameController").GetComponent<GameController>().AddMoney(moneyReward);
-		//Destroy(this.transform.root.gameObject);
 		Destroy(this.transform.gameObject);
 		
 		if (drops != null) {
@@ -170,8 +162,11 @@ public class BaseEnemy : MonoBehaviour {
 			return;
 		if (Random.Range(0, 10) < 3) {
 			Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity);
-		} else if (Random.Range(0, 10) < 6) {
-			Instantiate(ITEM_PREFAB, transform.position, Quaternion.identity);
+		}
+		if (Random.Range(0, 10) < 6) {
+			TowerItem t = new TowerItem(BaseTower.TOWER_TURRET, level);
+			GameObject g = Instantiate(ITEM_PREFAB, transform.position, Quaternion.identity) as GameObject;
+			g.GetComponent<TowerItemScript>().item = t;
 		} else {
 			Instantiate(CRAFTABLE_PREFAB, transform.position, Quaternion.identity);
 		}
@@ -187,6 +182,10 @@ public class BaseEnemy : MonoBehaviour {
 
 	public Vector2 GridPosition {
 		get { return _level.GridConvert(transform.position); }
+	}
+
+	public int Life {
+		get { return _life; }
 	}
 
 	public string Name {

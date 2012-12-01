@@ -32,13 +32,14 @@ public class SpawnScheme {
 
 		// Get Controllers
 		_levelController = gameController;
-//		_waveController = _levelController.GetComponent<WaveController>();
 
 		//
 		_spawnScheme = new List<MobSpawn>();
 
 //		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
+
+		Debug.Log("WAVENUMBER: " + waveNumber);
 
 		// Mob Root
 		mobRoot = GameObject.Find("[Root]Mobs").transform;
@@ -53,19 +54,15 @@ public class SpawnScheme {
 				GameObject g = _spawnScheme[0].Spawn(_levelController.mobSpawnPoint + offset, Quaternion.identity);
 				g.transform.parent = mobRoot;
 
-				BaseEnemy m = g.GetComponent<BaseEnemy>();
-				float currentMobMoveSpeed = m.MoveSpeed;
-
 				// Procedurally assign new Enemy entity maxLife based on moveSpeed
-//				m.maxLife = (int)(((1f / moveSpeed) * HEALTH_COEFF) * (1 + (waveController.waveNumber * HEALTH_MULTIPLIER)));
+				BaseEnemy m = g.GetComponent<BaseEnemy>();
 				m.MotionPath = _levelController.MotionPath; // set enemy path to path determined by A* search
 
+				// Update Spawn Timer
 				_timeSinceLastSpawn -= _spawnScheme[0].WaitTime;
 				_spawnScheme.RemoveAt(0);
 			}
-
 			_timeSinceLastSpawn += Time.deltaTime;
-
 			return true;
 		}
 		return false;
@@ -99,17 +96,9 @@ public class SpawnScheme {
 		// Mob's Stats
 		private float mobMoveSpeed;		// Mob's Move Speed
 		private int mobHealth;			// Mob's Health
-		private float mobLevel;			// Mob's Level
+		private int mobLevel;			// Mob's Level
 
-//		public MobSpawn (GameObject g, float wait, float mspd) {
-//			_mobToSpawn = g;
-//			_waitTime = wait;
-//
-//			// Set Stats
-//			mobMoveSpeed = mspd;
-//		}
-
-		public MobSpawn (GameObject g, float wait, float mspd, int hp, float level) {
+		public MobSpawn (GameObject g, float wait, float mspd, int hp, int level) {
 			_mobToSpawn = g;
 			_waitTime = wait;
 

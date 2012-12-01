@@ -160,7 +160,7 @@ public class BaseTower : MonoBehaviour {
 //				break;
 //		}
 
-		Debug.Log("Adding Component: " + tPrefab.componentName);
+//		Debug.Log("Adding Component: " + tPrefab.componentName);
 
 		// Instantiate the Game Object
 		TowerComponent towerInstance = Instantiate(tPrefab, transform.position + GetNextComponentPosition(), Quaternion.identity) as TowerComponent;
@@ -237,12 +237,6 @@ public class BaseTower : MonoBehaviour {
 	/*
 	 *	STATIC FUNCTIONS
 	 */
-//	public static int JiggleStat(int amt, float jiggle) {
-//		int min = Mathf.Max(1, Mathf.FloorToInt(amt * (1 - jiggle)));
-//		int max = Mathf.Max(1, Mathf.CeilToInt(amt * (1 + jiggle)));
-//		return UnityEngine.Random.Range(min, max);
-//	}
-
 	public static float JiggleStat(float amt, float jiggle) {
 		float min = amt * (1 - jiggle);
 		float max = amt * (1 + jiggle);

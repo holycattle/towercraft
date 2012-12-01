@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ComponentGenerator {
+	public const int PASSESTOKILL = 2;
 	private static ComponentGenerator _cgen;	// Creating a Singleton
 	private TowerComponent[][] _towerParts;
 	private Object[] _bases;
@@ -120,16 +121,16 @@ public class ComponentGenerator {
 		t.attributes.Add(new ModifyingAttribute(Stat.Range, actualStats[CraftableItem.PART_RANGE]));
 		t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, actualStats[CraftableItem.PART_ROF]));
 
-		t.componentName = t.GenerateName();
+//		t.componentName = t.GenerateName();
 		t.componentType = BaseTower.TOWER_TURRET;
-		t.level = t.CalculateLevel();
+//		t.level = t.CalculateLevel();
 
 		g.SetActiveRecursively(false);
 		t.transform.parent = partsRoot;
 		return t;
 	}
 
-	public TowerComponent GenerateComponent(int type, int cost) {
+	public TowerComponent GenerateComponent(int type, int level) {
 		if (type < 0 || type >= BaseTower.TOWER_COMPLETE)
 			return null;
 
@@ -181,7 +182,7 @@ public class ComponentGenerator {
 			s_range = Mathf.Round(s_range * 100) / 100f;
 
 			// Determine DPS for the current level
-			float dps = cost;	// TODO: CHANGE TO FORMULA
+			float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_MULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
 			float DPSMULT = 2f;
 
 			// Damage
@@ -190,19 +191,29 @@ public class ComponentGenerator {
 			// Firing Rate (# of bullets per second)
 			float s_firingRate = Mathf.Round((dps / s_dmg) * 10f) / 10f;
 
-			Debug.Log("DPS: " + dps + " / DMG: " + s_dmg + " / FR: " + s_firingRate);
-
 			t.attributes.Add(new ModifyingAttribute(Stat.Damage, s_dmg));
 			t.attributes.Add(new ModifyingAttribute(Stat.Range, s_range));
 			t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, s_firingRate));
 			t.missile = (GameObject)missiles[chMissile];
-			t.toolTipMessage = "DPS => " + (s_dmg * s_firingRate);
+			t.toolTipMessage = "DPS = " + (s_dmg * s_firingRate);
 
-			Debug.Log(":>" + t.toolTipMessage);
+			/*
+			 *	Name Generation
+			 */
 
-			t.componentName = t.GenerateName();
+			string[] n_damage = {"Advanced", "Prototype", "Overcharged", "Energized"};			// Damage
+			string[] n_firing = {"Capacitor"};	// ROF
+			string name;
+			if (s_firingRate < 0) {
+				name = n_damage[Random.Range(0, n_damage.Length)];
+			} else {
+				name = n_firing[Random.Range(0, n_firing.Length)];
+			}
+			name += " Turret";
+
+			t.componentName = name;
 			t.componentType = BaseTower.TOWER_TURRET;
-			t.level = t.CalculateLevel();
+			t.level = level;
 
 			g.SetActiveRecursively(false);
 			t.transform.parent = partsRoot;
@@ -214,13 +225,7 @@ public class ComponentGenerator {
 			TowerComponent t = g.GetComponent<TowerComponent>();
 			t.componentName = _towerParts[type][part].gameObject.name;
 			t.componentType = BaseTower.TOWER_BASE;
-			t.level = cost;
-
-//			int amt = Random.Range(0, cost);
-//			t.attributes.Add(new ModifyingAttribute(Stat.Range, 1 + amt));
-//			if (cost - amt > 0) {
-//				t.attributes.Add(new ModifyingAttribute(Stat.Damage, cost - amt));
-//			}
+			t.level = level;
 
 			g.SetActiveRecursively(false);
 			t.transform.parent = partsRoot;
