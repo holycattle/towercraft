@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Slow : Ailment {
 
-	private float slowPercentage = 0.5f;
+	public float slowPercentage = 0.5f;
 	private float deltaMoveSpeed;
 
 	protected override void Start() {

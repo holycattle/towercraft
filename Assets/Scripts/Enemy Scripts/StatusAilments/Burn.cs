@@ -3,12 +3,12 @@ using System.Collections;
 
 public class Burn : Ailment {
 
-	private int damage = 1;
+	public int damage = 1;
 	private float damageInterval = 1;
 
 	protected override void Start() {
 		base.Start();
-		Interval = 10;
+		Interval = 8;
 	}
 
 	protected override void Update() {

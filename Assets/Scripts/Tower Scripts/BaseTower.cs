@@ -31,6 +31,7 @@ public class BaseTower : MonoBehaviour {
 	public float towerRange;		// (meters)
 	public float firingInterval;	// (seconds wait per shot)
 	public GameObject missile;
+	public GameObject statusAilment;
 	public bool isFiring;
 
 	// Tower Logic
@@ -86,6 +87,7 @@ public class BaseTower : MonoBehaviour {
 					BaseMissile b = g.GetComponent<BaseMissile>();
 					b.Target = _enemiesInRange[0];
 					b.damage = (int)stats[(int)Stat.Damage].AdjustedBaseValue;
+					b.statusAilment = this.statusAilment;
 
 					_timeTillFire += firingInterval;
 				}
@@ -135,7 +137,11 @@ public class BaseTower : MonoBehaviour {
 		GetComponent<SphereCollider>().radius = stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE;
 
 		// Load the Missile
-		missile = temp.missile;
+		if (temp.missile != null) {
+			missile = temp.missile;
+		}
+		// Load Status Ailment
+		statusAilment = temp.statusAilment;
 
 		isFiring = true;
 

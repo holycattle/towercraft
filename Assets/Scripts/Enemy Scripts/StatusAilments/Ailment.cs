@@ -3,6 +3,10 @@ using System.Collections;
 
 public class Ailment : MonoBehaviour {
 
+	public const int BURN = 0;
+	public const int SLOW = 1;
+	public const int STUN = 2;
+	
 	protected BaseEnemy _enemy;
 	protected float interval;
 

@@ -6,7 +6,8 @@ public class TowerTurret : TowerComponent {
 
 	// Turret Stats
 	public List<ModifyingAttribute> attributes;
-	public GameObject missile;	// Missile
+	public GameObject missile;
+	public GameObject statusAilment;
 
 	// Tooltip
 	public string toolTipMessage;

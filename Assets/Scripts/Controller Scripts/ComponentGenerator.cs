@@ -139,7 +139,6 @@ public class ComponentGenerator {
 			int chMissileSource = Random.Range(0, missileSources.Length);
 			int chBarrel = Random.Range(0, barrels.Length);
 			int chSpinner = Random.Range(0, spinningParts.Length);
-			int chMissile = Random.Range(0, missiles.Length);
 
 			// Turret Base
 			GameObject g = GameObject.Instantiate(turretBase, buildSpot, Quaternion.identity) as GameObject;
@@ -185,6 +184,32 @@ public class ComponentGenerator {
 			float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_MULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
 			float DPSMULT = 2f;
 
+			// Add Status Ailment
+			if (Random.Range(0, 1) == 0) {
+				dps /= 2f;
+
+				int i = Random.Range(0, Ailment.STUN + 1);
+				string[] s = {"Burn", "Slow", "Stun"};
+				GameObject statEffect = Resources.Load("Prefabs/StatusAilments/" + s[i], typeof(GameObject)) as GameObject;
+				t.missile = Resources.Load("Prefabs/Towers/Turret Parts/MissilesStatus/" + s[i] + "Missile", typeof(GameObject)) as GameObject;
+				Debug.Log("tmissname: " + t.missile.name);
+				switch (i) {
+					case Ailment.BURN:
+						statEffect.GetComponent<Burn>().damage = 2;
+						break;
+					case Ailment.SLOW:
+						statEffect.GetComponent<Slow>().slowPercentage = 0.5f;
+						break;
+					case Ailment.STUN:
+						break;
+				}
+				t.statusAilment = statEffect;
+			} else {
+				// No Status Ailment
+				int chMissile = Random.Range(0, missiles.Length);
+				t.missile = (GameObject)missiles[chMissile];
+			}
+
 			// Damage
 			int s_dmg = Random.Range(1, (int)(dps * DPSMULT));	// Multiply to allow for FiringRate : (0, 1]
 
@@ -194,8 +219,8 @@ public class ComponentGenerator {
 			t.attributes.Add(new ModifyingAttribute(Stat.Damage, s_dmg));
 			t.attributes.Add(new ModifyingAttribute(Stat.Range, s_range));
 			t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, s_firingRate));
-			t.missile = (GameObject)missiles[chMissile];
-			t.toolTipMessage = "DPS = " + (s_dmg * s_firingRate);
+
+			t.toolTipMessage = "DPS = " + (s_dmg * s_firingRate) + t.toolTipMessage;
 
 			/*
 			 *	Name Generation

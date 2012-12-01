@@ -6,8 +6,8 @@ public class BaseMissile : MonoBehaviour {
 	public float moveSpeed;
 	public int damage;
 	public float splashRadius;
-	public float splashDissipationFactor;
 	public GameObject explosionEffect;
+	public GameObject statusAilment;
 	private GameObject _target;
 	
 	void Update() {
@@ -19,7 +19,7 @@ public class BaseMissile : MonoBehaviour {
 		} else {
 			// Self Destruct
 			Destroy(this.gameObject);
-			
+
 			// Retargetting Code (Untested)
 			/*GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 			
@@ -46,7 +46,7 @@ public class BaseMissile : MonoBehaviour {
 			}*/
 		}
 	}
-	
+
 	public GameObject Target {
 		set { _target = value; }
 	}
@@ -55,6 +55,12 @@ public class BaseMissile : MonoBehaviour {
 		if (_target != null) {
 			if (collision.gameObject.tag == "Enemy") {
 				collision.transform.gameObject.GetComponent<BaseEnemy>().AddLife(-damage);
+
+				// Add Status Effect
+				if (statusAilment != null) {
+					GameObject g = Instantiate(statusAilment, collision.gameObject.transform.position, Quaternion.identity) as GameObject;
+					g.transform.parent = collision.gameObject.transform;
+				}
 
 				// Add Particle Effects
 				Instantiate(explosionEffect, this.transform.position, Quaternion.identity);
