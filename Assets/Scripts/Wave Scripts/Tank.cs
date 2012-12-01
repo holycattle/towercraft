@@ -4,6 +4,7 @@ using System.Collections;
 public class Tank : SpawnScheme {
 
 	public Tank (LevelController gameController, GameObject[] mobs, int cost, int waveNumber) : base(gameController, mobs, cost, waveNumber) {
+		//resistant to slow
 		Debug.Log("Scheme = Tank");
 
 		// Create the Scheme
@@ -15,7 +16,7 @@ public class Tank : SpawnScheme {
 		while (cost > 0) {
 			// Choose which mob to spawn.
 			GameObject g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
-			_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber));
+			_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.FREEZE_TYPE, Random.Range(0f, 1f)));
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;
 		}
 	}
