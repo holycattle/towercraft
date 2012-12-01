@@ -8,8 +8,14 @@ public class CameraController : MonoBehaviour {
 
 	// Controllers
 	private GameController _game;
+	private LevelController _level;
 	private PlayerController _player;
 	private WeaponController _weapon;
+
+	// Path Drawing
+	private const float INTERVAL = 0.25f;
+	public GameObject pathDrawer;
+	private float pathInterval = 0;
 
 	void Start() {
 		minimapCam = GameObject.Find("Minimap Camera").GetComponent<Camera>();
@@ -17,8 +23,12 @@ public class CameraController : MonoBehaviour {
 
 		// Controller Inits
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
+		_level = _game.gameObject.GetComponent<LevelController>();
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_weapon = _player.gameObject.GetComponentInChildren<WeaponController>();
+
+		// Path Drawer
+		pathDrawer = Resources.Load("Prefabs/Tools/PathDrawer", typeof(GameObject)) as GameObject;
 
 		firstPersonCam.enabled = true;
 		minimapCam.enabled = false;
@@ -30,10 +40,20 @@ public class CameraController : MonoBehaviour {
 			SetOverviewCamera(!minimapCam.enabled);
 		}
 
-		float forwardMoveAmount = Input.GetAxis("Vertical") * forwardSpeed * Time.deltaTime;
-		float sideMoveAmount = Input.GetAxis("Horizontal") * forwardSpeed * Time.deltaTime;
+		if (minimapCam.enabled) {
+			float forwardMoveAmount = Input.GetAxis("Vertical") * forwardSpeed * Time.deltaTime;
+			float sideMoveAmount = Input.GetAxis("Horizontal") * forwardSpeed * Time.deltaTime;
+			transform.Translate(sideMoveAmount, 0, forwardMoveAmount, Space.World);
 
-		transform.Translate(sideMoveAmount, 0, forwardMoveAmount, Space.World);
+			// Path Drawers
+			pathInterval -= Time.deltaTime;
+			if (pathInterval <= 0) {
+				pathInterval = INTERVAL;
+
+				GameObject g = Instantiate(pathDrawer) as GameObject;
+				g.GetComponent<PathFollower>().path = _level.MotionPath;
+			}
+		}
 	}
 
 	public void SetOverviewCamera(bool val) {
@@ -55,6 +75,8 @@ public class CameraController : MonoBehaviour {
 
 			// Disable the Player
 			_player.SetEnabled(false);
+
+			pathInterval = 0;
 		} else {
 			/*
 			 * First Person Camera
@@ -65,6 +87,12 @@ public class CameraController : MonoBehaviour {
 
 			// Re-Enable the Player
 			_player.SetEnabled(true);
+
+			// Destroy all Path Drawers
+			GameObject[] g = GameObject.FindGameObjectsWithTag("PathDrawer");
+			foreach (GameObject tg in g) {
+				GameObject.Destroy(tg);
+			}
 		}
 	}
 }

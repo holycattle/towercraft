@@ -45,7 +45,7 @@ public class GameTool : MonoBehaviour {
 		crosshair = new Texture2D[4];
 		crosshairRect = new Rect[4];
 		for (int i= 0; i < crosshair.Length; i++) {
-			crosshair[i] = Resources.Load("Textures/d" + i) as Texture2D;
+			crosshair[i] = Resources.Load("Textures/GUI/Crosshair/d" + i) as Texture2D;
 			crosshairRect[i] = new Rect(Screen.width / 2 - crosshair[i].width / 2, Screen.height / 2 - crosshair[i].height / 2,
 				crosshair[i].width, crosshair[i].height);
 		}

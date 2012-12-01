@@ -14,7 +14,6 @@ public class Slow : Ailment {
 	}
 
 	protected override void BeginStatus() {
-		Debug.Log("Slowed!");
 		deltaMoveSpeed = Mathf.Max(0.5f, (int)(deltaMoveSpeed * slowPercentage));
 		_enemy.MoveSpeed -= deltaMoveSpeed;
 	}
