@@ -124,13 +124,13 @@ public class SpawnScheme {
 			switch(resistanceType) {
 				//remove int typecast later
 				case BaseEnemy.BURN_TYPE:
-					m.heatResistance = (int)resistanceAmt;
+					m.heatResistance = resistanceAmt;
 					break;
 				case BaseEnemy.FREEZE_TYPE:
-					m.slowResistance = (int)resistanceAmt;
+					m.slowResistance = resistanceAmt;
 					break;
 				case BaseEnemy.STUN_TYPE:
-					m.stunResistance = (int)resistanceAmt;
+					m.stunResistance = resistanceAmt;
 					break;
 			}
 			return g;

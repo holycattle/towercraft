@@ -8,7 +8,7 @@ public class Weapon : GameTool {
 	private const int NUM_WEAPONEQUIPS = 2;
 
 	// Default Constants
-	public const int DEFAULT_DAMAGE = 200;
+	public const int DEFAULT_DAMAGE = 1;
 	public const int DEFAULT_RANGE = 64;
 	public const int DEFAULT_FIRINGRATE = 4;
 	public const int DEFAULT_ACCURACY = 10;

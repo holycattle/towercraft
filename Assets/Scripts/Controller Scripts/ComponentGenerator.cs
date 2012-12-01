@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ComponentGenerator {
-	public const int PASSESTOKILL = 2;
+	public const int PASSESTOKILL = 4;
 	private static ComponentGenerator _cgen;	// Creating a Singleton
 	private TowerComponent[][] _towerParts;
 	private Object[] _bases;
@@ -174,7 +174,8 @@ public class ComponentGenerator {
 			 *	Stats Generation
 			 */
 			TowerTurret t = g.GetComponent<TowerTurret>();
-
+			string name = "";
+			
 			// Range
 			float s_range;
 			s_range = BaseTower.JiggleStat(BaseTower.BASE_RANGE, 0.15f);
@@ -195,12 +196,15 @@ public class ComponentGenerator {
 				Debug.Log("tmissname: " + t.missile.name);
 				switch (i) {
 					case Ailment.BURN:
-						statEffect.GetComponent<Burn>().damage = 2;
+						//statEffect.GetComponent<Burn>().damage = 2;
+						name += "Incendiary ";
 						break;
 					case Ailment.SLOW:
-						statEffect.GetComponent<Slow>().slowPercentage = 0.5f;
+						//statEffect.GetComponent<Slow>().slowPercentage = 0.5f;
+						name += "Slowness ";
 						break;
 					case Ailment.STUN:
+						name += "Stunning ";
 						break;
 				}
 				t.statusAilment = statEffect;
@@ -228,11 +232,10 @@ public class ComponentGenerator {
 
 			string[] n_damage = {"Advanced", "Prototype", "Overcharged", "Energized"};			// Damage
 			string[] n_firing = {"Capacitor"};	// ROF
-			string name;
 			if (s_firingRate < 0) {
-				name = n_damage[Random.Range(0, n_damage.Length)];
+				name += n_damage[Random.Range(0, n_damage.Length)];
 			} else {
-				name = n_firing[Random.Range(0, n_firing.Length)];
+				name += n_firing[Random.Range(0, n_firing.Length)];
 			}
 			name += " Turret";
 

@@ -30,9 +30,9 @@ public class BaseEnemy : MonoBehaviour {
 	private float range = 32;
 	
 	//ailment resistance; domain = [0, 1]
-	public int heatResistance;
-	public int slowResistance;
-	public int stunResistance;
+	public float heatResistance;
+	public float slowResistance;
+	public float stunResistance;
 
 	// Vary-ables
 	private int _life;					// Current Life
