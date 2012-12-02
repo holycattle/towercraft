@@ -5,7 +5,6 @@ public class Assorted : SpawnScheme {
 
 	public Assorted (LevelController gameController, GameObject[] mobs, int cost, int waveNumber) : base(gameController, mobs, cost, waveNumber) {
 		Debug.Log("Scheme = Assorted");
-		
 
 		while (cost > 0) {
 			float moveSpeed = UnityEngine.Random.Range(MIN_SPEED, MAX_SPEED);
@@ -17,11 +16,11 @@ public class Assorted : SpawnScheme {
 			GameObject g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
 			
 			if(enemyType == MobType.Tank) {
-				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.FREEZE_TYPE, Random.Range(0f, 1f)));
+				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
 			} else if(enemyType == MobType.Creepling) {
-				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.STUN_TYPE, Random.Range(0f, 1f)));
+				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
 			} else if(enemyType == MobType.Speedster) {
-				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, BaseEnemy.BURN_TYPE, Random.Range(0f, 1f)));
+				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
 			}
 			
 			cost -= g.GetComponent<BaseEnemy>().WaveCost;

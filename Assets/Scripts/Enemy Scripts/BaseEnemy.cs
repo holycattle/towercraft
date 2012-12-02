@@ -211,6 +211,16 @@ public class BaseEnemy : MonoBehaviour {
 			UpdateStats();
 		}
 	}
+	
+	public string getResistanceTypeAsString() {
+		if(Mathf.Max(heatResistance, slowResistance, stunResistance) == heatResistance) {
+			return "Heat";
+		} else if(Mathf.Max(heatResistance, slowResistance, stunResistance) == slowResistance) {
+			return "Slow";
+		} else {
+			return "Stun";
+		}
+	}
 
 	public List<Vector2> MotionPath {
 		set { _path = value; }
