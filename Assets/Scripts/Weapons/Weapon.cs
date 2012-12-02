@@ -32,7 +32,6 @@ public class Weapon : GameTool {
 	private GameObject statusEffect;
 	// Other Stats
 	private float range;
-//	private float accuracy;
 	private int magSize;		// # Bullets per Magazine
 	private float reloadTime = 2;	// Secs to Reload
 
@@ -217,7 +216,11 @@ public class Weapon : GameTool {
 		get { return _bullets; }
 	}
 
-	public int totalAmmo {
+	public int MagazineSize {
+		get { return magSize; }
+	}
+
+	public int TotalAmmo {
 		get { return _totalBullets; }
 	}
 	
