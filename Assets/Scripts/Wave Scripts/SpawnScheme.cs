@@ -121,16 +121,23 @@ public class SpawnScheme {
 			m.level = mobLevel;
 			//resistanceType = BaseEnemy.BURN_TYPE;
 			//resistanceAmt = 1;
+			
 			switch(resistanceType) {
 				//remove int typecast later
 				case BaseEnemy.BURN_TYPE:
 					m.heatResistance = resistanceAmt;
+					m.slowResistance = (1 - resistanceAmt)/2;
+					m.stunResistance = (1 - resistanceAmt)/2;
 					break;
 				case BaseEnemy.FREEZE_TYPE:
 					m.slowResistance = resistanceAmt;
+					m.stunResistance = (1 - resistanceAmt)/2;
+					m.heatResistance = (1 - resistanceAmt)/2;
 					break;
 				case BaseEnemy.STUN_TYPE:
 					m.stunResistance = resistanceAmt;
+					m.heatResistance = (1 - resistanceAmt)/2;
+					m.slowResistance = (1 - resistanceAmt)/2;
 					break;
 			}
 			return g;
