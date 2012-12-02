@@ -12,7 +12,9 @@ public class WaveController : MonoBehaviour {
 	private const int WAVESTART_COST = 128;
 	private const float WAVE_INCREASE = 1.5f;
 	private const int WAVE_INTERVAL = 10; // In seconds
+	
 	public int incomingWave;
+	public int incomingWaveResistanceType;
 
 	public GameObject[] mobs; // Mobs to choose from.
 	//public Hashtable mobTable; 
@@ -45,6 +47,7 @@ public class WaveController : MonoBehaviour {
 			_timeTillNextWave -= Time.deltaTime;
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;
+				incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
 				incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
 				NextWave();
 			}
@@ -83,13 +86,13 @@ public class WaveController : MonoBehaviour {
 		switch (incomingWave) { //change this later to randomly go through all enemy types
 //		switch (ASSORTED) {
 			case TANK:
-				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, _waveNumber);
+				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, _waveNumber, incomingWaveResistanceType);
 				break;
 			case CREEPLING:
-				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, _waveNumber);
+				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, _waveNumber, incomingWaveResistanceType);
 				break;
 			case SPEEDSTER:
-				_spawnScheme = new Speedster(_gameController, mobs, _nextWaveCost, _waveNumber);
+				_spawnScheme = new Speedster(_gameController, mobs, _nextWaveCost, _waveNumber, incomingWaveResistanceType);
 				break;
 			case ASSORTED:
 				_spawnScheme = new Assorted(_gameController, mobs, _nextWaveCost, _waveNumber);
