@@ -20,6 +20,14 @@ public class PlayerController : MonoBehaviour {
 	public Texture2D menu;
 	public Texture2D item;
 	public GUIStyle style;
+	
+	// Damage bars
+	private MyTexture2D leftDamage;
+	private MyTexture2D rightDamage;
+//	private Rect leftDmgBox;
+//	private Rect rightDmgBox;
+	private float timeLeft;
+	private float timeDamage = 0.25f;
 
 	void Start() {
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
@@ -28,11 +36,25 @@ public class PlayerController : MonoBehaviour {
 
 		Screen.showCursor = true;
 
+		Texture2D left = Resources.Load("Textures/Weapon/TakeDamage0", typeof(Texture2D)) as Texture2D;
+		Texture2D right = Resources.Load("Textures/Weapon/TakeDamage1", typeof(Texture2D)) as Texture2D;
+		Color c = new Color(0.8f, 0, 0, 1f);
+		leftDamage = new MyTexture2D(left,
+			new Rect((Screen.width / 2) - left.width, (Screen.height - left.height) / 2, left.width, left.height), c);
+		rightDamage = new MyTexture2D(right,
+			 new Rect(Screen.width / 2, (Screen.height - right.height) / 2, right.width, right.height), c);
+
 		// Player Variables
 		_life = MAX_LIFE;
 	}
 
 	void Update() {
+		if (timeLeft > 0) {
+			timeLeft -= Time.deltaTime;
+			leftDamage.Alpha = timeLeft / timeDamage;
+			rightDamage.Alpha = timeLeft / timeDamage;
+		}
+
 		if (_life <= 0) {
 			_life = MAX_LIFE;
 			transform.position = new Vector3(0, 50, 0);
@@ -45,6 +67,13 @@ public class PlayerController : MonoBehaviour {
 //		GUI.Box(new Rect(0, TEXT_HEIGHT, LIVES_WIDTH, LIVES_HEIGHT), "Money: " + _game.Money, style);
 		GUI.Box(new Rect(0, TEXT_HEIGHT * 2, LIVES_WIDTH, LIVES_HEIGHT), "Next Wave: " + (_wave.TimeTillNextWavex100 / 100f).ToString("F2"), style);
 		GUI.Box(new Rect(0, Screen.height - TEXT_HEIGHT, LIVES_WIDTH, LIVES_HEIGHT), "LIFE: " + _life, style);
+
+		if (timeLeft > 0) {
+			leftDamage.DrawMe();
+			rightDamage.DrawMe();
+//			GUI.DrawTexture(leftDmgBox, leftDamage);
+//			GUI.DrawTexture(rightDmgBox, rightDamage);
+		}
 	}
 
 	public void SetEnabled(bool b) {
@@ -60,6 +89,10 @@ public class PlayerController : MonoBehaviour {
 
 	public void AddLife(int amt) {
 		_life += amt;
+
+		if (amt < 0 && timeLeft <= 0) {
+			timeLeft = timeDamage;
+		}
 
 		if (_life >= MAX_LIFE) {
 			_life = MAX_LIFE;
