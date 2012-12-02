@@ -6,8 +6,9 @@ public class HUDController : MonoBehaviour {
 	private WaveController _wave;
 	private PlayerController _player;
 	private Weapon _weapon;
+	public const int PADDING = 16;
 	public const int LIVES_WIDTH = 256;
-	public const int LIVES_HEIGHT = 48;
+	public const int LIVES_HEIGHT = 32;
 	public const int AMMO_WIDTH = 128;
 	public const int AMMO_HEIGHT = 32;
 	public const int TEXT_HEIGHT = 30;
@@ -29,13 +30,13 @@ public class HUDController : MonoBehaviour {
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_weapon = GameObject.Find("LaserGun").GetComponent<Weapon>();
 
-		lifeEmpty = Resources.Load("Textures/GUI/Health/empty4", typeof(Texture)) as Texture2D;
-		lifeFull = Resources.Load("Textures/GUI/Health/full4", typeof(Texture)) as Texture2D;
-		lifeBarRect = new Rect(0, Screen.height - LIVES_HEIGHT, LIVES_WIDTH, LIVES_HEIGHT);
+		lifeEmpty = Resources.Load("Textures/GUI/Health/empty0", typeof(Texture)) as Texture2D;
+		lifeFull = Resources.Load("Textures/GUI/Health/full0", typeof(Texture)) as Texture2D;
+		lifeBarRect = new Rect(PADDING, Screen.height - LIVES_HEIGHT - PADDING, LIVES_WIDTH, LIVES_HEIGHT);
 
 		ammoEmpty = Resources.Load("Textures/GUI/Health/ammo0", typeof(Texture)) as Texture2D;
 		ammoFull = Resources.Load("Textures/GUI/Health/ammo1", typeof(Texture)) as Texture2D;
-		ammoBarRect = new Rect(0, Screen.height - LIVES_HEIGHT - AMMO_HEIGHT, AMMO_WIDTH, AMMO_HEIGHT);
+		ammoBarRect = new Rect(PADDING, Screen.height - LIVES_HEIGHT - AMMO_HEIGHT - PADDING, AMMO_WIDTH, AMMO_HEIGHT);
 	}
 
 	void OnGUI() {
