@@ -3,12 +3,13 @@ using System.Collections;
 
 public class HealthScript : PickupableScript {
 
-	private int health;
+	public int health;
 
 	protected override void Start() {
 		base.Start();
 
-		health = 10;
+		if (health == 0)
+			health = 10;
 	}
 
 	public override void Pickup(ItemCollector ic) {

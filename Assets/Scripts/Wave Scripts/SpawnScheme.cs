@@ -4,8 +4,15 @@ using System.Collections.Generic;
 using System;
 
 public class SpawnScheme {
+	// Drop Probabilities
+	public const int BASES_DROP = 4;
+	public const int TURRET_DROP = 2;
+	public const int TURRETPART_DROP = 5;
+	public const int WEAPON_DROP = 1;
+
+	// Other
 	private const int INTERVAL_COEFF = 7;
-	
+
 	// moveSpeed range - to be tweaked later on
 	public const int MIN_SPEED = 3;
 	public const int MAX_SPEED = 13;
@@ -99,6 +106,7 @@ public class SpawnScheme {
 		private int mobLevel;			// Mob's Level
 		private int resistanceType;
 		private float resistanceAmt;
+
 		public MobSpawn (GameObject g, float wait, float mspd, int hp, int level, int resistanceType, float resistanceAmt) {
 			_mobToSpawn = g;
 			_waitTime = wait;
@@ -119,27 +127,53 @@ public class SpawnScheme {
 			m.MoveSpeed = mobMoveSpeed;
 			m.maxLife = mobHealth;
 			m.level = mobLevel;
-			//resistanceType = BaseEnemy.BURN_TYPE;
-			//resistanceAmt = 1;
-			
-			switch(resistanceType) {
-				//remove int typecast later
+			switch (resistanceType) {
 				case BaseEnemy.BURN_TYPE:
 					m.heatResistance = resistanceAmt;
-					m.slowResistance = (1 - resistanceAmt)/2;
-					m.stunResistance = (1 - resistanceAmt)/2;
+					m.slowResistance = m.stunResistance = (1 - resistanceAmt) / 2;
+//					 = (1 - resistanceAmt) / 2;
 					break;
 				case BaseEnemy.FREEZE_TYPE:
 					m.slowResistance = resistanceAmt;
-					m.stunResistance = (1 - resistanceAmt)/2;
-					m.heatResistance = (1 - resistanceAmt)/2;
+					m.stunResistance = m.heatResistance = (1 - resistanceAmt) / 2;
+//					 = (1 - resistanceAmt) / 2;
 					break;
 				case BaseEnemy.STUN_TYPE:
 					m.stunResistance = resistanceAmt;
-					m.heatResistance = (1 - resistanceAmt)/2;
-					m.slowResistance = (1 - resistanceAmt)/2;
+					m.heatResistance = m.slowResistance = (1 - resistanceAmt) / 2;
+//					 = (1 - resistanceAmt) / 2;
 					break;
 			}
+
+			// Set items to spawn
+			Item[] toDrop = new Item[4];
+			int i = 0;
+
+			if (UnityEngine.Random.Range(0, 10) < BASES_DROP) {
+				toDrop[i] = new TowerItem(BaseTower.TOWER_BASE, mobLevel);
+				i++;
+			}
+
+
+			if (UnityEngine.Random.Range(0, 10) < TURRETPART_DROP) {
+				toDrop[i] = new TowerItem(BaseTower.TOWER_TURRET, mobLevel);
+				i++;
+			}
+			if (UnityEngine.Random.Range(0, 10) < TURRET_DROP) {
+				toDrop[i] = new CraftableItem(mobLevel);
+				i++;
+			}
+			if (UnityEngine.Random.Range(0, 10) < WEAPON_DROP) {
+				toDrop[i] = WeaponItem.RandomItem(mobLevel);
+				i++;
+			}
+			m.drops = new Item[i];
+			for (int o = 0; o < i; o++) {
+				m.drops[o] = toDrop[o];
+			}
+
+			Debug.Log("Dropping : " + i + " items");
+
 			return g;
 		}
 	

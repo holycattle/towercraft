@@ -15,6 +15,9 @@ public class CraftableItem : Item {
 	private int _level;
 	private int _stat = 0;	// Modifier Value
 
+	public CraftableItem (int level) : this(Random.Range(0, PART_MAX), level) {
+	}
+
 	public CraftableItem (int type, int cost) : base(ITEM_CRAFT) {
 		_type = type;
 		_level = cost;
