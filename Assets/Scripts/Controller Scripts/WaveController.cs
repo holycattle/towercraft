@@ -7,6 +7,12 @@ public class WaveController : MonoBehaviour {
 	private const int CREEPLING = 1;
 	private const int TANK = 2;
 	private const int ASSORTED = 3;
+	
+	//change this once we've come up with official names
+	private const string SPEEDSTER_NAME = "Speedster";
+	private const string CREEPLING_NAME = "Creepling";
+	private const string TANK_NAME = "Tank";
+	
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
 	private const int WAVESTART_COST = 128;
@@ -102,6 +108,39 @@ public class WaveController : MonoBehaviour {
 	
 	public int waveNumber {
 		get { return _waveNumber;}
+	}
+	
+	public string getNextWave() {
+		string nw = "";
+		
+		switch(incomingWaveResistanceType) {
+			case BaseEnemy.BURN_TYPE:
+				nw += "Burn-resistant";
+				break;
+			case BaseEnemy.STUN_TYPE:
+				nw += "Stun-resistant";
+				break;
+			case BaseEnemy.FREEZE_TYPE:
+				nw += "Slow-resistant";
+				break;
+		}
+		
+		switch(incomingWave) {
+			case TANK:
+				nw += " " + TANK_NAME + "s";
+				break;
+			case CREEPLING:
+				nw += " " + CREEPLING_NAME + "s";
+				break;
+			case SPEEDSTER:
+				nw += " " + SPEEDSTER_NAME + "s";
+				break;
+			case ASSORTED:
+				return "Random Wave!";
+				break;
+		}
+		
+		return nw;
 	}
 	
 	public int TimeTillNextWavex100 {
