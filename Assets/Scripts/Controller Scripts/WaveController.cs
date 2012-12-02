@@ -37,6 +37,8 @@ public class WaveController : MonoBehaviour {
 		_nextWaveCost = WAVESTART_COST;
 		_waveNumber = 0;
 		_timeTillNextWave = 5;
+		incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
+		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
 		_waveActive = false;
 	}
 
@@ -47,14 +49,15 @@ public class WaveController : MonoBehaviour {
 				if (GameObject.FindGameObjectWithTag("Enemy") == null) {
 					_waveActive = false;
 					_timeTillNextWave = WAVE_INTERVAL;
+					incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
+					incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+					Debug.Log("incoming resistance = " + incomingWaveResistanceType.ToString());
 				}
 			}
 		} else {
 			_timeTillNextWave -= Time.deltaTime;
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;
-				incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
-				incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
 				NextWave();
 			}
 		}
@@ -87,10 +90,7 @@ public class WaveController : MonoBehaviour {
 		_waveActive = true;
 
 		// Create the Spawn Scheme
-
-		// Note: Random.Range(x, y) Generates a random number from [x, y). Inclusive X, Exclusive Y.
-		switch (incomingWave) { //change this later to randomly go through all enemy types
-//		switch (ASSORTED) {
+		switch (incomingWave) {
 			case TANK:
 				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, _waveNumber, incomingWaveResistanceType);
 				break;
