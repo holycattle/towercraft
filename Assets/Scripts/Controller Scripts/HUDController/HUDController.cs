@@ -14,7 +14,7 @@ public class HUDController : MonoBehaviour {
 	// Life Bar
 	private Rect lifeBarRect;
 	private Vector2 pos = new Vector2(100, 100);
-	private Vector2 size = new Vector2(312, 60);
+	private Vector2 size = new Vector2(256, 64);
 	public Texture2D lifeEmpty;
 	public Texture2D lifeFull;
 	
