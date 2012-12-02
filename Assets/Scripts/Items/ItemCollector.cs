@@ -86,30 +86,30 @@ public class ItemCollector : MonoBehaviour {
 
 		// Deactivate Messenger: So there aren't any messages
 		_game.Messenger.enabled = false;
-//		Pickup(new TowerItem(0, 1));
-//		Pickup(new TowerItem(0, 1));
-//		Pickup(new TowerItem(0, 1));
-//		Pickup(new TowerItem(0, 1));
-//		Pickup(new TowerItem(0, 1));
-//		Pickup(new TowerItem(0, 1));
-//		Pickup(new TowerItem(1, 2));
-//		Pickup(new TowerItem(1, 2));
-//		Pickup(new TowerItem(1, 2));
-//		Pickup(new TowerItem(1, 2));
+		Pickup(new TowerItem(0, 1));
+		Pickup(new TowerItem(0, 1));
+		Pickup(new TowerItem(0, 1));
+		Pickup(new TowerItem(0, 1));
+		Pickup(new TowerItem(0, 1));
+		Pickup(new TowerItem(0, 1));
+		Pickup(new TowerItem(1, 2));
+		Pickup(new TowerItem(1, 2));
+		Pickup(new TowerItem(1, 2));
+		Pickup(new TowerItem(1, 2));
 
-//		Pickup(new CraftableItem(0, 1));
-//		Pickup(new CraftableItem(1, 1));
-//		Pickup(new CraftableItem(2, 1));
-//		Pickup(new CraftableItem(0, 1));
-//		Pickup(new CraftableItem(1, 1));
-//		Pickup(new CraftableItem(2, 1));
+		Pickup(new CraftableItem(0, 1));
+		Pickup(new CraftableItem(1, 1));
+		Pickup(new CraftableItem(2, 1));
+		Pickup(new CraftableItem(0, 1));
+		Pickup(new CraftableItem(1, 1));
+		Pickup(new CraftableItem(2, 1));
 
-//		Pickup(new WeaponDPSItem(1));
-//		Pickup(new WeaponDPSItem(1));
-//		Pickup(new WeaponDPSItem(1));
-//		Pickup(new WeaponStatItem(1));
-//		Pickup(new WeaponStatItem(1));
-//		Pickup(new WeaponStatItem(1));
+		Pickup(new WeaponDPSItem(1));
+		Pickup(new WeaponDPSItem(1));
+		Pickup(new WeaponDPSItem(1));
+		Pickup(new WeaponStatItem(1));
+		Pickup(new WeaponStatItem(1));
+		Pickup(new WeaponStatItem(1));
 		_game.Messenger.enabled = true; //enable messenger again
 
 		craftingRecipe = new CraftableItem[CraftableItem.PART_MAX];
