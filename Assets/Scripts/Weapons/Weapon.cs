@@ -147,6 +147,8 @@ public class Weapon : GameTool {
 			return;
 		}
 
+		damage = 200;
+
 		if (_timeTillFire <= 0) {
 			// Raycast
 			int maxInaccuracy = (int)(CurrentRecoil * crosshairOffset);

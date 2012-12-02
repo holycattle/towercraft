@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class BaseEnemy : MonoBehaviour {
+	//
+	public const int AMMO_DROP = 5;
+	public const int HEALTH_DROP = 5;
+
 	// Constants
 	public const float MOV_OFFSET = 2f;
 	public const int BURN_TYPE = 0;
@@ -13,9 +17,8 @@ public class BaseEnemy : MonoBehaviour {
 	// References
 	private LevelController _level;
 	private PlayerController _player;
-	private static GameObject ITEM_PREFAB;
+	private static GameObject AMMO_PREFAB;
 	private static GameObject HEALTH_PREFAB;
-	private static GameObject CRAFTABLE_PREFAB;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
 	public MobType type;
@@ -23,12 +26,12 @@ public class BaseEnemy : MonoBehaviour {
 	public int maxLife;
 	public int waveCost;
 	public int level;
-	public GameObject[] drops;
+	public Item[] drops;
 	private int damage = 2;
 	private int accuracy = (int)(0.25f * 100);
 	private float firingInterval = 1f;
 	private float range = 32;
-	
+
 	//ailment resistance; domain = [0, 1]
 	public float heatResistance;
 	public float slowResistance;
@@ -63,12 +66,14 @@ public class BaseEnemy : MonoBehaviour {
 		originalRot = transform.rotation;
 
 		// TODO: Make this more optimal
-		if (ITEM_PREFAB == null)
-			ITEM_PREFAB = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
+//		if (ITEM_PREFAB == null)
+//			ITEM_PREFAB = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
 		if (HEALTH_PREFAB == null)
 			HEALTH_PREFAB = Resources.Load("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
-		if (CRAFTABLE_PREFAB == null)
-			CRAFTABLE_PREFAB = Resources.Load("Prefabs/Items/Craftable", typeof(GameObject)) as GameObject;
+		if (AMMO_PREFAB == null)
+			AMMO_PREFAB = Resources.Load("Prefabs/Items/Ammo", typeof(GameObject)) as GameObject;
+//		if (CRAFTABLE_PREFAB == null)
+//			CRAFTABLE_PREFAB = Resources.Load("Prefabs/Items/Craftable", typeof(GameObject)) as GameObject;
 
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
@@ -159,24 +164,20 @@ public class BaseEnemy : MonoBehaviour {
 		Destroy(this.transform.gameObject);
 		
 		if (drops != null) {
-			foreach (GameObject g in drops) {
-				if (g != null) {
-					Instantiate(g, transform.position, Quaternion.identity);
+			foreach (Item i in drops) {
+				if (i != null) {
+					i.ItemInstantiate(transform.position, Quaternion.identity);
 				}
 			}
 		}
 
-		if (Random.Range(0, 3) == 2)
-			return;
-		if (Random.Range(0, 10) < 3) {
-			Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity);
+		if (UnityEngine.Random.Range(0, 10) < AMMO_DROP) {
+			GameObject g = Instantiate(AMMO_PREFAB, transform.position, Quaternion.identity) as GameObject;
+			g.GetComponent<AmmoScript>().amount = Random.Range(20, 40);
 		}
-		if (Random.Range(0, 10) < 6) {
-			TowerItem t = new TowerItem(BaseTower.TOWER_TURRET, level);
-			GameObject g = Instantiate(ITEM_PREFAB, transform.position, Quaternion.identity) as GameObject;
-			g.GetComponent<TowerItemScript>().item = t;
-		} else {
-			Instantiate(CRAFTABLE_PREFAB, transform.position, Quaternion.identity);
+		if (UnityEngine.Random.Range(0, 10) < HEALTH_DROP) {
+			GameObject g = Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity) as GameObject;
+			g.GetComponent<HealthScript>().health = Random.Range(5, 20);
 		}
 	}
 
@@ -213,9 +214,9 @@ public class BaseEnemy : MonoBehaviour {
 	}
 	
 	public string getResistanceTypeAsString() {
-		if(Mathf.Max(heatResistance, slowResistance, stunResistance) == heatResistance) {
+		if (Mathf.Max(heatResistance, slowResistance, stunResistance) == heatResistance) {
 			return "Heat";
-		} else if(Mathf.Max(heatResistance, slowResistance, stunResistance) == slowResistance) {
+		} else if (Mathf.Max(heatResistance, slowResistance, stunResistance) == slowResistance) {
 			return "Slow";
 		} else {
 			return "Stun";

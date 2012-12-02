@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour {
 
 	// Path Drawing
 	private const float INTERVAL = 0.25f;
-	public GameObject pathDrawer;
+	private GameObject pathDrawer;
 	private float pathInterval = 0;
 
 	void Start() {
@@ -46,13 +46,17 @@ public class CameraController : MonoBehaviour {
 			transform.Translate(sideMoveAmount, 0, forwardMoveAmount, Space.World);
 
 			// Path Drawers
-			pathInterval -= Time.deltaTime;
-			if (pathInterval <= 0) {
-				pathInterval = INTERVAL;
-
+			if (Input.GetKeyDown(KeyCode.Q)) {
 				GameObject g = Instantiate(pathDrawer) as GameObject;
 				g.GetComponent<PathFollower>().path = _level.MotionPath;
 			}
+//			pathInterval -= Time.deltaTime;
+//			if (pathInterval <= 0) {
+//				pathInterval = INTERVAL;
+//
+//				GameObject g = Instantiate(pathDrawer) as GameObject;
+//				g.GetComponent<PathFollower>().path = _level.MotionPath;
+//			}
 		}
 	}
 

@@ -12,16 +12,14 @@ public class WaveController : MonoBehaviour {
 	private const string SPEEDSTER_NAME = "Speedster";
 	private const string CREEPLING_NAME = "Creepling";
 	private const string TANK_NAME = "Tank";
-	
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
 	private const int WAVESTART_COST = 128;
-	private const float WAVE_INCREASE = 1.5f;
+	private const float WAVE_INCREASE = 1.4f;
 	private const int WAVE_INTERVAL = 10; // In seconds
 	
 	public int incomingWave;
 	public int incomingWaveResistanceType;
-
 	public GameObject[] mobs; // Mobs to choose from.
 	//public Hashtable mobTable; 
 
@@ -113,7 +111,7 @@ public class WaveController : MonoBehaviour {
 	public string getNextWave() {
 		string nw = "";
 		
-		switch(incomingWaveResistanceType) {
+		switch (incomingWaveResistanceType) {
 			case BaseEnemy.BURN_TYPE:
 				nw += "Burn-resistant";
 				break;
@@ -125,7 +123,7 @@ public class WaveController : MonoBehaviour {
 				break;
 		}
 		
-		switch(incomingWave) {
+		switch (incomingWave) {
 			case TANK:
 				nw += " " + TANK_NAME + "s";
 				break;

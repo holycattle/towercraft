@@ -21,4 +21,12 @@ public class WeaponItem : Item {
 	public override string GetName() {
 		return weaponName;
 	}
+
+	public static WeaponItem RandomItem(int level) {
+		if (Random.Range(0, 2) == 0) {
+			return new WeaponDPSItem(level);
+		} else {
+			return new WeaponStatItem(level);
+		}
+	}
 }
