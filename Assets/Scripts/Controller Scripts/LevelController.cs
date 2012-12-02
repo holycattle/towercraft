@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class LevelController : MonoBehaviour {
 	public const int TILE_SIZE = 8;
 	public const int HTILE_SIZE = TILE_SIZE / 2;
-	
+	private const float GRIDHEIGHT = 2;
+
 	// Map Dimensions
 	public int mapWidth;
 	public int mapHeight;
@@ -21,6 +22,7 @@ public class LevelController : MonoBehaviour {
 	// Map Variables
 	private Grid[] _map;
 	private List<Vector2> _path;
+	private GameObject rendererParent;
 
 	// Other Components
 	private MinimapScript minimap;
@@ -47,14 +49,50 @@ public class LevelController : MonoBehaviour {
 				GameObject t = Instantiate(tilePrefab,
 					new Vector3(startXPosition + x * TILE_SIZE + HTILE_SIZE, 0, startYPosition + y * TILE_SIZE + HTILE_SIZE),
 					Quaternion.identity) as GameObject;
-				
+
 				t.name = "Grid:" + x + "," + y;
 				t.transform.parent = gridParent.transform;
 				_map[y * mapWidth + x] = t.GetComponent<Grid>();
 				_map[y * mapWidth + x].GridValue = new Vector2(x, y);
 			}
 		}
+
+		// Grid View
+		rendererParent = new GameObject("RendererParent");
+//		Material m = Resources.Load("Textures/PathDrawer/GridLine", typeof(Material)) as Material;
+//		Color c = new Color(.2f, .2f, .8f, 1f);
+//		float lineWidth = 0.15f;
+//		for (int y = 0; y <= mapHeight; y++) {
+//			GameObject t = new GameObject("YLine: " + y);
+//			LineRenderer lr = t.AddComponent<LineRenderer>();
+//			lr.material = m;
+//			lr.castShadows = false;
+//			lr.receiveShadows = false;
+//			lr.SetColors(c, c);
+//			lr.SetWidth(lineWidth, lineWidth);
+//			lr.SetVertexCount(2);
+//			lr.SetPosition(0, new Vector3(startXPosition, GRIDHEIGHT, startYPosition + y * TILE_SIZE));
+//			lr.SetPosition(1, new Vector3(startXPosition + TILE_SIZE * mapWidth, GRIDHEIGHT, startYPosition + y * TILE_SIZE));
+//			t.transform.parent = rendererParent.transform;
+//		}
+//		for (int x = 0; x <= mapWidth; x++) {
+//			GameObject t = new GameObject("XLine: " + x);
+//			LineRenderer lr = t.AddComponent<LineRenderer>();
+//			lr.material = m;
+//			lr.castShadows = false;
+//			lr.receiveShadows = false;
+//			lr.SetColors(c, c);
+//			lr.SetWidth(lineWidth, lineWidth);
+//			lr.SetVertexCount(2);
+//			lr.SetPosition(0, new Vector3(startXPosition + x * TILE_SIZE, GRIDHEIGHT, startYPosition));
+//			lr.SetPosition(1, new Vector3(startXPosition + x * TILE_SIZE, GRIDHEIGHT, startYPosition + TILE_SIZE * mapHeight));
+//			t.transform.parent = rendererParent.transform;
+//		}
+//		DrawGrid = false;
 		UpdatePath();
+	}
+
+	void OnGUI() {
 	}
 
 	void Update() {
@@ -72,13 +110,13 @@ public class LevelController : MonoBehaviour {
 			Debug.DrawLine(p, p + Vector3.up * 5);
 		}
 
-		if (Input.GetKeyDown(KeyCode.F4)) {
-			// KILL ALL BUTTON
-			GameObject[] e = GameObject.FindGameObjectsWithTag("Enemy");
-			foreach (GameObject go in e) {
-				Destroy(go);
-			}
-		}
+//		if (Input.GetKeyDown(KeyCode.F4)) {
+//			// KILL ALL BUTTON
+//			GameObject[] e = GameObject.FindGameObjectsWithTag("Enemy");
+//			foreach (GameObject go in e) {
+//				Destroy(go);
+//			}
+//		}
 	}
 
 	public void UpdatePath() {
@@ -99,7 +137,7 @@ public class LevelController : MonoBehaviour {
 		}
 
 		// Update the paths of all Enemies on the board
-		// => TODO!!! Make this more optimal. 
+		// => TODO!!! Make this more optimal.
 		GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 		for (int i = 0; i < enemies.Length; i++) {
 			BaseEnemy b = enemies[i].GetComponent<BaseEnemy>();
@@ -170,5 +208,9 @@ public class LevelController : MonoBehaviour {
 
 	public List<Vector2> MotionPath {
 		get { return _path; }
+	}
+
+	public bool DrawGrid {
+		set { rendererParent.SetActiveRecursively(value); }
 	}
 }
