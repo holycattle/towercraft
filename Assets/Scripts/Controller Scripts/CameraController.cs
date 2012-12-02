@@ -76,6 +76,9 @@ public class CameraController : MonoBehaviour {
 			// Disable the Player
 			_player.SetEnabled(false);
 
+			// Enable the Grid
+			_level.DrawGrid = true;
+
 			pathInterval = 0;
 		} else {
 			/*
@@ -87,6 +90,9 @@ public class CameraController : MonoBehaviour {
 
 			// Re-Enable the Player
 			_player.SetEnabled(true);
+
+			// Disable the Grid
+			_level.DrawGrid = false;
 
 			// Destroy all Path Drawers
 			GameObject[] g = GameObject.FindGameObjectsWithTag("PathDrawer");

@@ -7,9 +7,11 @@ public class Grid : MonoBehaviour {
 
 	// Grid Info
 	private Vector2 _gridValue;
+	private GameObject actualRotator;
 
 	// Tower Info
 	public GameObject tower;
+	public GameObject rotatorPrefab;
 	private BaseTower _ts; // Tower on this grid.
 	private MeshRenderer _selectionGrid;
 	private bool _hasTower;
@@ -17,6 +19,8 @@ public class Grid : MonoBehaviour {
 	void Awake() {
 		_ts = null;
 		_levelController = GameObject.Find(" GameController").GetComponent<LevelController>();
+
+		rotatorPrefab = Resources.Load("Prefabs/Tools/RangeView", typeof(GameObject)) as GameObject;
 
 		_selectionGrid = transform.FindChild("GridSelection").GetComponent<MeshRenderer>();
 		_hasTower = false;
@@ -58,6 +62,22 @@ public class Grid : MonoBehaviour {
 
 	private void SetSelected(bool sel) {
 		_selectionGrid.enabled = sel;
+
+		if (sel) {
+			if (Tower != null) {
+				float range = Tower.GetRange();
+				if (range > 0) {
+					actualRotator = Instantiate(rotatorPrefab) as GameObject;
+					RangeView v = actualRotator.GetComponent<RangeView>();
+					v.Range = range;
+					v.Center = transform.position;
+				}
+			}
+		} else {
+			if (actualRotator != null) {
+				Destroy(actualRotator);
+			}
+		}
 	}
 
 	public bool HasTower() {

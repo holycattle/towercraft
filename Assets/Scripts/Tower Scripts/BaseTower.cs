@@ -240,6 +240,10 @@ public class BaseTower : MonoBehaviour {
 		return GetNextComponentPosition(GetNextComponent());
 	}
 
+	public float GetRange() {
+		return stats[(int)Stat.Range].AdjustedBaseValue;
+	}
+
 	/*
 	 *	STATIC FUNCTIONS
 	 */
