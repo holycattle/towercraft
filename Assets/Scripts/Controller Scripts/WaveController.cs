@@ -7,6 +7,12 @@ public class WaveController : MonoBehaviour {
 	private const int CREEPLING = 1;
 	private const int TANK = 2;
 	private const int ASSORTED = 3;
+	
+	//change this once we've come up with official names
+	private const string SPEEDSTER_NAME = "Speedster";
+	private const string CREEPLING_NAME = "Creepling";
+	private const string TANK_NAME = "Tank";
+	
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
 	private const int WAVESTART_COST = 128;
@@ -24,13 +30,15 @@ public class WaveController : MonoBehaviour {
 	private int _waveNumber;
 	private int _nextWaveCost;
 	private float _timeTillNextWave;
-	private bool _waveActive;
+	public bool _waveActive;
 
 	void Start() {
 		_gameController = GetComponent<LevelController>();
 		_nextWaveCost = WAVESTART_COST;
 		_waveNumber = 0;
 		_timeTillNextWave = 5;
+		incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
+		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
 		_waveActive = false;
 	}
 
@@ -41,14 +49,15 @@ public class WaveController : MonoBehaviour {
 				if (GameObject.FindGameObjectWithTag("Enemy") == null) {
 					_waveActive = false;
 					_timeTillNextWave = WAVE_INTERVAL;
+					incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
+					incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+					Debug.Log("incoming resistance = " + incomingWaveResistanceType.ToString());
 				}
 			}
 		} else {
 			_timeTillNextWave -= Time.deltaTime;
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;
-				incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
-				incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
 				NextWave();
 			}
 		}
@@ -81,10 +90,7 @@ public class WaveController : MonoBehaviour {
 		_waveActive = true;
 
 		// Create the Spawn Scheme
-
-		// Note: Random.Range(x, y) Generates a random number from [x, y). Inclusive X, Exclusive Y.
-		switch (incomingWave) { //change this later to randomly go through all enemy types
-//		switch (ASSORTED) {
+		switch (incomingWave) {
 			case TANK:
 				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, _waveNumber, incomingWaveResistanceType);
 				break;
@@ -102,6 +108,39 @@ public class WaveController : MonoBehaviour {
 	
 	public int waveNumber {
 		get { return _waveNumber;}
+	}
+	
+	public string getNextWave() {
+		string nw = "";
+		
+		switch(incomingWaveResistanceType) {
+			case BaseEnemy.BURN_TYPE:
+				nw += "Burn-resistant";
+				break;
+			case BaseEnemy.STUN_TYPE:
+				nw += "Stun-resistant";
+				break;
+			case BaseEnemy.FREEZE_TYPE:
+				nw += "Slow-resistant";
+				break;
+		}
+		
+		switch(incomingWave) {
+			case TANK:
+				nw += " " + TANK_NAME + "s";
+				break;
+			case CREEPLING:
+				nw += " " + CREEPLING_NAME + "s";
+				break;
+			case SPEEDSTER:
+				nw += " " + SPEEDSTER_NAME + "s";
+				break;
+			case ASSORTED:
+				return "Random Wave!";
+				break;
+		}
+		
+		return nw;
 	}
 	
 	public int TimeTillNextWavex100 {
