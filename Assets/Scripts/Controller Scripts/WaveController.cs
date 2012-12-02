@@ -24,7 +24,7 @@ public class WaveController : MonoBehaviour {
 	private int _waveNumber;
 	private int _nextWaveCost;
 	private float _timeTillNextWave;
-	private bool _waveActive;
+	public bool _waveActive;
 
 	void Start() {
 		_gameController = GetComponent<LevelController>();
