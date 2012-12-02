@@ -113,7 +113,10 @@ public class Weapon : GameTool {
 		base.OnGUI();
 
 		if (_targetted != null) {
-			GUI.TextArea(new Rect(Screen.width / 2 - LIFE_WIDTH / 2, 0, LIFE_WIDTH, LIFE_HEIGHT), _targetted.Name + "\n" + _targetted.Life + " / " + _targetted.maxLife);
+			GUI.TextArea(new Rect(Screen.width / 2 - LIFE_WIDTH / 2, 0, LIFE_WIDTH, LIFE_HEIGHT),
+				_targetted.Name + "\n" + _targetted.Life + " / " + _targetted.maxLife + "\n" +
+				_targetted.getResistanceTypeAsString() + "-resistant"
+			);
 		}
 	}
 
