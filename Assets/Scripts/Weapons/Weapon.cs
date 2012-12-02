@@ -112,9 +112,6 @@ public class Weapon : GameTool {
 	protected override void OnGUI() {
 		base.OnGUI();
 
-		// Draw Bullet Count
-		GUI.Box(new Rect(0, 120, 128, 30), "Bullets: " + _bullets + " / " + _totalBullets);
-
 		if (_targetted != null) {
 			GUI.TextArea(new Rect(Screen.width / 2 - LIFE_WIDTH / 2, 0, LIFE_WIDTH, LIFE_HEIGHT), _targetted.Name + "\n" + _targetted.Life + " / " + _targetted.maxLife);
 		}
@@ -212,7 +209,15 @@ public class Weapon : GameTool {
 		// Start Reload Timer
 		_reloadCounter = reloadTime;
 	}
+	
+	public int Ammo {
+		get { return _bullets; }
+	}
 
+	public int totalAmmo {
+		get { return _totalBullets; }
+	}
+	
 	private void ReloadBullets() {
 		_totalBullets += _bullets;
 		if (_totalBullets >= magSize) {
