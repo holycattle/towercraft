@@ -64,7 +64,7 @@ public class GameController : MonoBehaviour {
 		 */
 		if (_livesLeft <= 0) {
 			// You Lose!
-			Debug.Log("You Lose the Game!");
+			AutoFade.LoadLevel("Start" ,3,1,Color.black);
 		}
 	}
 

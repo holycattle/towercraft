@@ -12,6 +12,6 @@ public class StartScreen : MonoBehaviour {
 		bool startGame = GUI.Button(startGameRect, "Start Game");
 		Debug.Log("test");
 		if(startGame)
-			Application.LoadLevel("Main");
+			AutoFade.LoadLevel("Main" ,3,1,Color.black);
 	}
 }
