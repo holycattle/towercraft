@@ -2,27 +2,20 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class Event : MonoBehaviour {
+public class Event {
 	public Predicate<Hashtable> conditionFunction;
 	public Predicate<Hashtable> actionFunction;
 	Hashtable conditionFunctionArgs = new Hashtable();
 	Hashtable actionFunctionArgs = new Hashtable();
 	public bool isSatisfied;
 	
-	public Event() {}
+	public Event() {
+		isSatisfied = false;
+	}
 
 	// Use this for initialization
 	void Start () {
 		Debug.Log("Starting!");
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		Debug.Log("running!");
-		if(evalCondition()) {
-			Debug.Log("oh yeah!");
-			Destroy(this);
-		}
 	}
 	
 	//T and T2 are ideally an array or list, but it can be anything
@@ -34,10 +27,12 @@ public class Event : MonoBehaviour {
 	public virtual void addAction(Action<Hashtable> actionFunction, Hashtable actArg) {
 		this.actionFunction = actionFunction.Clone() as Predicate<Hashtable>;
 		actionFunctionArgs = actArg.Clone() as Hashtable;
+		Debug.Log("added function: " + actionFunction.ToString());
 	}
 	
-	public virtual bool evalCondition() {		
+	public virtual bool evalCondition() {
 		isSatisfied = conditionFunction(conditionFunctionArgs);
+		Debug.Log(isSatisfied.ToString());
 		if(isSatisfied)
 			doAction();
 		
@@ -45,6 +40,7 @@ public class Event : MonoBehaviour {
 	}
 	
 	public virtual void doAction() {
-		actionFunction(actionFunctionArgs);
+		Debug.Log("done!");
+		actionFunction(new Hashtable());
 	}
 }
