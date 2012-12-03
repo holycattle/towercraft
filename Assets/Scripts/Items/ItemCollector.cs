@@ -6,9 +6,9 @@ public class ItemCollector : MonoBehaviour {
 	// GUI Constants
 	private const int WIDTH = 4;
 	private const int HEIGHT = 6;
-	private const int GRIDWIDTH = 128;
-	private const int GRIDHEIGHT = 32;
-	private const int SPACE = 4;
+	public const int GRIDWIDTH = 192;
+	public const int GRIDHEIGHT = 32;
+	public const int SPACE = 4;
 
 	// Inventory Constants
 	private const int INV_TOWER = 0;

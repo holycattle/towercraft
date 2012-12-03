@@ -217,6 +217,21 @@ public class BaseTower : MonoBehaviour {
 		return swappedOutComponent;
 	}
 
+	public TowerComponent GetTopComponent() {
+		switch (GetNextComponent()) {
+			case TOWER_COMPLETE:
+				return _towerComponents[TOWER_TURRET];
+				break;
+			case TOWER_TURRET:
+				return _towerComponents[TOWER_BASE];
+				break;
+			case TOWER_BASE:
+				return null;
+				break;
+		}
+		return null;
+	}
+
 	public int GetNextComponent() {
 		if (_towerComponents[TOWER_BASE] == null) {
 			return TOWER_BASE;
