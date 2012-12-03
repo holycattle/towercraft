@@ -24,9 +24,11 @@ public class StageController : MonoBehaviour {
 		timeEvents = new List<TimeEvent>();
 		waveEvents = new List<WaveEvent>();
 		
+		//initialize events here
 		TimeEvent newTimeEvent = new TimeEvent(7f);
 		newTimeEvent.addAction(newSkybox, new Hashtable());
-		timeEvents.Add(newTimeEvent);
+		timeEvents.Add(newTimeEvent); //don't forget to add it to the list!
+		//timeEvents for TimeEvents and waveEvents for WaveEvents
 	}
 	
 	// Update is called once per frame
