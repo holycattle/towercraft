@@ -55,11 +55,11 @@ public class StageController : MonoBehaviour {
 	}
 	
 	public void listenForEvents() {
-		//if(events)
-			foreach(Event eventItr in events) {
-				if(eventItr.evalCondition()) {
-					//eventItr.Dispose();
-				}
+		//this needs garbage collection
+		foreach(Event eventItr in events) {
+			if(!eventItr.isSatisfied) { //minor optimization... I really need to find a way to really optimize this
+				eventItr.evalCondition();
 			}
+		}
 	}
 }
