@@ -25,7 +25,7 @@ public class WaveController : MonoBehaviour {
 
 	private LevelController _gameController;
 	private SpawnScheme _spawnScheme;		// Current Wave Scheme
-	private int _waveNumber;
+	public int _waveNumber;
 	private int _nextWaveCost;
 	private float _timeTillNextWave;
 	public bool _waveActive;

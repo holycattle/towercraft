@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class StageController : MonoBehaviour {
 	private Hashtable bossStages = new Hashtable();
 	private WaveController waveController;
-	//public GameMessage gameMessages[];
+	public List<Event> events;
 	
 	public int finalWave = -1;
 	
@@ -18,23 +19,47 @@ public class StageController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
 		waveController = GameObject.Find(" GameController").GetComponentInChildren<WaveController>();
-		
-		//hard code special events for now
-		//specialEvents[] = 
+		events = new List<Event>();
+		Event e = new Event();
+		Hashtable args = new Hashtable();
+		//Debug.Log("current wave: " + waveController.waveNumber.ToString());
+		args[0] = waveController;
+		args[1] = finalWave;
+		e.addAction(newSkybox, args);
+		e.addCondition(isVictorious, args);
+		events.Add(e);
+		Debug.Log ("Added " + events.ToString());
 	}
 	
 	// Update is called once per frame
 	public virtual void Update () {
-		if(waveController.waveNumber != -1 && waveController.waveNumber > finalWave) {
+		//if(waveController.waveNumber != -1 && waveController.waveNumber > finalWave) {
 			//do victory scene/action
 			//Camera.mainCamera.GetComponent<Skybox>().material = Resources.Load("Skyboxes/Skybox17", typeof(Material)) as Material;
-			Debug.Log("Victory!");
-		}
+		//}
+		//Event e = new Event(, null);
+		listenForEvents();
 	}
 	
-	public int getFinalWave() {
-		return finalWave;
+	public void newSkybox(Hashtable h) {
+		Debug.Log ("should change skybox here");
+		Camera.mainCamera.GetComponent<Skybox>().material = Resources.Load("Skyboxes/Skybox17", typeof(Material)) as Material;
+	}
+	
+	public bool isVictorious(Hashtable h) {
+		Debug.Log("final wave = " + ((int)h[1]).ToString());
+		int w = ((WaveController)h[0]).waveNumber;
+		Debug.Log("current wavenumber = " + w.ToString());
+		return w == (int)h[1];
+	}
+	
+	public void listenForEvents() {
+		//if(events)
+			foreach(Event eventItr in events) {
+				if(eventItr.evalCondition()) {
+					//eventItr.Dispose();
+				}
+			}
 	}
 }
