@@ -24,7 +24,9 @@ public class StageController : MonoBehaviour {
 		timeEvents = new List<TimeEvent>();
 		waveEvents = new List<WaveEvent>();
 		
-		//initialize events here
+		TimeEvent newTimeEvent = new TimeEvent(7f);
+		newTimeEvent.addAction(newSkybox, new Hashtable());
+		timeEvents.Add(newTimeEvent);
 	}
 	
 	// Update is called once per frame
@@ -34,7 +36,15 @@ public class StageController : MonoBehaviour {
 	
 	public void newSkybox(Hashtable h) {
 		Debug.Log ("should change skybox here");
-		RenderSettings.skybox = Resources.Load("Skyboxes/Skybox17", typeof(Material)) as Material;
+		Skybox s = GameObject.Find("Main Camera").GetComponent<Skybox>();
+		s.material = Resources.Load("Skyboxes/Skybox17", typeof(Material)) as Material;
+	}
+	
+	public bool isVictorious(Hashtable h) {
+		Debug.Log("final wave = " + ((int)h[1]).ToString());
+		int w = ((WaveController)h[0]).waveNumber;
+		Debug.Log("current wavenumber = " + w.ToString());
+		return w == (int)h[1];
 	}
 	
 	public void listenForEvents() {
