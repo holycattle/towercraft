@@ -42,13 +42,6 @@ public class StageController : MonoBehaviour {
 		s.material = Resources.Load("Skyboxes/Skybox17", typeof(Material)) as Material;
 	}
 	
-	public bool isVictorious(Hashtable h) {
-		Debug.Log("final wave = " + ((int)h[1]).ToString());
-		int w = ((WaveController)h[0]).waveNumber;
-		Debug.Log("current wavenumber = " + w.ToString());
-		return w == (int)h[1];
-	}
-	
 	public void listenForEvents() {
 		//this needs garbage collection
 		foreach(TimeEvent t in timeEvents) {

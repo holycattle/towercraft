@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+//to-do: implement an Interface perhaps?
 public class TimeEvent : BaseEvent {
 	public float timeInSeconds;
 	

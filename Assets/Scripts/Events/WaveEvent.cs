@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+//to-do: implement an Interface perhaps?
 public class WaveEvent : BaseEvent {
 	public int waveFlag;
 	private WaveController waveController;
@@ -29,6 +30,4 @@ public class WaveEvent : BaseEvent {
 			
 		return isSatisfied;
 	}
-
-
 }
