@@ -8,6 +8,7 @@ public class StartScreen : MonoBehaviour {
 	const int BUTTON_HEIGHT = 50;
 	
 	void OnGUI() {
+		Screen.lockCursor = false;
 		Rect startGameRect = new Rect((Screen.width - BUTTON_WIDTH)/2, (Screen.height - BUTTON_HEIGHT)/2, BUTTON_WIDTH, BUTTON_HEIGHT);
 		bool startGame = GUI.Button(startGameRect, "Start Game");
 //		Debug.Log("test");

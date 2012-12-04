@@ -147,7 +147,7 @@ public class Weapon : GameTool {
 			return;
 		}
 
-		damage = 200;
+		//damage = 1;
 
 		if (_timeTillFire <= 0) {
 			// Raycast
