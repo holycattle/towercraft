@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class CameraController : MonoBehaviour {
+	Material DEFAULT_SKYBOX = null;
+	
 	float forwardSpeed = 32;
 	private Camera minimapCam;
 	private Camera firstPersonCam;
@@ -20,7 +22,10 @@ public class CameraController : MonoBehaviour {
 	void Start() {
 		minimapCam = GameObject.Find("Minimap Camera").GetComponent<Camera>();
 		firstPersonCam = GameObject.Find("Main Camera").GetComponent<Camera>();
-
+		//set default skybox
+		DEFAULT_SKYBOX = Resources.Load("Skyboxes/Skybox18", typeof(Material)) as Material;
+		GameObject.Find("Main Camera").GetComponent<Skybox>().material = DEFAULT_SKYBOX;
+		GameObject.Find("Minimap Camera").GetComponent<Skybox>().material = DEFAULT_SKYBOX;
 		// Controller Inits
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 		_level = _game.gameObject.GetComponent<LevelController>();

@@ -25,9 +25,9 @@ public class StageController : MonoBehaviour {
 		waveEvents = new List<WaveEvent>();
 		
 		//initialize events here
-		TimeEvent newTimeEvent = new TimeEvent(7f);
-		newTimeEvent.addAction(newSkybox, new Hashtable());
-		timeEvents.Add(newTimeEvent); //don't forget to add it to the list!
+		//TimeEvent newTimeEvent = new TimeEvent(7f);
+		//newTimeEvent.addAction(newSkybox, new Hashtable());
+		//timeEvents.Add(newTimeEvent); //don't forget to add it to the list!
 		//timeEvents for TimeEvents and waveEvents for WaveEvents
 	}
 	
