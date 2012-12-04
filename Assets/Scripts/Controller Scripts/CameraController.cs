@@ -20,18 +20,21 @@ public class CameraController : MonoBehaviour {
 	private float pathInterval = 0;
 	
 	private Vector3 mousePos;
-	//private float terrainWidth;
-	//private float terrainHeight;
+	private float terrainWidth;
+	private float terrainHeight;
 	const float SCROLL_WIDTH = 10f;
 	const float SCROLL_HEIGHT = 10f;
 	const int SCROLL_SPEED = 32;
-
+	
+	//map restraints
+	const float MAP_MIN_X = -18.7f;
+	const float MAP_MIN_Z = -70f;
+	const float MAP_MAX_X = 27f;
+	const float MAP_MAX_Z = 42f;
+	
 	void Start() {
-		//Terrain t = GameObject.Find("[Root]World").GetComponent<Terrain>();
-		//terrainWidth = t.terrainData.size.y;
-		//terrainHeight = t.terrainData.size.x;
-		//Debug.Log("terrain width = " + terrainWidth.ToString());
-		//Debug.Log("terrain height = " + terrainHeight.ToString());
+		Debug.Log("terrain width = " + terrainWidth.ToString());
+		Debug.Log("terrain height = " + terrainHeight.ToString());
 		minimapCam = GameObject.Find("Minimap Camera").GetComponent<Camera>();
 		firstPersonCam = GameObject.Find("Main Camera").GetComponent<Camera>();
 		//set default skybox
@@ -58,22 +61,20 @@ public class CameraController : MonoBehaviour {
 		}
 		
 		int top = 0; //1 if going up, -1 if going down
-		int left = 1; //1 if going right, -1 if going left
+		int left = 0; //1 if going right, -1 if going left
 		float forwardMoveAmount;
 		float sideMoveAmount;
 		if (minimapCam.enabled) {
 			mousePos = Input.mousePosition;
-			//Debug.Log("x: " + mousePos.x.ToString() + "; y: " + mousePos.y.ToString());
-			//Debug.Log("screen width: " + Screen.width.ToString() + "; screen height: " + Screen.height.ToString());
 			if(mousePos.x < SCROLL_WIDTH) {
 				left = -1;
 			} else if(mousePos.x >= Screen.width - SCROLL_WIDTH)
 				left = 1;
 			else left = 0;
 			
-			if(mousePos.y <= 0) {
+			if(mousePos.y < SCROLL_HEIGHT) {
 				top = -1;
-			} else if(mousePos.y >= Screen.height)
+			} else if(mousePos.y >= Screen.height - SCROLL_HEIGHT)
 				top = 1;
 			else top = 0;
 			
@@ -84,7 +85,7 @@ public class CameraController : MonoBehaviour {
 				forwardMoveAmount = Input.GetAxis("Vertical") * SCROLL_SPEED * Time.deltaTime;
 			if(Input.GetAxis("Horizontal") != 0)
 				sideMoveAmount = Input.GetAxis("Horizontal") * SCROLL_SPEED * Time.deltaTime;
-			transform.Translate(sideMoveAmount, 0, forwardMoveAmount, Space.World);
+			moveCamera(sideMoveAmount, 0, forwardMoveAmount);
 			
 			// Path Drawers
 			if (Input.GetKeyDown(KeyCode.Q)) {
@@ -99,6 +100,30 @@ public class CameraController : MonoBehaviour {
 //				g.GetComponent<PathFollower>().path = _level.MotionPath;
 //			}
 		}
+	}
+	
+	public bool withinMap(Vector3 v) {
+		//Debug.Log("camera x: " + transform.position.x.ToString() + "; camera z: " + transform.position.z.ToString());
+		if(v.x + transform.position.x < MAP_MIN_X) {
+			
+			return false;
+		} else if(v.x + transform.position.x > MAP_MAX_X) {
+			return false;
+		}
+		
+		if(v.z + transform.position.z < MAP_MIN_Z) {
+			return false;
+		} else if(v.z + transform.position.z > MAP_MAX_Z) {
+			return false;
+			
+		}
+		
+		return true;
+	}
+	
+	public void moveCamera(float x, float y, float z) {
+		if(withinMap(new Vector3(x, y, z)))
+			transform.Translate(x, y, z, Space.World);
 	}
 
 	public void SetOverviewCamera(bool val) {
