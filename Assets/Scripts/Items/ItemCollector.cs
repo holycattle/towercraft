@@ -6,7 +6,7 @@ public class ItemCollector : MonoBehaviour {
 	// GUI Constants
 	private const int WIDTH = 4;
 	private const int HEIGHT = 6;
-	public const int GRIDWIDTH = 192;
+	public const int GRIDWIDTH = 160;
 	public const int GRIDHEIGHT = 32;
 	public const int SPACE = 4;
 
@@ -35,12 +35,14 @@ public class ItemCollector : MonoBehaviour {
 	private WeaponItem[] weaponInventory;
 
 	// GUI Elements
+//	public GUIStyle inventoryStyle;
 	private Rect changeInventoryRect;
 	private Rect[] drawRects;
 	private Rect[] craftingRects;
 	private Rect cloneButtonRect;
 //	private Rect modeChangeButtonRect;
 	private Rect tooltipRect;
+
 
 	// Cloning / Combining
 	private int craftingMode;

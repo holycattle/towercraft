@@ -108,6 +108,13 @@ public class WeaponController : MonoBehaviour {
 				}
 			}
 
+			ImpulseUpdate();		// Affects localPosition (should affect localRotation eventually)
+			WeaponRotation();	// Affects localRotation
+		}
+	}
+
+	void LateUpdate() {
+		if (_game.ActiveMenu == Menu.Game) {
 			/*
 			 *	Mouse CLicks
 			 */
@@ -134,9 +141,6 @@ public class WeaponController : MonoBehaviour {
 			} else if (Input.GetMouseButtonUp(0)) {
 				ActiveTool.MouseUpOn(rayCastedObject);
 			}
-
-			ImpulseUpdate();		// Affects localPosition (should affect localRotation eventually)
-			WeaponRotation();	// Affects localRotation
 		}
 	}
 

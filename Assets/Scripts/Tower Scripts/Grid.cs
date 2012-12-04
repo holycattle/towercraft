@@ -47,6 +47,23 @@ public class Grid : MonoBehaviour {
 		_levelController.UpdatePath();
 	}
 
+	public TowerComponent BreakTopComponent() {
+		if (_ts != null) {
+			TowerComponent t = _ts.BreakTopComponent();
+			if (t.componentType == BaseTower.TOWER_BASE) {
+				Destroy(_ts.gameObject);
+				_ts = null;
+			}
+
+			return t;
+		}
+		
+		// Update Path
+		_levelController.UpdatePath();
+
+		return null;
+	}
+
 	public BaseTower GenerateBaseTower() {
 		// Create the tower
 		GameObject t = Instantiate(tower, transform.position, Quaternion.identity) as GameObject;

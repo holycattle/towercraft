@@ -5,7 +5,7 @@ using System.Collections;
 public class TimeEvent : BaseEvent {
 	public float timeInSeconds;
 	
-	public TimeEvent(float t) : base() {
+	public TimeEvent (float t) : base() {
 		timeInSeconds = t;
 		isSatisfied = false;
 	}
@@ -15,15 +15,15 @@ public class TimeEvent : BaseEvent {
 	}
 	
 	public bool evalCondition() {
-		if(!isSatisfied) {
-			Debug.Log(timeInSeconds.ToString() + " = " + Time.timeSinceLevelLoad);
+		if (!isSatisfied) {
+//			Debug.Log(timeInSeconds.ToString() + " = " + Time.timeSinceLevelLoad);
 			isSatisfied = (timeInSeconds <= Time.timeSinceLevelLoad);
-			Debug.Log(isSatisfied.ToString());
-			if(isSatisfied)
+//			Debug.Log(isSatisfied.ToString());
+			if (isSatisfied)
 				doAction();
 		}
-		Debug.Log("curr time: " + Time.timeSinceLevelLoad.ToString());
-		Debug.Log("waiting time: " + timeInSeconds.ToString());
+//		Debug.Log("curr time: " + Time.timeSinceLevelLoad.ToString());
+//		Debug.Log("waiting time: " + timeInSeconds.ToString());
 		return isSatisfied;
 	}
 }

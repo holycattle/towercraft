@@ -6,7 +6,7 @@ public class MessageController : MonoBehaviour {
 	// Constants
 	public const int MSG_PICKUP = 0;
 	public const int MSG_WARNING = 1;
-	public const int BOX_WIDTH = 400;
+	public const int BOX_WIDTH = 512;
 	public const int BOX_HEIGHT = 40;
 	public const int MAX_NUM_MSG = 8;
 	public const float DEFAULT_TEXT_DURATION = 3f;

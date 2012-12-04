@@ -9,16 +9,14 @@ public class Builder : GameTool {
 //	public GameObject[] towerTurrets;
 //	private GameObject[][] towerPrefabs;
 	private TowerComponent[] _displayArray;
-	private BaseTower _swapTower;
+//	private BaseTower _swapTower;
 
 	// Inventory
 	private ItemCollector _inventory;
 
 	// Building Menu
-//	private const int BUTTON_WIDTH = 100;
-//	private const int BUTTON_HEIGHT = 50;
-//	private const int BUTTON_PADDING = 50;
 	private Rect[] buttonRects;
+	private Rect breakButtonRect;
 	private Rect tooltipRect;
 	private Rect swapTooltipRect;
 	private int _activeMenu;
@@ -54,21 +52,20 @@ public class Builder : GameTool {
 		_inventory = transform.root.gameObject.GetComponentInChildren<ItemCollector>();
 
 		tooltipRect = new Rect(Screen.width / 2 + ItemCollector.SPACE, Screen.height / 2 - ItemCollector.GRIDHEIGHT * 4,
-			ItemCollector.GRIDWIDTH * 2, ItemCollector.GRIDHEIGHT * 4);
+			ItemCollector.GRIDWIDTH, ItemCollector.GRIDHEIGHT * 4);
 		swapTooltipRect = new Rect(Screen.width / 2 + ItemCollector.SPACE, Screen.height / 2 + ItemCollector.SPACE,
-			ItemCollector.GRIDWIDTH * 2, ItemCollector.GRIDHEIGHT * 4);
+			ItemCollector.GRIDWIDTH, ItemCollector.GRIDHEIGHT * 4);
+		breakButtonRect = new Rect(swapTooltipRect.xMax, swapTooltipRect.yMin, swapTooltipRect.width, swapTooltipRect.height);
 	}
 
 	protected override void OnGUI() {
 		base.OnGUI();
 		if (_game.ActiveMenu == Menu.Builder) {
+
+			BaseTower currentTower = targettedGrid.Tower;
+
 			for (int i = 0; i < _displayArray.Length; i++) {
 				if (GUI.Button(buttonRects[i], new GUIContent(_displayArray[i].componentName, _displayArray[i].GetTooltipString()))) {
-//					Debug.Log("Display Array: " + _displayArray[i].componentName + " > " + _displayArray[i].attributes.Count);
-					_game.ActiveMenu = Menu.Game;
-
-					BaseTower currentTower = targettedGrid.Tower;
-
 					if (_buildMode) {
 						// Build Mode
 						if (currentTower == null) {
@@ -88,14 +85,25 @@ public class Builder : GameTool {
 			}
 
 			GUI.Label(tooltipRect, GUI.tooltip);
-			if (_swapTower != null) {
-				GUI.Label(swapTooltipRect, _swapTower.GetTopComponent().GetTooltipString());
+			if (currentTower != null) {
+				GUI.Label(swapTooltipRect, currentTower.GetTopComponent().GetTooltipString());
+
+				if (GUI.Button(breakButtonRect, "Break Part")) {
+					TowerComponent t = targettedGrid.BreakTopComponent();
+					if (t != null) {
+						_inventory.Pickup(new TowerItem(t));
+					}
+					targettedGrid = null;
+				}
 			}
+
 			// If the targetted grid is no longer targetted,
 			//  it means that the player has already chosen a component to build
 			//  therefore, nullify the display array.
-			if (targettedGrid == null)
+			if (targettedGrid == null) {
+				_game.ActiveMenu = Menu.Game;
 				_displayArray = null;
+			}
 		}
 	}
 
@@ -104,10 +112,12 @@ public class Builder : GameTool {
 	}
 
 	public override void MouseDownOn(GameObject g) {
-		MouseClickOn(g);
+//		MouseClickOn(g);
 	}
 
 	public override void MouseClickOn(GameObject g) {
+		Debug.Log("herero");
+
 		if (_game.ActiveMenu == Menu.Game && g != null) {
 			targettedGrid = g.GetComponent<Grid>();
 
@@ -145,7 +155,7 @@ public class Builder : GameTool {
 //			targettedGrid.TempTower = false;
 
 			BaseTower currentTower = targettedGrid.Tower;
-			_swapTower = currentTower;
+//			_swapTower = currentTower;
 
 			_game.ActiveMenu = Menu.Builder;
 			_buildMode = true;

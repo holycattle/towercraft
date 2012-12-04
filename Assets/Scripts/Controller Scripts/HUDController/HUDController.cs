@@ -6,7 +6,7 @@ public class HUDController : MonoBehaviour {
 	private WaveController _wave;
 	private PlayerController _player;
 	private Weapon _weapon;
-	public const int PADDING = 16;
+	public const int PADDING = 48;
 	public const int LIVES_WIDTH = 256;
 	public const int LIVES_HEIGHT = 32;
 	public const int AMMO_WIDTH = 128;

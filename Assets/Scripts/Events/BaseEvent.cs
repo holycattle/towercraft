@@ -14,7 +14,7 @@ public class BaseEvent {
 	public virtual void addAction(Action<Hashtable> actionFunction, Hashtable actArg) {
 		this.actionFunction = actionFunction.Clone() as Action<Hashtable>;
 		actionFunctionArgs = actArg.Clone() as Hashtable;
-		Debug.Log("added function: " + actionFunction.ToString());
+//		Debug.Log("added function: " + actionFunction.ToString());
 	}
 	
 	public virtual void doAction() {

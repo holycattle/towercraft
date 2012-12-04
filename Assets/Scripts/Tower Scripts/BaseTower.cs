@@ -112,11 +112,15 @@ public class BaseTower : MonoBehaviour {
 
 	private void UpdateStats() {
 		Debug.Log("Update Stats!");
-		for (int i = 0; i < TOWER_COMPLETE; i++) {
-			Debug.Log("Tower: " + _towerComponents[i].componentName);
-		}
+//		for (int i = 0; i < TOWER_COMPLETE; i++) {
+//			Debug.Log("Tower: " + _towerComponents[i].componentName);
+//		}
 
-		_missileSource = _towerComponents[TOWER_TURRET].transform.Find("MissileSource");
+		if (_towerComponents[TOWER_TURRET] == null) {
+			_missileSource = null;
+		} else {
+			_missileSource = _towerComponents[TOWER_TURRET].transform.Find("MissileSource");
+		}
 
 		// Clear all current modifiers
 		foreach (Stat s in Enum.GetValues(typeof(Stat))) {
@@ -124,27 +128,48 @@ public class BaseTower : MonoBehaviour {
 		}
 
 		// Add modifiers
-		TowerTurret temp = (TowerTurret)_towerComponents[TOWER_TURRET];
-		Debug.Log("Length Attributes: " + temp.componentName + " > " + temp.attributes.Count);
-		foreach (ModifyingAttribute m in temp.attributes) {
-			stats[(int)m.stat].AddModifier(m);
+		if (_towerComponents[TOWER_TURRET] == null) {
+
+		} else {
+			TowerTurret temp = (TowerTurret)_towerComponents[TOWER_TURRET];
+			foreach (ModifyingAttribute m in temp.attributes) {
+				stats[(int)m.stat].AddModifier(m);
+			}
 		}
 
 		// Set Firing Interval
-		firingInterval = 1f / stats[(int)Stat.FiringRate].AdjustedBaseValue;
+		if (stats[(int)Stat.FiringRate].AdjustedBaseValue == 0) {
+			firingInterval = 0;
+		} else {
+			firingInterval = 1f / stats[(int)Stat.FiringRate].AdjustedBaseValue;
+		}
 
 		// Set Collider Range
-		GetComponent<SphereCollider>().radius = stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE;
+		if (stats[(int)Stat.Range].AdjustedBaseValue == 0) {
 
-		// Load the Missile
-		if (temp.missile != null) {
-			missile = temp.missile;
+		} else {
+			GetComponent<SphereCollider>().radius = stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE;
 		}
-		// Load Status Ailment
-		statusAilment = temp.statusAilment;
 
-		isFiring = true;
 
+		if (_towerComponents[TOWER_TURRET] == null) {
+			missile = null;
+			statusAilment = null;
+		} else {
+			// Load the Missile
+			TowerTurret temp = (TowerTurret)_towerComponents[TOWER_TURRET];
+			if (temp.missile != null) {
+				missile = temp.missile;
+			}
+			// Load Status Ailment
+			statusAilment = temp.statusAilment;
+		}
+
+		if (_towerComponents[TOWER_TURRET] == null) {
+			isFiring = false;
+		} else {
+			isFiring = true;
+		}
 		// Debug Out all Stats
 		for (int i = 0; i < Enum.GetValues(typeof(Stat)).Length; i++) {
 			Debug.Log(((Stat)i).ToString() + ": " + stats[i].AdjustedBaseValue);
@@ -153,20 +178,6 @@ public class BaseTower : MonoBehaviour {
 
 	public void AddNextComponent(TowerComponent tPrefab) {
 		int next = GetNextComponent();
-//		TowerComponent comp = g.GetComponent<TowerComponent>();
-//		switch (next) {
-//			case TOWER_BASE:
-//				comp = g.GetComponent<TowerBase>();
-//				break;
-//			case TOWER_STEM:
-//				comp = g.GetComponent<TowerStem>();
-//				break;
-//			case TOWER_TURRET:
-//				comp = g.GetComponent<TowerTurret>();
-//				break;
-//		}
-
-//		Debug.Log("Adding Component: " + tPrefab.componentName);
 
 		// Instantiate the Game Object
 		TowerComponent towerInstance = Instantiate(tPrefab, transform.position + GetNextComponentPosition(), Quaternion.identity) as TowerComponent;
@@ -177,7 +188,6 @@ public class BaseTower : MonoBehaviour {
 		if (towerInstance.componentType == TOWER_TURRET) {
 			foreach (ModifyingAttribute m in ((TowerTurret) tPrefab).attributes) {
 				((TowerTurret)towerInstance).attributes.Add(m);
-//				Debug.Log("Adding Attribute to INSTANCE!");
 			}
 		}
 
@@ -194,13 +204,23 @@ public class BaseTower : MonoBehaviour {
 		}
 	}
 
+	public TowerComponent DeactivateComponent(int type) {
+		_towerComponents[type].transform.position = new Vector3(0, 50, 0);	// Move to a far away place
+		_towerComponents[type].transform.parent = null;	// DE-Parent
+		_towerComponents[type].gameObject.SetActiveRecursively(false);
+		TowerComponent t = _towerComponents[type];
+		_towerComponents[type] = null;
+		return t;
+	}
+
 	public TowerComponent SwapComponent(TowerComponent tPrefab) {
 		int swapType = tPrefab.componentType;
 
-		_towerComponents[swapType].transform.position = new Vector3(0, 50, 0);	// Move to a far away place
-		_towerComponents[swapType].transform.parent = null;	// DE-Parent
-		_towerComponents[swapType].gameObject.SetActiveRecursively(false);
-		TowerComponent swappedOutComponent = _towerComponents[swapType].GetComponent<TowerComponent>();
+//		_towerComponents[swapType].transform.position = new Vector3(0, 50, 0);	// Move to a far away place
+//		_towerComponents[swapType].transform.parent = null;	// DE-Parent
+//		_towerComponents[swapType].gameObject.SetActiveRecursively(false);
+//		TowerComponent swappedOutComponent = _towerComponents[swapType].GetComponent<TowerComponent>();
+		TowerComponent swappedOutComponent = DeactivateComponent(swapType);
 
 		TowerComponent towerInstance = Instantiate(tPrefab, transform.position + GetNextComponentPosition(swapType), Quaternion.identity) as TowerComponent;
 		towerInstance.transform.parent = transform;
@@ -217,17 +237,28 @@ public class BaseTower : MonoBehaviour {
 		return swappedOutComponent;
 	}
 
+	public TowerComponent BreakTopComponent() {
+		TowerComponent t = null;
+		switch (GetNextComponent()) {
+			case TOWER_COMPLETE:
+				t = DeactivateComponent(TOWER_TURRET);
+				break;
+			case TOWER_TURRET:
+				t = DeactivateComponent(TOWER_BASE);
+				break;
+		}
+		UpdateStats();
+		return t;
+	}
+
 	public TowerComponent GetTopComponent() {
 		switch (GetNextComponent()) {
 			case TOWER_COMPLETE:
 				return _towerComponents[TOWER_TURRET];
-				break;
 			case TOWER_TURRET:
 				return _towerComponents[TOWER_BASE];
-				break;
 			case TOWER_BASE:
 				return null;
-				break;
 		}
 		return null;
 	}

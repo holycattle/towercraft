@@ -16,6 +16,7 @@ public class ModifiedStat : BaseStat {
 
 	public void ClearModifiers() {
 		_mods.Clear();
+		CalculateModValue();
 	}
 	
 	private void CalculateModValue() {

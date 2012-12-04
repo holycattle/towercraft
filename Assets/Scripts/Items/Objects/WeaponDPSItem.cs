@@ -16,7 +16,7 @@ public class WeaponDPSItem : WeaponItem {
 
 		float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_MULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
 		dps = BaseTower.JiggleStat(dps, 0.1f);
-		int randomDPSMultiplier = Random.Range(1, 4);
+		int randomDPSMultiplier = Random.Range(1, 2);
 		dps *= randomDPSMultiplier;
 
 
