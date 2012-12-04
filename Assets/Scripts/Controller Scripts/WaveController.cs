@@ -16,7 +16,7 @@ public class WaveController : MonoBehaviour {
 	private const int MAX_SPEED = 12;
 	private const int WAVESTART_COST = 128;
 	private const float WAVE_INCREASE = 1.4f;
-	private const int WAVE_INTERVAL = 10; // In seconds
+	private const int WAVE_INTERVAL = 30; // In seconds
 	
 	public int incomingWave;
 	public int incomingWaveResistanceType;
@@ -34,7 +34,7 @@ public class WaveController : MonoBehaviour {
 		_gameController = GetComponent<LevelController>();
 		_nextWaveCost = WAVESTART_COST;
 		_waveNumber = 0;
-		_timeTillNextWave = 5;
+		_timeTillNextWave = 45f;
 		incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
 		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
 		_waveActive = false;
@@ -54,6 +54,9 @@ public class WaveController : MonoBehaviour {
 			}
 		} else {
 			_timeTillNextWave -= Time.deltaTime;
+			if (Input.GetKeyDown(KeyCode.N)) {
+				_timeTillNextWave  = 0;
+			}
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;
 				NextWave();
