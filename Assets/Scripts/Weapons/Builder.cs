@@ -15,6 +15,7 @@ public class Builder : GameTool {
 	private ItemCollector _inventory;
 
 	// Building Menu
+	private GUISkin inventorySkin;
 	private Rect[] buttonRects;
 	private Rect breakButtonRect;
 	private Rect tooltipRect;
@@ -26,14 +27,6 @@ public class Builder : GameTool {
 	// Laser Sight
 	private LineRenderer laserSight;
 
-	protected override void Update() {
-		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1)) {
-			_game.ActiveMenu = Menu.Game;
-			Screen.lockCursor = false;
-			Time.timeScale = 0.0f;
-		}
-	}
-	
 	protected override void Awake() {
 		base.Awake();
 
@@ -51,16 +44,26 @@ public class Builder : GameTool {
 
 		_inventory = transform.root.gameObject.GetComponentInChildren<ItemCollector>();
 
-		tooltipRect = new Rect(Screen.width / 2 + ItemCollector.SPACE, Screen.height / 2 - ItemCollector.GRIDHEIGHT * 4,
-			ItemCollector.GRIDWIDTH, ItemCollector.GRIDHEIGHT * 4);
+		inventorySkin = Resources.Load("Fonts/InventorySkin", typeof(GUISkin)) as GUISkin;
+		tooltipRect = new Rect(Screen.width / 2 + ItemCollector.SPACE, Screen.height / 2 - ItemCollector.TOOLTIPHEIGHT,
+			ItemCollector.TOOLTIPWIDTH, ItemCollector.TOOLTIPHEIGHT);
 		swapTooltipRect = new Rect(Screen.width / 2 + ItemCollector.SPACE, Screen.height / 2 + ItemCollector.SPACE,
-			ItemCollector.GRIDWIDTH, ItemCollector.GRIDHEIGHT * 4);
+			ItemCollector.TOOLTIPWIDTH, ItemCollector.TOOLTIPHEIGHT);
 		breakButtonRect = new Rect(swapTooltipRect.xMax, swapTooltipRect.yMin, swapTooltipRect.width, swapTooltipRect.height);
+	}
+
+	protected override void Update() {
+		if (Input.GetKeyDown(KeyCode.Escape) || Input.GetMouseButtonDown(1)) {
+			_game.ActiveMenu = Menu.Game;
+			Screen.lockCursor = false;
+			Time.timeScale = 0.0f;
+		}
 	}
 
 	protected override void OnGUI() {
 		base.OnGUI();
 		if (_game.ActiveMenu == Menu.Builder) {
+			GUI.skin = inventorySkin;
 
 			BaseTower currentTower = targettedGrid.Tower;
 
@@ -104,6 +107,8 @@ public class Builder : GameTool {
 				_game.ActiveMenu = Menu.Game;
 				_displayArray = null;
 			}
+
+			GUI.skin = null;
 		}
 	}
 

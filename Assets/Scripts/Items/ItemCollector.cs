@@ -8,6 +8,8 @@ public class ItemCollector : MonoBehaviour {
 	private const int HEIGHT = 6;
 	public const int GRIDWIDTH = 160;
 	public const int GRIDHEIGHT = 32;
+	public const int TOOLTIPWIDTH = 256;
+	public const int TOOLTIPHEIGHT = 128;
 	public const int SPACE = 4;
 
 	// Inventory Constants
@@ -35,7 +37,7 @@ public class ItemCollector : MonoBehaviour {
 	private WeaponItem[] weaponInventory;
 
 	// GUI Elements
-//	public GUIStyle inventoryStyle;
+	private GUISkin inventorySkin;
 	private Rect changeInventoryRect;
 	private Rect[] drawRects;
 	private Rect[] craftingRects;
@@ -64,6 +66,7 @@ public class ItemCollector : MonoBehaviour {
 		 *	GUI Initialization
 		 */
 		// Init Rects for Inventory Items
+		inventorySkin = Resources.Load("Fonts/InventorySkin", typeof(GUISkin)) as GUISkin;
 		drawRects = new Rect[WIDTH * HEIGHT];
 		int totalWidth = WIDTH * GRIDWIDTH + (WIDTH - 1) * SPACE;
 		int totalHeight = HEIGHT * GRIDHEIGHT + (HEIGHT - 1) * SPACE;
@@ -84,7 +87,7 @@ public class ItemCollector : MonoBehaviour {
 		}
 		cloneButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy + (GRIDHEIGHT + SPACE) * HEIGHT, GRIDWIDTH, GRIDHEIGHT);
 //		modeChangeButtonRect = new Rect(sx + totalWidth + GRIDWIDTH, sy - (GRIDHEIGHT + SPACE), GRIDWIDTH, GRIDHEIGHT);
-		tooltipRect = new Rect(sx, sy + totalHeight + GRIDHEIGHT, GRIDWIDTH * 2, GRIDHEIGHT * 4);
+		tooltipRect = new Rect(sx, sy + totalHeight + SPACE, TOOLTIPWIDTH, TOOLTIPHEIGHT);
 
 		// Deactivate Messenger: So there aren't any messages
 		_game.Messenger.enabled = false;
@@ -158,8 +161,7 @@ public class ItemCollector : MonoBehaviour {
 	 */
 	void OnGUI() {
 		if (_game.ActiveMenu == Menu.Inventory) {
-//			int width = WIDTH * GRIDWIDTH + (WIDTH - 1) * SPACE;
-//			int height = HEIGHT * GRIDHEIGHT + (HEIGHT - 1) * SPACE;
+			GUI.skin = inventorySkin;
 
 			// Draw Mode Swap Button
 			if (GUI.Button(changeInventoryRect, INVENTORYTYPES[activeInv])) {
@@ -175,30 +177,39 @@ public class ItemCollector : MonoBehaviour {
 				}
 
 				if (GUI.Button(drawRects[i], new GUIContent(activeInventory[i].GetName(), activeInventory[i].GetTooltip()))) {
-					switch (activeInv) {
-						case INV_CRAFT:
-							CraftableItem c = ((CraftableItem)activeInventory[i]);
-							if (craftingRecipe[c.CraftableType] == null) {
-								// If there is no item CraftableType slot, then ADD
-								craftingRecipe[c.CraftableType] = c;
-								Remove(c);
-							} else {
-								// Else, SWAP the clicked with the one in the slot
-								Pickup(craftingRecipe[c.CraftableType]);
-								craftingRecipe[c.CraftableType] = c;
-								Remove(c);
-							}
-							break;
-						case INV_TOWER:
-							break;
-						case INV_WEAPON:
-							WeaponItem w = ((WeaponItem)activeInventory[i]);
-							WeaponItem prevEquipped = _gun.equippedWeapons[w.weaponType];
-							_gun.equippedWeapons[w.weaponType] = w;
-							Remove(activeInventory, w);
-							Pickup(activeInventory, prevEquipped);
-							_gun.RecalculateStats();
-							break;
+					if (Input.GetKey(KeyCode.LeftControl)) {
+						// Destroy Item
+						if (activeInv == INV_TOWER) {
+							Destroy(((TowerItem)activeInventory[i]).GetTowerComponent().gameObject);
+						}
+						Remove(activeInventory[i]);
+					} else {
+						switch (activeInv) {
+							case INV_CRAFT:
+								Remove(activeInventory[i]);
+								CraftableItem c = ((CraftableItem)activeInventory[i]);
+								if (craftingRecipe[c.CraftableType] == null) {
+									// If there is no item CraftableType slot, then ADD
+									craftingRecipe[c.CraftableType] = c;
+									Remove(c);
+								} else {
+									// Else, SWAP the clicked with the one in the slot
+									Pickup(craftingRecipe[c.CraftableType]);
+									craftingRecipe[c.CraftableType] = c;
+									Remove(c);
+								}
+								break;
+							case INV_TOWER:
+								break;
+							case INV_WEAPON:
+								WeaponItem w = ((WeaponItem)activeInventory[i]);
+								WeaponItem prevEquipped = _gun.equippedWeapons[w.weaponType];
+								_gun.equippedWeapons[w.weaponType] = w;
+								Remove(activeInventory, w);
+								Pickup(activeInventory, prevEquipped);
+								_gun.RecalculateStats();
+								break;
+						}
 					}
 				}
 			}
@@ -242,6 +253,8 @@ public class ItemCollector : MonoBehaviour {
 			}
 
 			GUI.Label(tooltipRect, GUI.tooltip);
+
+			GUI.skin = null;
 		}
 	}
 
