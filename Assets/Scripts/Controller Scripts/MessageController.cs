@@ -19,6 +19,8 @@ public class MessageController : MonoBehaviour {
 	public GUISkin messageSkin;
 	private int messageCounter;
 	private List<Message> messages;
+	
+	
 
 	void Start() {
 		//fadingTime = 3f;
@@ -49,9 +51,15 @@ public class MessageController : MonoBehaviour {
 	void OnGUI() {
 		//initialize custom GUISkin settings
 		GUI.skin = messageSkin;
-		GUI.skin.label.alignment = TextAnchor.UpperCenter;
-
 		foreach (Message m in messages) {
+			switch(m.msgType) {
+				case MSG_PICKUP:
+					GUI.skin.label.alignment = TextAnchor.MiddleLeft;				
+					break;
+				case MSG_WARNING:
+					GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+					break;
+			}
 			m.DrawToGUI();
 		}
 //		if (ItemAnnouncement) {
@@ -113,7 +121,7 @@ public class MessageController : MonoBehaviour {
 		private const float STARTCOLORCHANGE = 0.9f;	// How long during the interval until you start fading out
 		private const int COLORCHANGES = 10;			// # of colour changes
 		protected string msg;
-		protected int msgType;
+		public int msgType;
 		public bool destroy; 		// Should destroy at the end of update loop?
 
 		// Colour Lerping
@@ -124,26 +132,33 @@ public class MessageController : MonoBehaviour {
 		// Drawing Info
 		protected Rect r;
 		protected Color c;
+		
+		int posX;
+		int posY;
+		
+		public int type;
 
 		public Message (string mess, int type, float duration, int pos) {
 			msg = mess;
 			msgType = type;
-
+			//int sy = BOX_HEIGHT * pos;
 			// Set Color
 			switch (msgType) {
 				case MSG_PICKUP:
 					c = new Color(0f, 0.8f, 0f, 1f);	// Light Green
+					posX = 0;
+					posY = (((Screen.height - BOX_WIDTH)) / 2) + (BOX_HEIGHT * pos);
 					break;
 				case MSG_WARNING:
 					c = new Color(1f, 0f, 0f, 1f);	// Red
+					posX = (Screen.width - BOX_WIDTH) / 2;
+					posY = BOX_HEIGHT * pos;
 					break;
 			}
 			move = 0;
-
-			int sx = (Screen.width - BOX_WIDTH) / 2;
-			int sy = BOX_HEIGHT * pos;
 //			int sy = (int)(Screen.height * BOX_HEIGHT) + BOX_HEIGHT * pos;
-			r = new Rect(sx, sy, BOX_WIDTH, BOX_HEIGHT);
+			r = new Rect(posX, posY, BOX_WIDTH, BOX_HEIGHT);
+			
 
 			startTime = Time.time;
 			interval = duration;
