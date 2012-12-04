@@ -80,8 +80,10 @@ public class CameraController : MonoBehaviour {
 			forwardMoveAmount = top * SCROLL_SPEED * Time.deltaTime;
 			sideMoveAmount = left * SCROLL_SPEED * Time.deltaTime;
 			//legacy support for WSAD movement
-			forwardMoveAmount = Input.GetAxis("Vertical") * SCROLL_SPEED * Time.deltaTime;
-			sideMoveAmount = Input.GetAxis("Horizontal") * SCROLL_SPEED * Time.deltaTime;
+			if(Input.GetAxis("Vertical") != 0)
+				forwardMoveAmount = Input.GetAxis("Vertical") * SCROLL_SPEED * Time.deltaTime;
+			if(Input.GetAxis("Horizontal") != 0)
+				sideMoveAmount = Input.GetAxis("Horizontal") * SCROLL_SPEED * Time.deltaTime;
 			transform.Translate(sideMoveAmount, 0, forwardMoveAmount, Space.World);
 			
 			// Path Drawers
