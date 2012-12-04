@@ -30,12 +30,12 @@ public class HUDController : MonoBehaviour {
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_weapon = GameObject.Find("LaserGun").GetComponent<Weapon>();
 
-		lifeEmpty = Resources.Load("Textures/GUI/Health/empty5", typeof(Texture)) as Texture2D;
-		lifeFull = Resources.Load("Textures/GUI/Health/full5", typeof(Texture)) as Texture2D;
+		lifeEmpty = Resources.Load("Textures/GUI/Health/empty6", typeof(Texture)) as Texture2D;
+		lifeFull = Resources.Load("Textures/GUI/Health/full6", typeof(Texture)) as Texture2D;
 		lifeBarRect = new Rect(PADDING, Screen.height - LIVES_HEIGHT - PADDING, LIVES_WIDTH, LIVES_HEIGHT);
 
-		ammoEmpty = Resources.Load("Textures/GUI/Health/ammo0", typeof(Texture)) as Texture2D;
-		ammoFull = Resources.Load("Textures/GUI/Health/ammo1", typeof(Texture)) as Texture2D;
+		ammoEmpty = Resources.Load("Textures/GUI/Health/ammo00", typeof(Texture)) as Texture2D;
+		ammoFull = Resources.Load("Textures/GUI/Health/ammo01", typeof(Texture)) as Texture2D;
 		ammoBarRect = new Rect(PADDING, Screen.height - LIVES_HEIGHT - AMMO_HEIGHT - PADDING, AMMO_WIDTH, AMMO_HEIGHT);
 	}
 
