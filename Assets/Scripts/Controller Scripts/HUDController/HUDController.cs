@@ -30,8 +30,8 @@ public class HUDController : MonoBehaviour {
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_weapon = GameObject.Find("LaserGun").GetComponent<Weapon>();
 
-		lifeEmpty = Resources.Load("Textures/GUI/Health/empty0", typeof(Texture)) as Texture2D;
-		lifeFull = Resources.Load("Textures/GUI/Health/full0", typeof(Texture)) as Texture2D;
+		lifeEmpty = Resources.Load("Textures/GUI/Health/empty5", typeof(Texture)) as Texture2D;
+		lifeFull = Resources.Load("Textures/GUI/Health/full5", typeof(Texture)) as Texture2D;
 		lifeBarRect = new Rect(PADDING, Screen.height - LIVES_HEIGHT - PADDING, LIVES_WIDTH, LIVES_HEIGHT);
 
 		ammoEmpty = Resources.Load("Textures/GUI/Health/ammo0", typeof(Texture)) as Texture2D;
@@ -44,7 +44,7 @@ public class HUDController : MonoBehaviour {
 		
 		GUI.backgroundColor = Color.grey;
 		GUI.Box(new Rect(0, 0, LIVES_WIDTH, LIVES_HEIGHT), "Lives Left: " + _game.Lives);
-		if(!_wave._waveActive) {
+		if (!_wave._waveActive) {
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, 0, LIVES_WIDTH, LIVES_HEIGHT), "Incoming wave: " + _wave.getNextWave());
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 2, LIVES_WIDTH, LIVES_HEIGHT), "Approaching in: " + (_wave.TimeTillNextWavex100 / 100f).ToString("F2"));
 		}
