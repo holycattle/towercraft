@@ -7,7 +7,7 @@ public class MessageController : MonoBehaviour {
 	public const int MSG_PICKUP = 0;
 	public const int MSG_WARNING = 1;
 	public const int BOX_WIDTH = 400;
-	public const int BOX_HEIGHT = 25;
+	public const int BOX_HEIGHT = 40;
 	public const int MAX_NUM_MSG = 8;
 	public const float DEFAULT_TEXT_DURATION = 3f;
 	public const float STARTPOS = 0.1f;	// [0, 1] How far down in the screen you start drawing
@@ -147,12 +147,12 @@ public class MessageController : MonoBehaviour {
 				case MSG_PICKUP:
 					c = new Color(0f, 0.8f, 0f, 1f);	// Light Green
 					posX = 0;
-					posY = (((Screen.height - BOX_WIDTH)) / 2) + (BOX_HEIGHT * pos);
+					posY = (((Screen.height - BOX_WIDTH)) / 2) + (BOX_HEIGHT/2 * pos);
 					break;
 				case MSG_WARNING:
 					c = new Color(1f, 0f, 0f, 1f);	// Red
 					posX = (Screen.width - BOX_WIDTH) / 2;
-					posY = BOX_HEIGHT * pos;
+					posY = BOX_HEIGHT/2 * pos;
 					break;
 			}
 			move = 0;
