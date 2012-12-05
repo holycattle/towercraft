@@ -9,7 +9,7 @@ public class HUDController : MonoBehaviour {
 	public const int PADDING = 48;
 	public const int LIVES_WIDTH = 256;
 	public const int LIVES_HEIGHT = 32;
-	public const int AMMO_WIDTH = 128;
+	public const int AMMO_WIDTH = 256;
 	public const int AMMO_HEIGHT = 32;
 	public const int TEXT_HEIGHT = 30;
 	public GUIStyle style;
@@ -70,6 +70,6 @@ public class HUDController : MonoBehaviour {
 		GUI.DrawTexture(new Rect(0, 0, AMMO_WIDTH, AMMO_HEIGHT), ammoFull);
 		GUI.EndGroup();
 		GUI.EndGroup();
-		GUI.Box(ammoBarRect, "Bullets: " + _weapon.Ammo + " / " + _weapon.TotalAmmo, style);
+		GUI.Box(ammoBarRect, "Energy: " + _weapon.Ammo + " / " + _weapon.TotalAmmo, style);
 	}
 }
