@@ -3,7 +3,15 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour {
 	Material DEFAULT_SKYBOX = null;
-	
+	const float SCROLL_WIDTH = 16f;
+	const float SCROLL_HEIGHT = 16f;
+	const int SCROLL_SPEED = 32;
+
+	//map restraints
+	const float MAP_MIN_X = -18.7f;
+	const float MAP_MAX_X = 27f;
+	const float MAP_MIN_Z = -70f;
+	const float MAP_MAX_Z = 42f;
 	float forwardSpeed = 32;
 	private Camera minimapCam;
 	private Camera firstPersonCam;
@@ -18,19 +26,9 @@ public class CameraController : MonoBehaviour {
 	private const float INTERVAL = 0.25f;
 	private GameObject pathDrawer;
 	private float pathInterval = 0;
-	
 	private Vector3 mousePos;
 	private float terrainWidth;
 	private float terrainHeight;
-	const float SCROLL_WIDTH = 10f;
-	const float SCROLL_HEIGHT = 10f;
-	const int SCROLL_SPEED = 32;
-	
-	//map restraints
-	const float MAP_MIN_X = -18.7f;
-	const float MAP_MIN_Z = -70f;
-	const float MAP_MAX_X = 27f;
-	const float MAP_MAX_Z = 42f;
 	
 	void Start() {
 		Debug.Log("terrain width = " + terrainWidth.ToString());
@@ -66,27 +64,29 @@ public class CameraController : MonoBehaviour {
 		float sideMoveAmount;
 		if (minimapCam.enabled) {
 			mousePos = Input.mousePosition;
-			if(mousePos.x < SCROLL_WIDTH) {
+			if (mousePos.x < SCROLL_WIDTH) {
 				left = -1;
-			} else if(mousePos.x >= Screen.width - SCROLL_WIDTH)
+			} else if (mousePos.x >= Screen.width - SCROLL_WIDTH)
 				left = 1;
-			else left = 0;
+			else
+				left = 0;
 			
-			if(mousePos.y < SCROLL_HEIGHT) {
+			if (mousePos.y < SCROLL_HEIGHT) {
 				top = -1;
-			} else if(mousePos.y >= Screen.height - SCROLL_HEIGHT)
+			} else if (mousePos.y >= Screen.height - SCROLL_HEIGHT)
 				top = 1;
-			else top = 0;
+			else
+				top = 0;
 			
 			forwardMoveAmount = top * SCROLL_SPEED * Time.deltaTime;
 			sideMoveAmount = left * SCROLL_SPEED * Time.deltaTime;
 			//legacy support for WSAD movement
-			if(Input.GetAxis("Vertical") != 0)
+			if (Input.GetAxis("Vertical") != 0)
 				forwardMoveAmount = Input.GetAxis("Vertical") * SCROLL_SPEED * Time.deltaTime;
-			if(Input.GetAxis("Horizontal") != 0)
+			if (Input.GetAxis("Horizontal") != 0)
 				sideMoveAmount = Input.GetAxis("Horizontal") * SCROLL_SPEED * Time.deltaTime;
 			moveCamera(sideMoveAmount, 0, forwardMoveAmount);
-			
+
 			// Path Drawers
 			if (Input.GetKeyDown(KeyCode.Q)) {
 				GameObject g = Instantiate(pathDrawer) as GameObject;
@@ -101,29 +101,21 @@ public class CameraController : MonoBehaviour {
 //			}
 		}
 	}
-	
-	public bool withinMap(Vector3 v) {
-		//Debug.Log("camera x: " + transform.position.x.ToString() + "; camera z: " + transform.position.z.ToString());
-		if(v.x + transform.position.x < MAP_MIN_X) {
-			
-			return false;
-		} else if(v.x + transform.position.x > MAP_MAX_X) {
-			return false;
-		}
-		
-		if(v.z + transform.position.z < MAP_MIN_Z) {
-			return false;
-		} else if(v.z + transform.position.z > MAP_MAX_Z) {
-			return false;
-			
-		}
-		
-		return true;
-	}
-	
+
 	public void moveCamera(float x, float y, float z) {
-		if(withinMap(new Vector3(x, y, z)))
-			transform.Translate(x, y, z, Space.World);
+		if (x + transform.position.x < MAP_MIN_X) {
+			x = MAP_MIN_X - transform.position.x;
+		} else if (x + transform.position.x > MAP_MAX_X) {
+			x = MAP_MAX_X - transform.position.x;
+		}
+
+		if (z + transform.position.z < MAP_MIN_Z) {
+			z = MAP_MIN_Z - transform.position.z;
+		} else if (z + transform.position.z > MAP_MAX_Z) {
+			z = MAP_MAX_Z - transform.position.z;
+		}
+
+		transform.Translate(x, y, z, Space.World);
 	}
 
 	public void SetOverviewCamera(bool val) {
