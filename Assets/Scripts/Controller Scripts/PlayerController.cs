@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour {
 	public const int TEXT_HEIGHT = 30;
 	private Vector3 DISABLETRANSFORM = new Vector3(0, 100, 0);
 	
-	const float DEATH_TIME = 5f; //set this to how long before character respawns again (in seconds)
+	const float DEATH_TIME = 15f; //set this to how long before character respawns again (in seconds)
 
 	// Game Controllers
 	private GameController _game;
@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
 	private WeaponController _weapon;
 
 	// Player Variables
-	public const int MAX_LIFE = 10;
+	public const int MAX_LIFE = 100;
 	private int _life;
 
 	// GUI
@@ -29,8 +29,7 @@ public class PlayerController : MonoBehaviour {
 //	private Rect rightDmgBox;
 	private float timeLeft;
 	private float timeDamage = 0.25f;
-	private float respawnCountdown = 0f;
-	private Transform playerModel;
+	public float respawnCountdown = 0f;
 	
 	CameraController _overviewCamera;
 	
@@ -41,7 +40,6 @@ public class PlayerController : MonoBehaviour {
 		_wave = GameObject.Find(" GameController").GetComponent<WaveController>();
 		_weapon = GetComponentInChildren<WeaponController>();
 		_overviewCamera = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
-		playerModel = GameObject.Find("Graphics").GetComponent<Transform>();
 
 		Screen.showCursor = true;
 
@@ -87,8 +85,8 @@ public class PlayerController : MonoBehaviour {
 	void Respawn() {
 		respawnCountdown = 0;
 		_life = MAX_LIFE;
-		transform.position = new Vector3(0, 50, 0);
 		_overviewCamera.SetOverviewCamera(false);
+		transform.position = new Vector3(0, 25, 0);
 		isDead = false;
 	}
 	

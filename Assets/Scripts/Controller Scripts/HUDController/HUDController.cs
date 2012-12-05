@@ -51,6 +51,10 @@ public class HUDController : MonoBehaviour {
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 2, LIVES_WIDTH, LIVES_HEIGHT), "Approaching in: " + (_wave.TimeTillNextWavex100 / 100f).ToString("F2"));
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 3, LIVES_WIDTH, LIVES_HEIGHT), "Press N to continue to proceed to next wave.");
 		}
+		
+		if(_player.isDead) {
+			GUI.Box(new Rect((Screen.width - LIVES_WIDTH)/2, (Screen.height - TEXT_HEIGHT)/2 - 50, LIVES_WIDTH, LIVES_HEIGHT), "Respawning in " + (_player.respawnCountdown).ToString("F2"));
+		}
 		// Draw Bullet Count
 //		GUI.Box(new Rect(0, Screen.height - TEXT_HEIGHT - LIVES_HEIGHT, LIVES_WIDTH, LIVES_HEIGHT), "Bullets: " + _weapon.Ammo + " / " + _weapon.totalAmmo);
 
