@@ -56,6 +56,8 @@ public class WaveController : MonoBehaviour {
 			_timeTillNextWave -= Time.deltaTime;
 			if (Input.GetKeyDown(KeyCode.N)) {
 				_timeTillNextWave  = 0;
+				CameraController c = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
+				c.SetOverviewCamera(false);
 			}
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;

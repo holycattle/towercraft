@@ -21,6 +21,7 @@ public class CameraController : MonoBehaviour {
 	private LevelController _level;
 	private PlayerController _player;
 	private WeaponController _weapon;
+	private WaveController _wave;
 
 	// Path Drawing
 	private const float INTERVAL = 0.25f;
@@ -44,6 +45,7 @@ public class CameraController : MonoBehaviour {
 		_level = _game.gameObject.GetComponent<LevelController>();
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_weapon = _player.gameObject.GetComponentInChildren<WeaponController>();
+		_wave = GameObject.Find(" GameController").GetComponent<WaveController>();
 
 		// Path Drawer
 		pathDrawer = Resources.Load("Prefabs/Tools/PathDrawer", typeof(GameObject)) as GameObject;
@@ -55,7 +57,9 @@ public class CameraController : MonoBehaviour {
 	void Update() {
 		// Toggle Camera View
 		if (Input.GetKeyDown(KeyCode.C) && !_player.isDead) {
-			SetOverviewCamera(!minimapCam.enabled);
+			if(_wave._waveActive) {
+				_game.Messenger.WarningMessage("Cannot enter overhead view mode once the wave has started!");
+			} else SetOverviewCamera(!minimapCam.enabled);
 		}
 		
 		int top = 0; //1 if going up, -1 if going down
