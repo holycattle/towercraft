@@ -1,11 +1,21 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class FlagEvent : BaseEvent {
-	/*//public Flag flag;
 	public Predicate<Hashtable> conditionFunction;
-	public void addCondition(Predicate<Hashtable> conditionFunction, Hashtable condArg) {
-		this.conditionFunction = conditionFunction.Clone() as Predicate<Hashtable>;
-		conditionFunctionArgs = condArg.Clone() as Hashtable;
-	}*/
+	private Hashtable conditionFunctionArgs;
+	
+	public void addFlag(Predicate<Hashtable> cond, Hashtable args) {
+		conditionFunction = (Predicate<Hashtable>)cond.Clone();
+		conditionFunctionArgs = (Hashtable)args.Clone();
+	}
+	
+	public bool evalCondition() {
+		if(!conditionFunction(conditionFunctionArgs)) {
+			return false;
+		}
+		isSatisfied = true;
+		return true;
+	}
 }
