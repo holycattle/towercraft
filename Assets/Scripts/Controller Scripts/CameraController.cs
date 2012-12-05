@@ -54,7 +54,7 @@ public class CameraController : MonoBehaviour {
 
 	void Update() {
 		// Toggle Camera View
-		if (Input.GetKeyDown(KeyCode.C)) {
+		if (Input.GetKeyDown(KeyCode.C) && !_player.isDead) {
 			SetOverviewCamera(!minimapCam.enabled);
 		}
 		
@@ -146,21 +146,23 @@ public class CameraController : MonoBehaviour {
 			/*
 			 * First Person Camera
 			 */
+			
 			_weapon.SetActiveWeapon(WeaponController.TOOL_WEAPON);
 			_weapon.WeaponSwapLock = false;
 			_game.CaptureCursor = true;
-
+	
 			// Re-Enable the Player
 			_player.SetEnabled(true);
-
+	
 			// Disable the Grid
 			_level.DrawGrid = false;
-
+	
 			// Destroy all Path Drawers
 			GameObject[] g = GameObject.FindGameObjectsWithTag("PathDrawer");
 			foreach (GameObject tg in g) {
 				GameObject.Destroy(tg);
 			}
 		}
+		
 	}
 }

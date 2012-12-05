@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour {
 	public const int LIVES_HEIGHT = 30;
 	public const int TEXT_HEIGHT = 30;
 	private Vector3 DISABLETRANSFORM = new Vector3(0, 100, 0);
+	
+	const float DEATH_TIME = 5f; //set this to how long before character respawns again (in seconds)
 
 	// Game Controllers
 	private GameController _game;
@@ -13,7 +15,7 @@ public class PlayerController : MonoBehaviour {
 	private WeaponController _weapon;
 
 	// Player Variables
-	public const int MAX_LIFE = 100;
+	public const int MAX_LIFE = 10;
 	private int _life;
 
 	// GUI
@@ -27,11 +29,19 @@ public class PlayerController : MonoBehaviour {
 //	private Rect rightDmgBox;
 	private float timeLeft;
 	private float timeDamage = 0.25f;
+	private float respawnCountdown = 0f;
+	private Transform playerModel;
+	
+	CameraController _overviewCamera;
+	
+	public bool isDead = false;
 
 	void Start() {
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 		_wave = GameObject.Find(" GameController").GetComponent<WaveController>();
 		_weapon = GetComponentInChildren<WeaponController>();
+		_overviewCamera = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
+		playerModel = GameObject.Find("Graphics").GetComponent<Transform>();
 
 		Screen.showCursor = true;
 
@@ -45,6 +55,7 @@ public class PlayerController : MonoBehaviour {
 
 		// Player Variables
 		_life = MAX_LIFE;
+		
 	}
 
 	void Update() {
@@ -55,11 +66,32 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if (_life <= 0) {
-			_life = MAX_LIFE;
-			transform.position = new Vector3(0, 50, 0);
+			if(respawnCountdown == 0) {
+				Die();
+			} else if(respawnCountdown > 0) {
+				respawnCountdown -= Time.deltaTime;
+			} else if(respawnCountdown <= 0) {
+				Respawn();
+			}
 		}
 	}
-
+	
+	void Die() {
+		respawnCountdown = DEATH_TIME;
+		//transform.rotation = Quaternion.LookRotation(Vector3.up);
+		//move to minimap camera mode
+		_overviewCamera.SetOverviewCamera(true);
+		isDead = true;
+	}
+	
+	void Respawn() {
+		respawnCountdown = 0;
+		_life = MAX_LIFE;
+		transform.position = new Vector3(0, 50, 0);
+		_overviewCamera.SetOverviewCamera(false);
+		isDead = false;
+	}
+	
 	void OnGUI() {
 		GUI.backgroundColor = Color.grey;
 
