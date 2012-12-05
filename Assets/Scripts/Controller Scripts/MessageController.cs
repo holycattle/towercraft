@@ -6,6 +6,7 @@ public class MessageController : MonoBehaviour {
 	// Constants
 	public const int MSG_PICKUP = 0;
 	public const int MSG_WARNING = 1;
+	public const int MSG_HUD = 2;
 	public const int BOX_WIDTH = 512;
 	public const int BOX_HEIGHT = 40;
 	public const int MAX_NUM_MSG = 12;
@@ -59,6 +60,9 @@ public class MessageController : MonoBehaviour {
 				case MSG_WARNING:
 					GUI.skin.label.alignment = TextAnchor.MiddleCenter;
 					break;
+				case MSG_HUD:
+					GUI.skin.label.alignment = TextAnchor.MiddleCenter;
+					break;
 			}
 			m.DrawToGUI();
 		}
@@ -85,6 +89,13 @@ public class MessageController : MonoBehaviour {
 	public void WarningMessage(string warning) {
 		if (this.enabled == true) {
 			messages.Add(new Message(warning, MSG_WARNING, DEFAULT_TEXT_DURATION, messageCounter));
+			messageCounter = (messageCounter + 1) % MAX_NUM_MSG;
+		}
+	}
+	
+	public void HUDMessage(string msg, float duration) {
+		if (this.enabled == true) {
+			messages.Add(new Message(msg, MSG_HUD, duration, messageCounter));
 			messageCounter = (messageCounter + 1) % MAX_NUM_MSG;
 		}
 	}
@@ -153,6 +164,11 @@ public class MessageController : MonoBehaviour {
 					c = new Color(1f, 0f, 0f, 1f);	// Red
 					posX = (Screen.width - BOX_WIDTH) / 2;
 					posY = BOX_HEIGHT/2 * pos;
+					break;
+				case MSG_HUD:
+					c = new Color(1f, 0f, 0f, 1f);	// Red
+					posX = (Screen.width - BOX_WIDTH) / 2;
+					posY = ((Screen.height - BOX_HEIGHT)/4) + (BOX_HEIGHT/2 * pos);
 					break;
 			}
 			move = 0;

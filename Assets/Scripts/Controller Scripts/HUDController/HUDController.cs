@@ -37,6 +37,8 @@ public class HUDController : MonoBehaviour {
 		ammoEmpty = Resources.Load("Textures/GUI/Health/ammo00", typeof(Texture)) as Texture2D;
 		ammoFull = Resources.Load("Textures/GUI/Health/ammo01", typeof(Texture)) as Texture2D;
 		ammoBarRect = new Rect(PADDING, Screen.height - LIVES_HEIGHT - AMMO_HEIGHT - PADDING, AMMO_WIDTH, AMMO_HEIGHT);
+		
+		_game.Messenger.HUDMessage("Initializing HUD...", 5f);
 	}
 
 	void OnGUI() {
