@@ -35,7 +35,7 @@ public class HUDController : MonoBehaviour {
 	private Texture2D eLifeEmpty;
 	private Texture2D eLifeFull;
 
-	void Start() {
+	IEnumerator Start() {
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 		_wave = GameObject.Find(" GameController").GetComponent<WaveController>();
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
@@ -59,7 +59,11 @@ public class HUDController : MonoBehaviour {
 		eLifeBarRect = new Rect((Screen.width - eLifeEmpty.width) / 2, Screen.height * 0.8f - eLifeEmpty.height, eLifeEmpty.width, eLifeEmpty.height);
 		enemyDataRect = new Rect((Screen.width - ENEMY_DATA_WIDTH) / 2, eLifeBarRect.yMin - ENEMY_DATA_HEIGHT, ENEMY_DATA_WIDTH, ENEMY_DATA_HEIGHT);
 
-		_game.Messenger.HUDMessage("Initializing HUD...", 5f);
+		_game.Messenger.HUDMessage("Initializing life augmentation support...", 4f);
+		yield return new WaitForSeconds(4);
+		_game.Messenger.HUDMessage("Initializing weapon systems...", 4f);
+		yield return new WaitForSeconds(4);
+		_game.Messenger.HUDMessage("NanoSuit initialized.", 3f);
 	}
 
 	void OnGUI() {
