@@ -9,14 +9,13 @@ public class Burn : Ailment {
 	protected override void Start() {
 		base.Start();
 		Interval = 4;
-		damage = Mathf.Max(1, (int) (_enemy.maxLife * 0.02f));
+		damage = Mathf.Max(1, (int)(_enemy.maxLife * 0.01f));
 	}
 
 	protected override void Update() {
 		base.Update();
 
 		damageInterval -= Time.deltaTime;
-		Debug.Log("Burned!");
 		if (damageInterval <= 0) {
 			_enemy.AddLife(-damage);
 			damageInterval += 1;

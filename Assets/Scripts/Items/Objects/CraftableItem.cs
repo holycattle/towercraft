@@ -28,7 +28,7 @@ public class CraftableItem : Item {
 		switch (_type) {
 			case PART_DPS:
 				craftableName += "Energizer";
-				_stat = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_MULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * ComponentGenerator.Get().PASSESTOKILL);
+				_stat = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_DPSMULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * ComponentGenerator.Get().PASSESTOKILL);
 				break;
 			case PART_RANGE:
 				craftableName += "Stem";
@@ -55,7 +55,7 @@ public class CraftableItem : Item {
 				break;
 		}
 
-		craftableName += " v" + level + "." + Random.Range(10, 100);
+		craftableName += " lv." + level;
 	}
 
 	public override bool isLessThan(Item t) {

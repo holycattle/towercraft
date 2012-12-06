@@ -2,11 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
+	public const float NORMAL_TIMESCALE = 1f;
+//	public const float NORMAL_TIMESCALE = 3.0f;
+
 	// TOCHANGE
 	public const int MENU_GAME = 0;
 	public const int MENU_INVENTORY = 1;
 	public const int MENU_WEAPON = 2;
-	public const int MAX_LIVES = 10;
+	public const int MAX_LIVES = 30;
 
 	// Game
 	private Menu _activeMenu = Menu.Game;
@@ -18,7 +21,7 @@ public class GameController : MonoBehaviour {
 	// Message Controller
 	[HideInInspector]
 	public MessageController Messenger;
-	
+
 	void Start() {
 		Messenger = GetComponent<MessageController>();
 		Messenger.enabled = true;
@@ -39,7 +42,7 @@ public class GameController : MonoBehaviour {
 		if (_captureCursor) {
 			if (Screen.lockCursor) {
 				if (ActiveMenu == Menu.Game) {
-					Time.timeScale = 1;			// (Locked) AND (Active) = Playable
+					Time.timeScale = NORMAL_TIMESCALE;			// (Locked) AND (Active) = Playable
 				} else {
 					Screen.lockCursor = false;	// (Locked) AND (Not Active) = Not Playable (unlock cursor)
 					Time.timeScale = 0.0f;
@@ -48,14 +51,14 @@ public class GameController : MonoBehaviour {
 				// (Not Locked) AND (Active) = To Lock Game.
 				// (Not Locked) AND (Not Active) = Unlock Game.
 				Screen.lockCursor = ActiveMenu == Menu.Game;
-				Time.timeScale = Screen.lockCursor ? 1.0f : 0.0f;
+				Time.timeScale = Screen.lockCursor ? NORMAL_TIMESCALE : 0.0f;
 			}
 		} else {
 			if (Screen.lockCursor) {
 				// Unlock the cursor
 				Screen.lockCursor = false;
 			} else {
-				Time.timeScale = ActiveMenu == Menu.Game ? 1.0f : 0.0f;
+				Time.timeScale = ActiveMenu == Menu.Game ? NORMAL_TIMESCALE : 0.0f;
 			}
 		}
 
@@ -64,7 +67,7 @@ public class GameController : MonoBehaviour {
 		 */
 		if (_livesLeft <= 0) {
 			// You Lose!
-			AutoFade.LoadLevel("Start" ,3,1,Color.black);
+			AutoFade.LoadLevel("Start", 3, 1, Color.black);
 		}
 	}
 

@@ -10,6 +10,7 @@ public class Weapon : GameTool {
 	public const int DEFAULT_RANGE = 64;
 	public const int DEFAULT_FIRINGRATE = 4;
 	public const int DEFAULT_ACCURACY = 10;
+	public const int MAX_BULLETS = 256;
 
 	//
 	public GameObject sparks;
@@ -212,6 +213,9 @@ public class Weapon : GameTool {
 	public void AddAmmo(int i) {
 		_totalBullets += i;
 		_game.Messenger.ItemMessage("Picked up " + i + " Bullets!");
+		if (_totalBullets >= MAX_BULLETS) {
+			_totalBullets = MAX_BULLETS;
+		}
 	}
 
 	private void Reload() {

@@ -95,25 +95,14 @@ public class ItemCollector : MonoBehaviour {
 		Pickup(new TowerItem(0, 1));
 		Pickup(new TowerItem(0, 1));
 		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(1, 2));
-		Pickup(new TowerItem(1, 2));
-		Pickup(new TowerItem(1, 2));
-		Pickup(new TowerItem(1, 2));
+		Pickup(new TowerItem(1, 1));
+		Pickup(new TowerItem(1, 1));
 
-		Pickup(new CraftableItem(0, 1));
-		Pickup(new CraftableItem(1, 1));
-		Pickup(new CraftableItem(2, 1));
-		Pickup(new CraftableItem(0, 4));
-		Pickup(new CraftableItem(1, 4));
-		Pickup(new CraftableItem(2, 4));
+//		Pickup(new CraftableItem(0, 1));
+//		Pickup(new CraftableItem(1, 1));
+//		Pickup(new CraftableItem(2, 1));
 
 		Pickup(new WeaponDPSItem(1));
-		Pickup(new WeaponDPSItem(1));
-		Pickup(new WeaponDPSItem(1));
-		Pickup(new WeaponStatItem(1));
-		Pickup(new WeaponStatItem(1));
 		Pickup(new WeaponStatItem(1));
 		_game.Messenger.enabled = true; //enable messenger again
 
@@ -335,6 +324,10 @@ public class ItemCollector : MonoBehaviour {
 			if (towerInventory[i] != null) {
 //				Debug.Log("Checking: " + inventory[i].GetTowerComponent().componentName + " > " + inventory[i].GetTowerComponent().componentType);
 				if (((TowerItem)towerInventory[i]).GetTowerComponent().componentType == type) {
+					if (((TowerItem)towerInventory[i]).GetTowerComponent().gameObject == null) {
+						towerInventory[i] = null;
+						continue;
+					}
 					objects.Add(((TowerItem)towerInventory[i]).GetTowerComponent());
 				}
 			}

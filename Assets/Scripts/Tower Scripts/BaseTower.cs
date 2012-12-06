@@ -127,7 +127,7 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	private void UpdateStats() {
-		Debug.Log("Update Stats!");
+//		Debug.Log("Update Stats!");
 //		for (int i = 0; i < TOWER_COMPLETE; i++) {
 //			Debug.Log("Tower: " + _towerComponents[i].componentName);
 //		}
@@ -187,9 +187,9 @@ public class BaseTower : MonoBehaviour {
 			isFiring = true;
 		}
 		// Debug Out all Stats
-		for (int i = 0; i < Enum.GetValues(typeof(Stat)).Length; i++) {
-			Debug.Log(((Stat)i).ToString() + ": " + stats[i].AdjustedBaseValue);
-		}
+//		for (int i = 0; i < Enum.GetValues(typeof(Stat)).Length; i++) {
+//			Debug.Log(((Stat)i).ToString() + ": " + stats[i].AdjustedBaseValue);
+//		}
 	}
 
 	public void AddNextComponent(TowerComponent tPrefab) {
@@ -210,10 +210,10 @@ public class BaseTower : MonoBehaviour {
 		// Destroy the Prefab (Save on space)
 		Destroy(tPrefab.gameObject);
 
-		if (tPrefab.componentType == TOWER_TURRET) {
-			Debug.Log("Component PREFAB Count: " + ((TowerTurret)tPrefab).attributes.Count);
-			Debug.Log("Component INSTANCE Count: " + ((TowerTurret)towerInstance).attributes.Count);
-		}
+//		if (tPrefab.componentType == TOWER_TURRET) {
+//			Debug.Log("Component PREFAB Count: " + ((TowerTurret)tPrefab).attributes.Count);
+//			Debug.Log("Component INSTANCE Count: " + ((TowerTurret)towerInstance).attributes.Count);
+//		}
 
 		if (next == TOWER_TURRET) {
 			UpdateStats();

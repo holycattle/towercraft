@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ComponentGenerator {
-	public float PASSESTOKILL = 2;
+	public float PASSESTOKILL = 2f;
 	private static ComponentGenerator _cgen;	// Creating a Singleton
 	private TowerComponent[][] _towerParts;
 	private Object[] _bases;
@@ -243,12 +243,12 @@ public class ComponentGenerator {
 			s_range = Mathf.Round(s_range * 10) / 10f;
 
 			// Determine DPS for the current level
-			float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_MULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
+			float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_DPSMULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
 			float DPSMULT = 2f;
 
 			// Add Status Ailment
-			if (Random.Range(0, 2) == 0) {
-				dps /= 2f;
+			if (Random.Range(0, 4) == 0) {
+				dps *= 0.65f;
 
 				int i = Random.Range(0, Ailment.STUN + 1);
 				string[] s = {"Burn", "Slow", "Stun"};

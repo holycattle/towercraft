@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour {
-	const float PASSESTOKILL_ADDER = 0.5f;
+	protected float PASSESTOKILL_ADDER = 2f;
+	protected float PASSESTOKILL_ADDER_GROWVALUE = 1.5f;
 	private const int SPEEDSTER = 0;
 	private const int CREEPLING = 1;
 	private const int TANK = 2;
@@ -16,8 +17,8 @@ public class WaveController : MonoBehaviour {
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
 	private const int WAVESTART_COST = 128;
-	private const float WAVE_INCREASE = 1.4f;
-	private const int WAVE_INTERVAL = 30; // In seconds
+	private const float WAVE_INCREASE = 1.15f;
+	private const int WAVE_INTERVAL = 60; // In seconds
 	
 	public int incomingWave;
 	public int incomingWaveResistanceType;
@@ -37,7 +38,8 @@ public class WaveController : MonoBehaviour {
 		_waveNumber = 0;
 		_timeTillNextWave = 45f;
 		incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
-		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+//		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+//		incomingWave = CREEPLING;
 		_waveActive = false;
 	}
 
@@ -49,8 +51,9 @@ public class WaveController : MonoBehaviour {
 					_waveActive = false;
 					_timeTillNextWave = WAVE_INTERVAL;
 					incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
-					incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
-					Debug.Log("incoming resistance = " + incomingWaveResistanceType.ToString());
+//					incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+					incomingWave = CREEPLING;
+//					Debug.Log("incoming resistance = " + incomingWaveResistanceType.ToString());
 				}
 			}
 		} else {
@@ -58,10 +61,8 @@ public class WaveController : MonoBehaviour {
 			if (Input.GetKeyDown(KeyCode.N)) {
 				_timeTillNextWave = 0;
 				CameraController c = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
-				if(c.minimapCam.enabled)
+				if (c.minimapCam.enabled)
 					c.SetOverviewCamera(false);
-				//PlayerController p = GameObject.Find("Player").GetComponent<PlayerController>();
-				//p.transform.position = new Vector3(0, 2, 0);
 			}
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;
@@ -92,6 +93,8 @@ public class WaveController : MonoBehaviour {
 	}
 
 	private void NextWave() {
+		Debug.Log("Creating new: P2K = " + ComponentGenerator.Get().PASSESTOKILL);
+
 		_waveNumber++;
 		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
 		_waveActive = true;
@@ -111,8 +114,16 @@ public class WaveController : MonoBehaviour {
 				_spawnScheme = new Assorted(_gameController, mobs, _nextWaveCost, _waveNumber);
 				break;
 		}
-		if(ComponentGenerator.Get().PASSESTOKILL < 8)
-			ComponentGenerator.Get().PASSESTOKILL += PASSESTOKILL_ADDER;
+		ComponentGenerator.Get().PASSESTOKILL += PASSESTOKILL_ADDER;
+		PASSESTOKILL_ADDER *= PASSESTOKILL_ADDER_GROWVALUE;
+
+
+		// Clear all items from the stage
+		GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+		foreach (GameObject i in items) {
+			Destroy(i);
+		}
+
 	}
 	
 	public int waveNumber {

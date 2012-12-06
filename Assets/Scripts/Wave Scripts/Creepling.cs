@@ -12,6 +12,9 @@ public class Creepling : SpawnScheme {
 		int health = (int)(((1f / moveSpeed) * HEALTH_COEFF) * (1 + (waveNumber * HEALTH_MULTIPLIER)));
 		float interval = ((1f / moveSpeed) * GetINTERVAL_COEFF);
 
+		interval *= 1.6f;
+//		health = (int)(health * 0.75f);
+
 		while (cost > 0) {
 			// Choose which mob to spawn.
 			GameObject g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
