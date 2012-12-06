@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ComponentGenerator {
-	public const int PASSESTOKILL = 2;
+	public int PASSESTOKILL = 2;
 	private static ComponentGenerator _cgen;	// Creating a Singleton
 	private TowerComponent[][] _towerParts;
 	private Object[] _bases;
@@ -111,15 +111,64 @@ public class ComponentGenerator {
 		 *	Stats Generation
 		 */
 		TowerTurret t = g.GetComponent<TowerTurret>();
-		int[] actualStats = new int[CraftableItem.PART_MAX];
-		for (int i = 0; i < actualStats.Length; i++) {
-			actualStats[i] =
-				Random.Range((int)Mathf.Max(1, (int)Mathf.Floor(parts[i].Modifier * (1 - CraftableItem.CRAFT_RANDOMNESS))),
-					(int)Mathf.Ceil(parts[i].Modifier * (1 + CraftableItem.CRAFT_RANDOMNESS)));
-		}
-		t.attributes.Add(new ModifyingAttribute(Stat.Damage, actualStats[CraftableItem.PART_DAMAGE]));
-		t.attributes.Add(new ModifyingAttribute(Stat.Range, actualStats[CraftableItem.PART_RANGE]));
-		t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, actualStats[CraftableItem.PART_ROF]));
+		string name = "";
+
+		// Get average level of the three components
+		float avgLevel = (parts[CraftableItem.PART_DPS].Level + parts[CraftableItem.PART_RANGE].Level + parts[CraftableItem.PART_ROF].Level) / 3f;
+
+		// Range
+		float s_range;
+		s_range = (parts[CraftableItem.PART_RANGE].Level / avgLevel) * parts[CraftableItem.PART_RANGE].Modifier;
+		s_range = BaseTower.JiggleStat(s_range, 0.10f);
+		s_range = Mathf.Round(s_range * 100) / 100f;
+
+		// Determine DPS for the current level
+		float dps = parts[CraftableItem.PART_DPS].Modifier;
+		float DPSMULT = 2f;
+
+		// Add Status Ailment
+//		if (Random.Range(0, 1) == 0) {
+//			dps /= 2f;
+//
+//			int i = Random.Range(0, Ailment.STUN + 1);
+//			string[] s = {"Burn", "Slow", "Stun"};
+//			GameObject statEffect = Resources.Load("Prefabs/StatusAilments/" + s[i], typeof(GameObject)) as GameObject;
+//			t.missile = Resources.Load("Prefabs/Towers/Turret Parts/MissilesStatus/" + s[i] + "Missile", typeof(GameObject)) as GameObject;
+//			switch (i) {
+//				case Ailment.BURN:
+//					//statEffect.GetComponent<Burn>().damage = 2;
+//					name += "Incendiary ";
+//					break;
+//				case Ailment.SLOW:
+//					//statEffect.GetComponent<Slow>().slowPercentage = 0.5f;
+//					name += "Slowness ";
+//					break;
+//				case Ailment.STUN:
+//					name += "Stunning ";
+//					break;
+//			}
+//			t.statusAilment = statEffect;
+//		} else {
+//			// No Status Ailment
+//			int chMissile = Random.Range(0, missiles.Length);
+//			t.missile = (GameObject)missiles[chMissile];
+//		}
+
+		// Damage
+		int s_dmg = Random.Range(1, (int)(dps * DPSMULT));	// Multiply to allow for FiringRate : (0, 1]
+
+		// Firing Rate (# of bullets per second)
+		float s_firingRate = Mathf.Round((dps / s_dmg) * 10f) / 10f;
+
+		t.attributes.Add(new ModifyingAttribute(Stat.Damage, s_dmg));
+		t.attributes.Add(new ModifyingAttribute(Stat.Range, s_range));
+		t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, s_firingRate));
+
+		t.toolTipMessage = "DPS: " + (s_dmg * s_firingRate) + t.toolTipMessage;
+
+		/*
+		 *	Stats Generation
+		 */
 
 //		t.componentName = t.GenerateName();
 		t.componentType = BaseTower.TOWER_TURRET;
@@ -175,7 +224,7 @@ public class ComponentGenerator {
 			 */
 			TowerTurret t = g.GetComponent<TowerTurret>();
 			string name = "";
-			
+
 			// Range
 			float s_range;
 			s_range = BaseTower.JiggleStat(BaseTower.BASE_RANGE, 0.15f);
@@ -223,7 +272,7 @@ public class ComponentGenerator {
 			t.attributes.Add(new ModifyingAttribute(Stat.Range, s_range));
 			t.attributes.Add(new ModifyingAttribute(Stat.FiringRate, s_firingRate));
 
-			t.toolTipMessage = "DPS = " + (s_dmg * s_firingRate) + t.toolTipMessage;
+			t.toolTipMessage = "DPS: " + (s_dmg * s_firingRate) + t.toolTipMessage;
 
 			/*
 			 *	Name Generation

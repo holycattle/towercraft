@@ -105,9 +105,9 @@ public class ItemCollector : MonoBehaviour {
 		Pickup(new CraftableItem(0, 1));
 		Pickup(new CraftableItem(1, 1));
 		Pickup(new CraftableItem(2, 1));
-		Pickup(new CraftableItem(0, 1));
-		Pickup(new CraftableItem(1, 1));
-		Pickup(new CraftableItem(2, 1));
+		Pickup(new CraftableItem(0, 4));
+		Pickup(new CraftableItem(1, 4));
+		Pickup(new CraftableItem(2, 4));
 
 		Pickup(new WeaponDPSItem(1));
 		Pickup(new WeaponDPSItem(1));
@@ -186,7 +186,6 @@ public class ItemCollector : MonoBehaviour {
 					} else {
 						switch (activeInv) {
 							case INV_CRAFT:
-								Remove(activeInventory[i]);
 								CraftableItem c = ((CraftableItem)activeInventory[i]);
 								if (craftingRecipe[c.CraftableType] == null) {
 									// If there is no item CraftableType slot, then ADD
@@ -264,7 +263,7 @@ public class ItemCollector : MonoBehaviour {
 			if (i == null)
 				continue;
 			switch (i.CraftableType) {
-				case CraftableItem.PART_DAMAGE:
+				case CraftableItem.PART_DPS:
 					s += "Damage: [";
 					break;
 				case CraftableItem.PART_RANGE:

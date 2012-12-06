@@ -9,7 +9,7 @@ public class HUDController : MonoBehaviour {
 	public const int PADDING = 48;
 	public const int LIVES_WIDTH = 256;
 	public const int LIVES_HEIGHT = 32;
-	public const int AMMO_WIDTH = 256;
+	public const int AMMO_WIDTH = 128;
 	public const int AMMO_HEIGHT = 32;
 	public const int TEXT_HEIGHT = 30;
 	public GUIStyle style;
@@ -52,8 +52,8 @@ public class HUDController : MonoBehaviour {
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 3, LIVES_WIDTH, LIVES_HEIGHT), "Press N to continue to proceed to next wave.");
 		}
 		
-		if(_player.isDead) {
-			GUI.Box(new Rect((Screen.width - LIVES_WIDTH)/2, (Screen.height - TEXT_HEIGHT)/2 - 50, LIVES_WIDTH, LIVES_HEIGHT), "Respawning in " + (_player.respawnCountdown).ToString("F2"));
+		if (_player.isDead) {
+			GUI.Box(new Rect((Screen.width - LIVES_WIDTH) / 2, (Screen.height - TEXT_HEIGHT) / 2 - 50, LIVES_WIDTH, LIVES_HEIGHT), "Respawning in " + (_player.respawnCountdown).ToString("F2"));
 		}
 		// Draw Bullet Count
 //		GUI.Box(new Rect(0, Screen.height - TEXT_HEIGHT - LIVES_HEIGHT, LIVES_WIDTH, LIVES_HEIGHT), "Bullets: " + _weapon.Ammo + " / " + _weapon.totalAmmo);
