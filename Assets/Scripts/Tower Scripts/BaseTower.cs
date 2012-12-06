@@ -55,42 +55,40 @@ public class BaseTower : MonoBehaviour {
 	}
 
 	void Update() {
+		// Try to Fire
+		if (_timeTillFire <= 0 && isFiring) {
+			if (_target == null) {
+				_target = FindClosestTarget();
+			} else {
+				if (_enemiesInRange.Contains(_target)) {
+					// Target IN range
+					// Do not change target.
+				} else {
+					// Target OUT of range
+					// Change target.
+					_target = FindClosestTarget();
+				}
+			}
+
+			// Missile Firing
+			if (_target != null) {
+				GameObject g = Instantiate(missile, _missileSource.position, Quaternion.identity) as GameObject;
+
+				// Set target
+				BaseMissile b = g.GetComponent<BaseMissile>();
+				b.Target = _target;
+				b.damage = (int)stats[(int)Stat.Damage].AdjustedBaseValue;
+				b.statusAilment = this.statusAilment;
+
+				_timeTillFire += firingInterval;
+			}
+		}
+
 		// Make the Cannon face the Enemy
 		if (_target != null) {
 			float distance = Vector2.Distance(new Vector2(_target.transform.position.x, _target.transform.position.z), new Vector2(transform.position.x, transform.position.z));
 			if (distance < stats[(int)Stat.Range].AdjustedBaseValue * LevelController.TILE_SIZE) {
 				_missileSource.rotation = Quaternion.Slerp(_missileSource.rotation, Quaternion.LookRotation(_missileSource.position - _target.transform.position), 0.5f);
-			}
-		}
-
-//		Debug.Log("Count: " + _enemiesInRange.Count);
-
-		// Try to Fire
-		if (_timeTillFire <= 0 && isFiring) {
-			if (_enemiesInRange.Count > 0) {
-				_target = _enemiesInRange[0];
-				while (!(_target != null)) { // If the target has already been destroyed
-					_enemiesInRange.RemoveAt(0);
-					if (_enemiesInRange.Count > 0) {
-						_target = _enemiesInRange[0];
-					} else {
-						_target = null;
-						break;
-					}
-				}
-
-				// Missile Firing
-				if (_target != null && _timeTillFire <= 0) {
-					GameObject g = Instantiate(missile, _missileSource.position, Quaternion.identity) as GameObject;
-
-					// Set target
-					BaseMissile b = g.GetComponent<BaseMissile>();
-					b.Target = _enemiesInRange[0];
-					b.damage = (int)stats[(int)Stat.Damage].AdjustedBaseValue;
-					b.statusAilment = this.statusAilment;
-
-					_timeTillFire += firingInterval;
-				}
 			}
 		}
 
@@ -108,6 +106,24 @@ public class BaseTower : MonoBehaviour {
 	void OnTriggerExit(Collider other) {
 		if (other.gameObject.tag == "Enemy")
 			_enemiesInRange.Remove(other.transform.gameObject);
+	}
+
+	private GameObject FindClosestTarget() {
+		if (_enemiesInRange.Count > 0) {
+			// Get closest
+			GameObject closest = null;
+			float closestDistance = 9999999;
+			foreach (GameObject g in _enemiesInRange) {
+				if (g != null) {
+					if (Vector3.Distance(g.transform.position, transform.position) < closestDistance) {
+						closest = g;
+						closestDistance = Vector3.Distance(g.transform.position, transform.position);
+					}
+				}
+			}
+			return closest;
+		}
+		return null;
 	}
 
 	private void UpdateStats() {

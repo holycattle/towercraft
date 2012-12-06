@@ -172,8 +172,6 @@ public class SpawnScheme {
 				m.drops[o] = toDrop[o];
 			}
 
-			Debug.Log("Dropping : " + i + " items");
-
 			return g;
 		}
 	

@@ -235,7 +235,7 @@ public class ComponentGenerator {
 			float DPSMULT = 2f;
 
 			// Add Status Ailment
-			if (Random.Range(0, 1) == 0) {
+			if (Random.Range(0, 3) == 0) {
 				dps /= 2f;
 
 				int i = Random.Range(0, Ailment.STUN + 1);

@@ -72,11 +72,14 @@ public class BaseEnemy : MonoBehaviour {
 			HEALTH_PREFAB = Resources.Load("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
 		if (AMMO_PREFAB == null)
 			AMMO_PREFAB = Resources.Load("Prefabs/Items/Ammo", typeof(GameObject)) as GameObject;
-//		if (CRAFTABLE_PREFAB == null)
-//			CRAFTABLE_PREFAB = Resources.Load("Prefabs/Items/Craftable", typeof(GameObject)) as GameObject;
 
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
+
+		// Fix Name
+		if (gameObject.name.EndsWith("(Clone)")) {
+			gameObject.name = gameObject.name.Substring(0, gameObject.name.Length - 7);
+		}
 	}
 
 	void Update() {
@@ -213,7 +216,7 @@ public class BaseEnemy : MonoBehaviour {
 		}
 	}
 	
-	public string getResistanceTypeAsString() {
+	public string GetResistanceTypeAsString() {
 		if (Mathf.Max(heatResistance, slowResistance, stunResistance) == heatResistance) {
 			return "Heat";
 		} else if (Mathf.Max(heatResistance, slowResistance, stunResistance) == slowResistance) {

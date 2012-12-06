@@ -2,8 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class Weapon : GameTool {
-	private const int LIFE_WIDTH = 160;
-	private const int LIFE_HEIGHT = 50;
 	private Vector3 SCREEN_CENTER = new Vector3(Screen.width / 2, Screen.height / 2, 0);
 	private const int NUM_WEAPONEQUIPS = 2;
 
@@ -30,6 +28,7 @@ public class Weapon : GameTool {
 	private float firingRate;
 	private int energyConsumption;
 	private GameObject statusEffect;
+
 	// Other Stats
 	private float range;
 	private int magSize;		// # Bullets per Magazine
@@ -46,8 +45,7 @@ public class Weapon : GameTool {
 
 	// GUI Information
 	private BaseEnemy _targetted;
-	
-	AudioSource gunSound = new AudioSource();
+	private AudioSource gunSound = new AudioSource();
 
 	protected override void Awake() {
 		base.Awake();
@@ -73,7 +71,6 @@ public class Weapon : GameTool {
 	}
 
 	public void RecalculateStats() {
-
 		damage = ((WeaponDPSItem)equippedWeapons[WeaponItem.DPS]).damage;
 		firingRate = ((WeaponDPSItem)equippedWeapons[WeaponItem.DPS]).firingRate;
 		statusEffect = ((WeaponDPSItem)equippedWeapons[WeaponItem.DPS]).statusEffect;
@@ -108,16 +105,26 @@ public class Weapon : GameTool {
 			if (_timeTillFire <= 0)
 				_timeTillFire = 0;
 		}
+
+		if (_weapon.ActiveTool == this) {
+			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER);
+			RaycastHit hit;
+
+			// Casts the ray and get the first game object hit
+			if (Physics.Raycast(ray, out hit, Mathf.Infinity, _weapon.RaycastLayer)) {
+				BaseEnemy b = hit.transform.gameObject.GetComponent<BaseEnemy>();
+				if (b != null) {
+					_targetted = b;
+				}
+			}
+		}
 	}
 
 	protected override void OnGUI() {
 		base.OnGUI();
 
 		if (_targetted != null) {
-			GUI.TextArea(new Rect(Screen.width / 2 - LIFE_WIDTH / 2, 0, LIFE_WIDTH, LIFE_HEIGHT),
-				_targetted.Name + "\n" + _targetted.Life + " / " + _targetted.maxLife + "\n" +
-				_targetted.getResistanceTypeAsString() + "-resistant"
-			);
+
 		}
 	}
 
@@ -148,8 +155,6 @@ public class Weapon : GameTool {
 			Reload();
 			return;
 		}
-
-		//damage = 1;
 
 		if (_timeTillFire <= 0) {
 			// Raycast
@@ -230,6 +235,10 @@ public class Weapon : GameTool {
 
 	public int TotalAmmo {
 		get { return _totalBullets; }
+	}
+
+	public BaseEnemy TargettedEnemy {
+		get { return _targetted; }
 	}
 	
 	private void ReloadBullets() {

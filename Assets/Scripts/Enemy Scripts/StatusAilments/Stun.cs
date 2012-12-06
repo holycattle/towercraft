@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Stun : Ailment {
 	
-	public const float LENGTH = 2;
+	public const float LENGTH = 0.8f;
 	private float deltaMoveSpeed;
 
 	protected override void Start() {

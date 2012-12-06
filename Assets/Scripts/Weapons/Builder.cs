@@ -121,8 +121,6 @@ public class Builder : GameTool {
 	}
 
 	public override void MouseClickOn(GameObject g) {
-		Debug.Log("herero");
-
 		if (_game.ActiveMenu == Menu.Game && g != null) {
 			targettedGrid = g.GetComponent<Grid>();
 

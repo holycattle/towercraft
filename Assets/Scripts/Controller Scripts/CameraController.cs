@@ -12,7 +12,6 @@ public class CameraController : MonoBehaviour {
 	const float MAP_MAX_X = 27f;
 	const float MAP_MIN_Z = -70f;
 	const float MAP_MAX_Z = 42f;
-	float forwardSpeed = 32;
 	private Camera minimapCam;
 	private Camera firstPersonCam;
 
@@ -26,14 +25,15 @@ public class CameraController : MonoBehaviour {
 	// Path Drawing
 	private const float INTERVAL = 0.25f;
 	private GameObject pathDrawer;
-	private float pathInterval = 0;
+//	private float pathInterval = 0;
 	private Vector3 mousePos;
 	private float terrainWidth;
 	private float terrainHeight;
 	
 	void Start() {
-		Debug.Log("terrain width = " + terrainWidth.ToString());
-		Debug.Log("terrain height = " + terrainHeight.ToString());
+//		Debug.Log("terrain width = " + terrainWidth.ToString());
+//		Debug.Log("terrain height = " + terrainHeight.ToString());
+
 		minimapCam = GameObject.Find("Minimap Camera").GetComponent<Camera>();
 		firstPersonCam = GameObject.Find("Main Camera").GetComponent<Camera>();
 		//set default skybox
@@ -57,9 +57,10 @@ public class CameraController : MonoBehaviour {
 	void Update() {
 		// Toggle Camera View
 		if (Input.GetKeyDown(KeyCode.C) && !_player.isDead) {
-			if(_wave._waveActive) {
+			if (_wave._waveActive) {
 				_game.Messenger.WarningMessage("Cannot enter overhead view mode once the wave has started!");
-			} else SetOverviewCamera(!minimapCam.enabled);
+			} else
+				SetOverviewCamera(!minimapCam.enabled);
 		}
 		
 		int top = 0; //1 if going up, -1 if going down
@@ -144,8 +145,6 @@ public class CameraController : MonoBehaviour {
 
 			// Enable the Grid
 			_level.DrawGrid = true;
-
-			pathInterval = 0;
 		} else {
 			/*
 			 * First Person Camera
