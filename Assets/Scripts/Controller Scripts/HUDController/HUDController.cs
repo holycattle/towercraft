@@ -59,11 +59,17 @@ public class HUDController : MonoBehaviour {
 		eLifeBarRect = new Rect((Screen.width - eLifeEmpty.width) / 2, Screen.height * 0.8f - eLifeEmpty.height, eLifeEmpty.width, eLifeEmpty.height);
 		enemyDataRect = new Rect((Screen.width - ENEMY_DATA_WIDTH) / 2, eLifeBarRect.yMin - ENEMY_DATA_HEIGHT, ENEMY_DATA_WIDTH, ENEMY_DATA_HEIGHT);
 
-		_game.Messenger.HUDMessage("Initializing life augmentation support...", 4f);
-		yield return new WaitForSeconds(4);
-		_game.Messenger.HUDMessage("Initializing weapon systems...", 4f);
-		yield return new WaitForSeconds(4);
-		_game.Messenger.HUDMessage("NanoSuit initialized.", 3f);
+		_game.Messenger.HUDMessage("Stand by for suit initialization...", 3f);
+		yield return new WaitForSeconds(3);
+		_game.Messenger.HUDMessage("Reactor online.", 2f);
+		yield return new WaitForSeconds(2);
+		_game.Messenger.HUDMessage("Sensors online.", 2f);
+		yield return new WaitForSeconds(2);
+		_game.Messenger.HUDMessage("Weapons online.", 2f);
+		yield return new WaitForSeconds(2);
+		_game.Messenger.HUDMessage("All systems nominal.", 3f);
+		_game.Messenger.HUDMessage("Gaber Suit initialized.", 3f);
+		
 	}
 
 	void OnGUI() {
