@@ -8,9 +8,8 @@ public class StageController : MonoBehaviour {
 	public List<TimeEvent> timeEvents;
 	public List<WaveEvent> waveEvents;
 	
-	public int finalWave = -1;
+	public int finalWave;
 	
-	public Hashtable specialEvents = new Hashtable();
 	
 	public StageController(int f) {
 		finalWave = f;
