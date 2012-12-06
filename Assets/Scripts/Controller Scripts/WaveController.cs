@@ -58,6 +58,8 @@ public class WaveController : MonoBehaviour {
 				_timeTillNextWave  = 0;
 				CameraController c = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
 				c.SetOverviewCamera(false);
+				PlayerController p = GameObject.Find("Player").GetComponent<PlayerController>();
+				p.transform.position = new Vector3(0, 2, 0);
 			}
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;
