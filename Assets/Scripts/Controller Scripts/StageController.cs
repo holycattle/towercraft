@@ -43,6 +43,7 @@ public class StageController : MonoBehaviour {
 	public bool showFinalTransmission;
 	
 	public float lastMessageTime;
+	public bool tutorialDone;
 	
 	public StageController(int f) {
 		finalWave = f;
@@ -240,7 +241,7 @@ public class StageController : MonoBehaviour {
 			}
 		}
 		if(fifthMessage) {
-			GUI.Box(upperCenterRect, "Dr. Pierce:\n Press ‘1’ to switch to the nanolathe. You can assemble" +
+			GUI.Box(upperCenterRect, "Dr. Pierce:\n Press ‘1’ to switch to the nanolathe. You can assemble " +
 				"defensive structures from items in" +
 				"your inventory using this. For now, we’ll build your stock turrets because we" +
 				"don’t have the time or resources for more advanced defenses.");
@@ -328,6 +329,7 @@ public class StageController : MonoBehaviour {
 			GUI.Box(upperCenterRect, "Dr. Pierce:\nLooks like you're getting the hang of that suit. " +
 				"I'm afraid I'm being summoned for an emergency meeting with the Council, so I must take my leave for now. I will return as soon as I can." +
 				"If you forget anything, check the manual that comes with the suit.");
+			tutorialDone = true;
 		}
 		
 		if(waveController.waveNumber == 2 && waveController._timeTillNextWave < 35f && waveController._timeTillNextWave >= 30f) {
