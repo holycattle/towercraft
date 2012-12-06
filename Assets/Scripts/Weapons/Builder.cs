@@ -89,14 +89,16 @@ public class Builder : GameTool {
 
 			GUI.Label(tooltipRect, GUI.tooltip);
 			if (currentTower != null) {
-				GUI.Label(swapTooltipRect, currentTower.GetTopComponent().GetTooltipString());
+				if (currentTower.GetTopComponent() != null) {
+					GUI.Label(swapTooltipRect, currentTower.GetTopComponent().GetTooltipString());
 
-				if (GUI.Button(breakButtonRect, "Break Part")) {
-					TowerComponent t = targettedGrid.BreakTopComponent();
-					if (t != null) {
-						_inventory.Pickup(new TowerItem(t));
+					if (GUI.Button(breakButtonRect, "Break Part")) {
+						TowerComponent t = targettedGrid.BreakTopComponent();
+						if (t != null) {
+							_inventory.Pickup(new TowerItem(t));
+						}
+						targettedGrid = null;
 					}
-					targettedGrid = null;
 				}
 			}
 
@@ -179,8 +181,8 @@ public class Builder : GameTool {
 //			targettedGrid.SetSelected(true);
 
 			_displayArray = _inventory.GetGameObjects(_activeMenu);
-			
-			if (_displayArray.Length == 0) {
+
+			if (_displayArray.Length == 0 || _displayArray == null) {
 				_game.ActiveMenu = Menu.Game;
 				Screen.lockCursor = false;
 				Time.timeScale = 0.0f;

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class BaseEnemy : MonoBehaviour {
 	//
-	public const int AMMO_DROP = 5;
-	public const int HEALTH_DROP = 5;
+	public const int AMMO_DROP = 3;
+	public const int HEALTH_DROP = 3;
 
 	// Constants
 	public const float MOV_OFFSET = 2f;
@@ -174,13 +174,14 @@ public class BaseEnemy : MonoBehaviour {
 			}
 		}
 
-		if (UnityEngine.Random.Range(0, 10) < AMMO_DROP) {
-			GameObject g = Instantiate(AMMO_PREFAB, transform.position, Quaternion.identity) as GameObject;
-			g.GetComponent<AmmoScript>().amount = Random.Range(20, 40);
-		}
-		if (UnityEngine.Random.Range(0, 10) < HEALTH_DROP) {
-			GameObject g = Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity) as GameObject;
-			g.GetComponent<HealthScript>().health = Random.Range(5, 20);
+		if (UnityEngine.Random.Range(0, 10) < AMMO_DROP + HEALTH_DROP) {
+			if (Random.Range(0, AMMO_DROP + HEALTH_DROP) < AMMO_DROP) {
+				GameObject g = Instantiate(AMMO_PREFAB, transform.position, Quaternion.identity) as GameObject;
+				g.GetComponent<AmmoScript>().amount = Random.Range(20, 40);
+			} else {
+				GameObject g = Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity) as GameObject;
+				g.GetComponent<HealthScript>().health = Random.Range(5, 20);
+			}
 		}
 	}
 

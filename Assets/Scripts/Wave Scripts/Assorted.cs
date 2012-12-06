@@ -15,11 +15,11 @@ public class Assorted : SpawnScheme {
 			// Choose which mob to spawn.
 			GameObject g = (GameObject)mobTable[enemyType.ToString()]; //optimized assigning of new mob by using a Hashtable
 			
-			if(enemyType == MobType.Tank) {
+			if (enemyType == MobType.Tank) {
 				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
-			} else if(enemyType == MobType.Creepling) {
+			} else if (enemyType == MobType.Creepling) {
 				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
-			} else if(enemyType == MobType.Speedster) {
+			} else if (enemyType == MobType.Speedster) {
 				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
 			}
 			

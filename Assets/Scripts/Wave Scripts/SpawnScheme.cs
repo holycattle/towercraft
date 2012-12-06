@@ -5,22 +5,23 @@ using System;
 
 public class SpawnScheme {
 	// Drop Probabilities
-	public const int BASES_DROP = 4;
-	public const int TURRET_DROP = 2;
-	public const int TURRETPART_DROP = 5;
-	public const int WEAPON_DROP = 1;
+	public const int BASES_DROP = 4;	// Out of 30
+	public const int TURRET_DROP = 1;	// Out of 30
+	public const int TURRETPART_DROP = 5;	// Out of 30
+	public const int WEAPON_DROP = 2;	// Out of 30
 
 	// Other
 	private const int INTERVAL_COEFF = 7;
 
 	// moveSpeed range - to be tweaked later on
-	public const int MIN_SPEED = 3;
-	public const int MAX_SPEED = 13;
-	
+	public const int MIN_SPEED = 6;
+	public const int MAX_SPEED = 14;
+
 	//maxHealth coefficient and multiplier
 	public const int HEALTH_COEFF = 200; 			//this determines the scale of the HP
 	public const float HEALTH_MULTIPLIER = 0.2f; 	//every wave, health increases by current_health * HEALTH_MULTIPLIER
-
+	public const int HEALTH_DPSCOEFF = 100;
+	public const float HEALTH_DPSMULTIPLIER = 0.05f;
 	private LevelController _levelController;
 //	private WaveController _waveController;
 	protected List<MobSpawn> _spawnScheme;
@@ -149,21 +150,20 @@ public class SpawnScheme {
 			Item[] toDrop = new Item[4];
 			int i = 0;
 
-			if (UnityEngine.Random.Range(0, 10) < BASES_DROP) {
-				toDrop[i] = new TowerItem(BaseTower.TOWER_BASE, mobLevel);
+			if (UnityEngine.Random.Range(0, 30) < BASES_DROP + TURRET_DROP) {
+				if (UnityEngine.Random.Range(0, BASES_DROP + TURRET_DROP) < BASES_DROP) {
+					toDrop[i] = new TowerItem(BaseTower.TOWER_BASE, mobLevel);
+				} else {
+					toDrop[i] = new TowerItem(BaseTower.TOWER_TURRET, mobLevel);
+				}
 				i++;
 			}
 
-
-			if (UnityEngine.Random.Range(0, 10) < TURRETPART_DROP) {
-				toDrop[i] = new TowerItem(BaseTower.TOWER_TURRET, mobLevel);
-				i++;
-			}
-			if (UnityEngine.Random.Range(0, 10) < TURRET_DROP) {
+			if (UnityEngine.Random.Range(0, 30) < TURRETPART_DROP) {
 				toDrop[i] = new CraftableItem(mobLevel);
 				i++;
 			}
-			if (UnityEngine.Random.Range(0, 10) < WEAPON_DROP) {
+			if (UnityEngine.Random.Range(0, 30) < WEAPON_DROP) {
 				toDrop[i] = WeaponItem.RandomItem(mobLevel);
 				i++;
 			}
