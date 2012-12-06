@@ -319,6 +319,6 @@ public class BaseTower : MonoBehaviour {
 public enum Stat {
 	Damage,
 	Range,
-	FiringRate,
-	SplashRange
+	FiringRate
+//	SplashRange
 }

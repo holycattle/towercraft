@@ -6,7 +6,7 @@ public class CraftableItem : Item {
 	public const float CRAFT_RANDOMNESS = 0.2f;
 	public const int PART_DPS = 0;
 	public const int PART_RANGE = 1;
-	public const int PART_ROF = 2;	// ROF = Rate of Fire
+	public const int PART_MODIFIER = 2;	// ROF = Rate of Fire
 	public const int PART_MAX = 3;
 
 	// Values
@@ -32,16 +32,30 @@ public class CraftableItem : Item {
 				break;
 			case PART_RANGE:
 				craftableName += "Stem";
-				_stat = BaseTower.BASE_RANGE;
-				_tooltip = "\nRange will scale depending on other components.";
+				_stat = Mathf.Round(BaseTower.JiggleStat(BaseTower.BASE_RANGE, 0.1f) * 10f) / 10f;
+				_tooltip = "Range will scale depending on other components.";
 				break;
-			case PART_ROF:
+			case PART_MODIFIER:
 				craftableName += "Capacitor";
-//				_stat = cost * BaseTower.MULT_FIRINGRATE;
+				_stat = Random.Range(0, 4);
+				switch ((int)_stat) {
+					case 0:
+						_tooltip = "Turret will have a HIGH Rate of fire.";
+						break;
+					case 1:
+						_tooltip = "Turret will have a HIGH Damage per shot.";
+						break;
+					case 2:
+						_tooltip = "Turret will have a HIGH Range.";
+						break;
+					case 3:
+						_tooltip = "Turret will have a small chance to get an elemental.";
+						break;
+				}
 				break;
 		}
 
-		craftableName += " - v" + level + "." + Random.Range(10, 100);
+		craftableName += " v" + level + "." + Random.Range(10, 100);
 	}
 
 	public override bool isLessThan(Item t) {
@@ -69,16 +83,23 @@ public class CraftableItem : Item {
 		switch (_type) {
 			case PART_DPS:
 				s += "DPS: ";
+				s += _stat;
+				s += "\n";
 				break;
 			case PART_RANGE:
 				s += "Range: ";
+				s += _stat;
+				s += "\n";
 				break;
-			case PART_ROF:
-				s += "Firing Rate: ";
+			case PART_MODIFIER:
 				break;
 		}
-		s += _stat;
+		s += "-----\n";
 		s += _tooltip;
 		return s;
+	}
+
+	public string RawTooltip {
+		get { return _tooltip; }
 	}
 }

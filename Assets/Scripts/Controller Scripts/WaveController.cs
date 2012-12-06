@@ -55,7 +55,7 @@ public class WaveController : MonoBehaviour {
 		} else {
 			_timeTillNextWave -= Time.deltaTime;
 			if (Input.GetKeyDown(KeyCode.N)) {
-				_timeTillNextWave  = 0;
+				_timeTillNextWave = 0;
 				CameraController c = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
 				c.SetOverviewCamera(false);
 				PlayerController p = GameObject.Find("Player").GetComponent<PlayerController>();
@@ -142,7 +142,6 @@ public class WaveController : MonoBehaviour {
 				break;
 			case ASSORTED:
 				return "Random Wave!";
-				break;
 		}
 		
 		return nw;

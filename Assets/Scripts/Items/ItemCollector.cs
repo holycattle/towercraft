@@ -260,22 +260,33 @@ public class ItemCollector : MonoBehaviour {
 	private string CraftPreviewString() {
 		string s = "";
 		foreach (CraftableItem i in craftingRecipe) {
-			if (i == null)
-				continue;
+			if (i == null) {
+				return "Incomplete Recipe!";
+			}
+
+
 			switch (i.CraftableType) {
 				case CraftableItem.PART_DPS:
-					s += "Damage: [";
+					s += "DPS: " + i.Modifier;
 					break;
 				case CraftableItem.PART_RANGE:
-					s += "Range: [";
+					s += "Range: " + i.Modifier;
 					break;
-				case CraftableItem.PART_ROF:
-					s += "Rate of Fire: [";
+				case CraftableItem.PART_MODIFIER:
+					s += "Modifier: " + i.RawTooltip;
 					break;
 			}
-			s += (int)Mathf.Max(1, Mathf.Floor(i.Modifier * (1 - CraftableItem.CRAFT_RANDOMNESS)))
-				+ " - " + (int)Mathf.Ceil(i.Modifier * (1 + CraftableItem.CRAFT_RANDOMNESS)) + "]\n";
+			s += "\n";
 		}
+
+		int level = craftingRecipe[0].Level;
+		foreach (CraftableItem i in craftingRecipe) {
+			if (i.Level != level) {
+				s += "Varying Levels in Parts Detected.\nStats may vary.";
+				break;
+			}
+		}
+
 		return s;
 	}
 

@@ -114,48 +114,60 @@ public class ComponentGenerator {
 		string name = "";
 
 		// Get average level of the three components
-		float avgLevel = (parts[CraftableItem.PART_DPS].Level + parts[CraftableItem.PART_RANGE].Level + parts[CraftableItem.PART_ROF].Level) / 3f;
+		float avgLevel = (parts[CraftableItem.PART_DPS].Level + parts[CraftableItem.PART_RANGE].Level + parts[CraftableItem.PART_MODIFIER].Level) / 3f;
 
 		// Range
 		float s_range;
 		s_range = (parts[CraftableItem.PART_RANGE].Level / avgLevel) * parts[CraftableItem.PART_RANGE].Modifier;
-		s_range = BaseTower.JiggleStat(s_range, 0.10f);
-		s_range = Mathf.Round(s_range * 100) / 100f;
+		if ((int)parts[CraftableItem.PART_MODIFIER].Modifier == 2) {
+			s_range *= 1.5f;
+		}
+		s_range = BaseTower.JiggleStat(s_range, 0.05f);
+		s_range = Mathf.Round(s_range * 10) / 10f;
 
 		// Determine DPS for the current level
 		float dps = parts[CraftableItem.PART_DPS].Modifier;
 		float DPSMULT = 2f;
 
-		// Add Status Ailment
-//		if (Random.Range(0, 1) == 0) {
-//			dps /= 2f;
-//
-//			int i = Random.Range(0, Ailment.STUN + 1);
-//			string[] s = {"Burn", "Slow", "Stun"};
-//			GameObject statEffect = Resources.Load("Prefabs/StatusAilments/" + s[i], typeof(GameObject)) as GameObject;
-//			t.missile = Resources.Load("Prefabs/Towers/Turret Parts/MissilesStatus/" + s[i] + "Missile", typeof(GameObject)) as GameObject;
-//			switch (i) {
-//				case Ailment.BURN:
-//					//statEffect.GetComponent<Burn>().damage = 2;
-//					name += "Incendiary ";
-//					break;
-//				case Ailment.SLOW:
-//					//statEffect.GetComponent<Slow>().slowPercentage = 0.5f;
-//					name += "Slowness ";
-//					break;
-//				case Ailment.STUN:
-//					name += "Stunning ";
-//					break;
-//			}
-//			t.statusAilment = statEffect;
-//		} else {
-//			// No Status Ailment
-//			int chMissile = Random.Range(0, missiles.Length);
-//			t.missile = (GameObject)missiles[chMissile];
-//		}
+		if ((int)parts[CraftableItem.PART_MODIFIER].Modifier == 3) {
+			// Add Status Ailment
+			if (Random.Range(0, 3) == 0) {
+				dps /= 2f;
+
+				int i = Random.Range(0, Ailment.STUN + 1);
+				string[] s = {"Burn", "Slow", "Stun"};
+				GameObject statEffect = Resources.Load("Prefabs/StatusAilments/" + s[i], typeof(GameObject)) as GameObject;
+				t.missile = Resources.Load("Prefabs/Towers/Turret Parts/MissilesStatus/" + s[i] + "Missile", typeof(GameObject)) as GameObject;
+				switch (i) {
+					case Ailment.BURN:
+					//statEffect.GetComponent<Burn>().damage = 2;
+						name += "Incendiary ";
+						break;
+					case Ailment.SLOW:
+					//statEffect.GetComponent<Slow>().slowPercentage = 0.5f;
+						name += "Slowness ";
+						break;
+					case Ailment.STUN:
+						name += "Stunning ";
+						break;
+				}
+				t.statusAilment = statEffect;
+			} else {
+				name += "Basic ";
+			}
+		}
 
 		// Damage
-		int s_dmg = Random.Range(1, (int)(dps * DPSMULT));	// Multiply to allow for FiringRate : (0, 1]
+		int s_dmg;
+		if ((int)parts[CraftableItem.PART_MODIFIER].Modifier == 1) {
+			s_dmg = Random.Range((int)dps, (int)(dps * DPSMULT));
+			name += "Advanced ";
+		} else if ((int)parts[CraftableItem.PART_MODIFIER].Modifier == 0) {
+			s_dmg = Random.Range(1, (int)(dps * 0.75f));
+			name += "Remote ";
+		} else {
+			s_dmg = Random.Range(1, (int)(dps * DPSMULT));
+		}
 
 		// Firing Rate (# of bullets per second)
 		float s_firingRate = Mathf.Round((dps / s_dmg) * 10f) / 10f;
@@ -170,9 +182,9 @@ public class ComponentGenerator {
 		 *	Stats Generation
 		 */
 
-//		t.componentName = t.GenerateName();
+		t.componentName = name + "Turret";
 		t.componentType = BaseTower.TOWER_TURRET;
-//		t.level = t.CalculateLevel();
+		t.level = (int)avgLevel;
 
 		g.SetActiveRecursively(false);
 		t.transform.parent = partsRoot;
@@ -228,14 +240,14 @@ public class ComponentGenerator {
 			// Range
 			float s_range;
 			s_range = BaseTower.JiggleStat(BaseTower.BASE_RANGE, 0.15f);
-			s_range = Mathf.Round(s_range * 100) / 100f;
+			s_range = Mathf.Round(s_range * 10) / 10f;
 
 			// Determine DPS for the current level
 			float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_MULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
 			float DPSMULT = 2f;
 
 			// Add Status Ailment
-			if (Random.Range(0, 3) == 0) {
+			if (Random.Range(0, 2) == 0) {
 				dps /= 2f;
 
 				int i = Random.Range(0, Ailment.STUN + 1);
