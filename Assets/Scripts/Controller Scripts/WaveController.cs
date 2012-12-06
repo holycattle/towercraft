@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour {
+	const float PASSESTOKILL_ADDER = 0.5f;
 	private const int SPEEDSTER = 0;
 	private const int CREEPLING = 1;
 	private const int TANK = 2;
@@ -109,6 +110,8 @@ public class WaveController : MonoBehaviour {
 				_spawnScheme = new Assorted(_gameController, mobs, _nextWaveCost, _waveNumber);
 				break;
 		}
+		if(ComponentGenerator.Get().PASSESTOKILL < 8)
+			ComponentGenerator.Get().PASSESTOKILL += PASSESTOKILL_ADDER;
 	}
 	
 	public int waveNumber {

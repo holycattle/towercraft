@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ComponentGenerator {
-	public int PASSESTOKILL = 2;
+	public float PASSESTOKILL = 2;
 	private static ComponentGenerator _cgen;	// Creating a Singleton
 	private TowerComponent[][] _towerParts;
 	private Object[] _bases;
