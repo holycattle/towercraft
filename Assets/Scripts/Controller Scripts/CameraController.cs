@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour {
 	const float MAP_MAX_X = 27f;
 	const float MAP_MIN_Z = -70f;
 	const float MAP_MAX_Z = 42f;
-	private Camera minimapCam;
+	public Camera minimapCam;
 	private Camera firstPersonCam;
 
 	// Controllers
