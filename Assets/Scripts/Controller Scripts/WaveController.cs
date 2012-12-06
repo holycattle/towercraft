@@ -36,7 +36,7 @@ public class WaveController : MonoBehaviour {
 		_gameController = GetComponent<LevelController>();
 		_nextWaveCost = WAVESTART_COST;
 		_waveNumber = 0;
-		_timeTillNextWave = 45f;
+		_timeTillNextWave = 120f;
 		incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
 //		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
 //		incomingWave = CREEPLING;
