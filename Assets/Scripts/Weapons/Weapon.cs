@@ -46,6 +46,8 @@ public class Weapon : GameTool {
 
 	// GUI Information
 	private BaseEnemy _targetted;
+	
+	AudioSource gunSound = new AudioSource();
 
 	protected override void Awake() {
 		base.Awake();
@@ -53,7 +55,7 @@ public class Weapon : GameTool {
 
 	protected override void Start() {
 		base.Start();
-
+		gunSound = GameObject.Find("LaserGun").audio;
 		emitter = GetComponentInChildren<ParticleEmitter>();
 		emitter.emit = false;
 
@@ -176,6 +178,9 @@ public class Weapon : GameTool {
 				proj.GetComponent<Bullet>().range = range;
 				proj.GetComponent<Bullet>().statusAilment = statusEffect;
 				Physics.IgnoreCollision(proj.collider, transform.root.collider);
+				
+				gunSound.Play();
+				
 			} else {
 				// Gun Projectile
 				GameObject proj = Instantiate(bullet, transform.position, Quaternion.LookRotation(transform.forward)) as GameObject;
@@ -184,6 +189,7 @@ public class Weapon : GameTool {
 				proj.GetComponent<Bullet>().range = range;
 				proj.GetComponent<Bullet>().statusAilment = statusEffect;
 				Physics.IgnoreCollision(proj.collider, transform.root.collider);
+				gunSound.Play();
 			}
 			_timeTillFire += _fireInterval;
 			_bullets -= energyConsumption;
