@@ -66,6 +66,10 @@ public class WaveController : MonoBehaviour {
 			}
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;
+				CameraController c = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
+				if (c.minimapCam.enabled) {
+					c.SetOverviewCamera(false);
+				}
 				NextWave();
 			}
 		}
