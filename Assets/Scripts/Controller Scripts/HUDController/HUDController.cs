@@ -73,7 +73,7 @@ public class HUDController : MonoBehaviour {
 		GUI.backgroundColor = Color.grey;
 		GUI.Box(new Rect(0, 0, LIVES_WIDTH, LIVES_HEIGHT), "Lives Left: " + _game.Lives);
 		if (!_wave._waveActive) {
-			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, 0, LIVES_WIDTH, LIVES_HEIGHT), "Incoming wave: " + _wave.getNextWave());
+			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, 0, LIVES_WIDTH, LIVES_HEIGHT), "Incoming: " + _wave.getNextWave());
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 2, LIVES_WIDTH, LIVES_HEIGHT), "Approaching in: " + (_wave.TimeTillNextWavex100 / 100f).ToString("F2"));
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 3, LIVES_WIDTH, LIVES_HEIGHT), "Press N to proceed to the next wave.");
 		}
