@@ -123,7 +123,7 @@ public class Builder : GameTool {
 	}
 
 	public override void MouseClickOn(GameObject g) {
-		if (_game.ActiveMenu == Menu.Game && g != null) {
+		if (_game.ActiveMenu == Menu.Game && g != null && !_game._player.isDead) {
 			targettedGrid = g.GetComponent<Grid>();
 
 			// 1) CHECK if the clicked object is a grid

@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
 
 	// Game Variables
 	private int _livesLeft;
+	public PlayerController _player;
 
 	// Message Controller
 	[HideInInspector]
@@ -25,6 +26,7 @@ public class GameController : MonoBehaviour {
 	void Start() {
 		Messenger = GetComponent<MessageController>();
 		Messenger.enabled = true;
+		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 	}
 
 	void Awake() {
