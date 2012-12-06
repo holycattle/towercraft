@@ -69,7 +69,8 @@ public class HUDController : MonoBehaviour {
 		yield return new WaitForSeconds(2);
 		_game.Messenger.HUDMessage("All systems nominal.", 3f);
 		_game.Messenger.HUDMessage("Gaber Suit initialized.", 3f);
-		
+		yield return new WaitForSeconds(2);
+		_game.Messenger.HUDMessage("Incoming transmission.", 2f);
 	}
 
 	void OnGUI() {

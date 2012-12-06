@@ -29,7 +29,7 @@ public class WaveController : MonoBehaviour {
 	private SpawnScheme _spawnScheme;		// Current Wave Scheme
 	public int _waveNumber;
 	private int _nextWaveCost;
-	private float _timeTillNextWave;
+	public float _timeTillNextWave;
 	public bool _waveActive;
 
 	void Start() {

@@ -23,7 +23,7 @@ public class WaveEvent : BaseEvent {
 	public bool evalCondition() {
 		if(!isSatisfied) {
 			isSatisfied = waveSatisfied();
-			Debug.Log(isSatisfied.ToString());
+			//Debug.Log(isSatisfied.ToString());
 			if(isSatisfied)
 				doAction();
 		}

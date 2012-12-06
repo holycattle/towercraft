@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class StageController : MonoBehaviour {
+	const int FINAL_WAVE = 10; //set to how many waves
 	const int FIRST_MESSAGE_TIME = 12;
 	const int SECOND_MESSAGE_TIME = FIRST_MESSAGE_TIME + LONG_MESSAGE_DURATION + 1;
 	const int THIRD_MESSAGE_TIME = SECOND_MESSAGE_TIME + LONG_MESSAGE_DURATION + 1;
@@ -39,6 +40,10 @@ public class StageController : MonoBehaviour {
 	public bool tenthMessage;
 	public bool eleventhMessage;
 	
+	public bool showFinalTransmission;
+	
+	public float lastMessageTime;
+	
 	public StageController(int f) {
 		finalWave = f;
 		//waveController = GameObject.Find(" GameController").GetComponentInChildren<WaveController>();
@@ -47,8 +52,9 @@ public class StageController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Time.timeScale = 10f;
+		lastMessageTime = 0;
 		firstMessage = false;
+		tenthMessage = false;
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 		waveController = GameObject.Find(" GameController").GetComponentInChildren<WaveController>();
 		timeEvents = new List<TimeEvent>();
@@ -115,6 +121,9 @@ public class StageController : MonoBehaviour {
 		WaveEvent waveEvent = new WaveEvent(1);
 		waveEvent.addAction(waveStarted, args);
 		waveEvents.Add(waveEvent);
+		
+		//11th time event
+
 		
 	}
 	
@@ -201,7 +210,7 @@ public class StageController : MonoBehaviour {
 		GUI.skin.box.fontSize = 21;
 		const float DIALOG_BOX_WIDTH = 512;
 		const float DIALOG_BOX_HEIGHT = 128;
-		Rect upperCenterRect = new Rect((Screen.width - DIALOG_BOX_WIDTH)/2, (Screen.height - DIALOG_BOX_HEIGHT)/2 - 25, DIALOG_BOX_WIDTH, DIALOG_BOX_HEIGHT);
+		Rect upperCenterRect = new Rect((Screen.width - DIALOG_BOX_WIDTH)/2, (Screen.height - DIALOG_BOX_HEIGHT)/2 - 50, DIALOG_BOX_WIDTH, DIALOG_BOX_HEIGHT);
 		if(firstMessage) {
 			GUI.Box(upperCenterRect, "Dr. Pierce:\n" + "Good morning. I see you’re taking well to the new suit." +
 				"You’ll notice some changes to the UI since you last stepped into it," +
@@ -248,8 +257,8 @@ public class StageController : MonoBehaviour {
 			}
 		}
 		if(seventhMessage) {
-			GUI.Box(upperCenterRect, "Dr. Pierce:\n Left-click on a highlighted space in front of you, then" +
-				"select a base and a turret type. Right now you don’t have much in the way of choices," +
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nLeft-click on a highlighted space in front of you, then" +
+				"select a base and a turret type. Right now you don’t have much in the way of choices, " +
 				"but I doubt that this raid will consist of any more than small fry.");
 			if(Time.timeSinceLevelLoad > SEVENTH_MESSAGE_TIME + LONG_MESSAGE_DURATION) {
 				seventhMessage = false;
@@ -263,7 +272,7 @@ public class StageController : MonoBehaviour {
 			}
 		}
 		if(ninthMessage) {
-			GUI.Box(upperCenterRect, "Dr. Pierce:\nAlternately, you can press C to use our tower warp guidance system to " +
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nAlternately, you can press C to use our tower warp guidance system " +
 				"for a more convenient overhead view. You can also warp in towers from there. However, you can only use this " +
 				"when there are no enemies around.");
 			if(Time.timeSinceLevelLoad > NINTH_MESSAGE_TIME + LONG_MESSAGE_DURATION) {
@@ -271,6 +280,7 @@ public class StageController : MonoBehaviour {
 			}
 		}
 		if(tenthMessage) {
+			
 			GUI.Box(upperCenterRect, "Dr. Pierce:\nHere they come. Watch the fireworks!");
 			if(Time.timeSinceLevelLoad > TENTH_MESSAGE_TIME + SHORT_MESSAGE_DURATION) {
 				tenthMessage = false;
@@ -280,16 +290,99 @@ public class StageController : MonoBehaviour {
 		if(waveHasStarted && waveController.waveNumber == 1 && !waveController._waveActive) {
 			if(_game.Lives == GameController.MAX_LIVES)
 				GUI.Box(upperCenterRect, "Dr. Pierce:\nGood work. We got them.");
-			else GUI.Box(upperCenterRect, "Damn it, he got through. The port to Eden has sustained some damage. Next time be more vigilant.");
+			else GUI.Box(upperCenterRect, "Dr. Pierce:\nDamn it, he got through. The port to Eden has sustained some damage. Next time be more vigilant.");
 			//if(Time.timeSinceLevelLoad > ELEVENTH + SHORT_MESSAGE_DURATION) {
 			Invoke("endWaveMessage", 5f);
-			
 		}
+		
+		if(eleventhMessage) {
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nYou might be noticing those colored objects on the ground. " +
+				"Those are energizers and capacitor arrays deemed useful by the Suit's AI. " +
+				"You should salvage those for turret use. Pick them up by approaching them. Your suit will automatically draw them into inventory.");
+			if(Time.timeSinceLevelLoad > lastMessageTime + LONG_MESSAGE_DURATION) {
+				eleventhMessage = false;
+				lastMessageTime = Time.timeSinceLevelLoad;
+				Debug.Log("last message time: " + lastMessageTime.ToString());
+				Debug.Log("current time: " + Time.timeSinceLevelLoad.ToString());
+			}
+		}
+		
+		if(waveController.waveNumber == 1 && waveController._timeTillNextWave < 30f && waveController._timeTillNextWave >= 20f && !waveController._waveActive) {
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nYou can use these items to build new towers, make more tower parts, or upgrade your weapon. Consult your manual for more info; you might be already getting tired of me lecturing you.");
+			if(Time.timeSinceLevelLoad > lastMessageTime + LONG_MESSAGE_DURATION) {
+				eleventhMessage = false;
+				lastMessageTime = 0;
+				Debug.Log("last message time: " + lastMessageTime.ToString());
+				Debug.Log("current time: " + Time.timeSinceLevelLoad.ToString());
+			}
+		}
+		
+		if(waveController.waveNumber == 1 && waveController._timeTillNextWave < 15f && !waveController._waveActive) {
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nOur satellites are detecting a bigger wave of enemies. " +
+				"You might have to take matters into your own hands. Press 2 to switch to your weapon and left click to shoot 'em down yourself. " +
+				"Target enemies with the mouse and press or hold the left mouse button to fire.");
 
+		}
+		
+		if(waveController.waveNumber == 2 && waveController._timeTillNextWave < 50f && waveController._timeTillNextWave >= 40f) {
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nLooks like you're getting the hang of that suit. " +
+				"I'm afraid I'm being summoned for an emergency meeting with the Council, so I must take my leave for now. I will return as soon as I can." +
+				"If you forget anything, check the manual that comes with the suit.");
+		}
+		
+		if(waveController.waveNumber == 2 && waveController._timeTillNextWave < 35f && waveController._timeTillNextWave >= 30f) {
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nI wish you luck. You're Eden's-- no... Humanity's last line of defense.");
+		}
+		
+		if(waveController.waveNumber == FINAL_WAVE && !waveController._waveActive && !showFinalTransmission) {
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nHey, I'm back from the me-- Wow, you're doing well. Terra Nova knew it was a good idea to select you for the defense of our " +
+				"only mainland port. We’ll be providing supplies lat--.");
+			Invoke("endMessage", 10f);
+		}
+		
+		if(showFinalTransmission) {
+			GUI.Box(upperCenterRect, "Dr. Kahn:\nDr. Pierce, the Council says it’s time...");
+			lastMessageTime = Time.timeSinceLevelLoad;
+			Invoke("loadFinishedScene", 4f);
+		}
+		
+		/*if(Time.timeSinceLevelLoad > lastMessageTime + 3 && Time.timeSinceLevelLoad < lastMessageTime + 7 && waveController.waveNumber == FINAL_WAVE) {
+			showFinalTransmission = false;
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nYou’ve got to be… the suit is brand-new! We can’t just send him off there without breaking it in!");
+			lastMessageTime = Time.timeSinceLevelLoad;
+		}
+		
+		if(Time.timeSinceLevelLoad > lastMessageTime + 7 && Time.timeSinceLevelLoad < lastMessageTime + 14 && waveController.waveNumber == FINAL_WAVE) {
+			GUI.Box(upperCenterRect, "Dr. Kahn:\n Now, Doctor. We’ve already found a defensible spire, and have completed the preparations at Eden.");
+			lastMessageTime = Time.timeSinceLevelLoad;
+		}
+		
+		if(Time.timeSinceLevelLoad > lastMessageTime + 14 && Time.timeSinceLevelLoad < lastMessageTime + 19 && waveController.waveNumber == FINAL_WAVE) {
+			GUI.Box(upperCenterRect, "Dr. Pierce:\nI... Fine.");
+			AutoFade.LoadLevel("Main", 3, 1, Color.black);
+		}*/
+
+	}
+	
+	public void endMessage() {
+		_game.Messenger.HUDMessage("PRIORITY TRANSMISSION.", 3f);
+		showFinalTransmission = true;
+	}
+	
+	public void loadFinishedScene() {
+		AutoFade.LoadLevel("Finished", 3, 1, Color.black);
 	}
 	
 	public void endWaveMessage() {
 		waveHasStarted = false;
+		lastMessageTime = Time.timeSinceLevelLoad + 5f;
+		if(lastMessageTime > 0) {
+			TimeEvent messageEvent = new TimeEvent((float)lastMessageTime + 2);
+			Hashtable args = new Hashtable();
+			args[0] = this;
+			messageEvent.addAction(receive11thMessage, args);
+			timeEvents.Add(messageEvent); //don't forget to add it to the list!
+		}
 	}
 	
 	public void listenForEvents() {
