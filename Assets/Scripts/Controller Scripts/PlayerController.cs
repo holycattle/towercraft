@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
 	private WeaponController _weapon;
 
 	// Player Variables
-	public const int MAX_LIFE = 1;
+	public const int MAX_LIFE = 100;
 	private int _life;
 
 	// GUI
