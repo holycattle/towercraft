@@ -4,12 +4,12 @@ using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour {
 	protected float PASSESTOKILL_ADDER = 1f;
-	protected float PASSESTOKILL_ADDER_GROWVALUE = 1.5f;
+	protected float PASSESTOKILL_ADDER_GROWVALUE = 1f;
 	private const int SPEEDSTER = 0;
 	private const int CREEPLING = 1;
 	private const int TANK = 2;
 	private const int ASSORTED = 3;
-	
+
 	//change this once we've come up with official names
 	private const string SPEEDSTER_NAME = "Speedster";
 	private const string CREEPLING_NAME = "Creepling";
@@ -17,7 +17,7 @@ public class WaveController : MonoBehaviour {
 	private const int MIN_SPEED = 2;
 	private const int MAX_SPEED = 12;
 	private const int WAVESTART_COST = 128;
-	private const float WAVE_INCREASE = 1.15f;
+	private const float WAVE_INCREASE = 1.2f;
 	private const int WAVE_INTERVAL = 60; // In seconds
 	
 	public int incomingWave;

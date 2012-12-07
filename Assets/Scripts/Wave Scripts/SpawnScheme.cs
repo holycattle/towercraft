@@ -19,7 +19,7 @@ public class SpawnScheme {
 
 	//maxHealth coefficient and multiplier
 	public const int HEALTH_COEFF = 200; 			//this determines the scale of the HP
-	public const float HEALTH_MULTIPLIER = 0.3f; 	//every wave, health increases by current_health * HEALTH_MULTIPLIER
+	public const float HEALTH_MULTIPLIER = 0.4f; 	//every wave, health increases by current_health * HEALTH_MULTIPLIER
 	public const int HEALTH_DPSCOEFF = 100;
 	public const float HEALTH_DPSMULTIPLIER = 0.1f;
 	private LevelController _levelController;

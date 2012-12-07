@@ -241,7 +241,7 @@ public class StageController : MonoBehaviour {
 				}
 			}
 			if (fifthMessage) {
-				GUI.Box(upperCenterRect, "Dr. Pierce:\n Press ‘1' to switch to the nanolathe. You can assemble " +
+				GUI.Box(upperCenterRect, "Dr. Pierce:\n Press '1' to switch to the nanolathe. You can assemble " +
 					"defensive structures from items in" +
 					"your inventory using this. For now, we'll build your stock turrets because we" +
 					"don't have the time or resources for more advanced defenses.");
