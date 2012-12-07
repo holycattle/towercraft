@@ -88,6 +88,7 @@ public class BaseEnemy : MonoBehaviour {
 		 */
 		if (_activePoint == _path.Count) {
 			// Dont do anything anymore.
+			Destroy(this.gameObject);
 			return;
 		}
 

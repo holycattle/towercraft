@@ -18,8 +18,10 @@ public class Assorted : SpawnScheme {
 			if (enemyType == MobType.Tank) {
 				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
 			} else if (enemyType == MobType.Creepling) {
+				interval *= 2f;
 				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
 			} else if (enemyType == MobType.Speedster) {
+				interval *= 3f;
 				_spawnScheme.Add(new MobSpawn(g, interval, moveSpeed, health, waveNumber, Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1), Random.Range(0f, 1f)));
 			}
 			

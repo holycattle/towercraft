@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WaveController : MonoBehaviour {
-	protected float PASSESTOKILL_ADDER = 2f;
+	protected float PASSESTOKILL_ADDER = 1f;
 	protected float PASSESTOKILL_ADDER_GROWVALUE = 1.5f;
 	private const int SPEEDSTER = 0;
 	private const int CREEPLING = 1;
@@ -38,8 +38,8 @@ public class WaveController : MonoBehaviour {
 		_waveNumber = 0;
 		_timeTillNextWave = 120f;
 		incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
-//		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
-		incomingWave = SPEEDSTER;
+		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+//		incomingWave = SPEEDSTER;
 		_waveActive = false;
 	}
 
@@ -51,8 +51,8 @@ public class WaveController : MonoBehaviour {
 					_waveActive = false;
 					_timeTillNextWave = WAVE_INTERVAL;
 					incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
-//					incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
-					incomingWave = CREEPLING;
+					incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+//					incomingWave = CREEPLING;
 //					Debug.Log("incoming resistance = " + incomingWaveResistanceType.ToString());
 				}
 			}
@@ -63,7 +63,7 @@ public class WaveController : MonoBehaviour {
 				CameraController c = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
 				if (c.minimapCam.enabled)
 					c.SetOverviewCamera(false);
-			} else if(Input.GetKeyDown(KeyCode.N) && !GameObject.Find(" GameController").GetComponent<StageController>().tutorialDone)
+			} else if (Input.GetKeyDown(KeyCode.N) && !GameObject.Find(" GameController").GetComponent<StageController>().tutorialDone)
 				GameObject.Find(" GameController").GetComponent<StageController>().tutorialDone = true;
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;

@@ -14,7 +14,9 @@ public class AmmoScript : PickupableScript {
 	}
 
 	public override void Pickup(ItemCollector ic) {
-		if (ic != null) 
+		if (ic != null)
+		if (ic.gameObject != null)
+		if (ic.gameObject.transform.root.GetComponentInChildren<Weapon>() != null)
 			ic.gameObject.transform.root.GetComponentInChildren<Weapon>().AddAmmo(amount);
 	}
 

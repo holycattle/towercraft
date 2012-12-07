@@ -11,8 +11,8 @@ public class EndPortal : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		GameObject go = other.transform.parent.gameObject;
-		
-		if (!go.name.Equals("Player", System.StringComparison.OrdinalIgnoreCase)) {
+
+		if (go.tag == "Enemy") {
 			// Destroys the entity that enters it.
 			Destroy(go);
 			// Subtract from Life

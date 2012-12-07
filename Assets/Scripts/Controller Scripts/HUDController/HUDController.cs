@@ -79,11 +79,14 @@ public class HUDController : MonoBehaviour {
 		
 		GUI.backgroundColor = Color.grey;
 		GUI.Box(new Rect(0, 0, LIVES_WIDTH, LIVES_HEIGHT), "Lives Left: " + _game.Lives);
+		GUI.Box(new Rect(0, LIVES_HEIGHT, LIVES_WIDTH, LIVES_HEIGHT), "Wave No: " + _wave.waveNumber);
 		if (!_wave._waveActive) {
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, 0, LIVES_WIDTH, LIVES_HEIGHT), "Incoming: " + _wave.getNextWave());
 			GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 2, LIVES_WIDTH, LIVES_HEIGHT), "Approaching in: " + (_wave.TimeTillNextWavex100 / 100f).ToString("F2"));
-			if(GameObject.Find(" GameController").GetComponent<StageController>().tutorialDone) GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 3, LIVES_WIDTH, LIVES_HEIGHT), "Press N to proceed to the next wave.");
-			else GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 3, LIVES_WIDTH, LIVES_HEIGHT), "Press N to skip tutorial.");
+			if (GameObject.Find(" GameController").GetComponent<StageController>().tutorialDone)
+				GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 3, LIVES_WIDTH, LIVES_HEIGHT), "Press N to proceed to the next wave.");
+			else
+				GUI.Box(new Rect(Screen.width - LIVES_WIDTH, TEXT_HEIGHT * 3, LIVES_WIDTH, LIVES_HEIGHT), "Press N to skip tutorial.");
 		}
 		
 		if (_player.isDead) {

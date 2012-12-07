@@ -19,9 +19,9 @@ public class SpawnScheme {
 
 	//maxHealth coefficient and multiplier
 	public const int HEALTH_COEFF = 200; 			//this determines the scale of the HP
-	public const float HEALTH_MULTIPLIER = 0.2f; 	//every wave, health increases by current_health * HEALTH_MULTIPLIER
+	public const float HEALTH_MULTIPLIER = 0.3f; 	//every wave, health increases by current_health * HEALTH_MULTIPLIER
 	public const int HEALTH_DPSCOEFF = 100;
-	public const float HEALTH_DPSMULTIPLIER = 0.05f;
+	public const float HEALTH_DPSMULTIPLIER = 0.1f;
 	private LevelController _levelController;
 //	private WaveController _waveController;
 	protected List<MobSpawn> _spawnScheme;
@@ -132,17 +132,14 @@ public class SpawnScheme {
 				case BaseEnemy.BURN_TYPE:
 					m.heatResistance = resistanceAmt;
 					m.slowResistance = m.stunResistance = (1 - resistanceAmt) / 2;
-//					 = (1 - resistanceAmt) / 2;
 					break;
 				case BaseEnemy.FREEZE_TYPE:
 					m.slowResistance = resistanceAmt;
 					m.stunResistance = m.heatResistance = (1 - resistanceAmt) / 2;
-//					 = (1 - resistanceAmt) / 2;
 					break;
 				case BaseEnemy.STUN_TYPE:
 					m.stunResistance = resistanceAmt;
 					m.heatResistance = m.slowResistance = (1 - resistanceAmt) / 2;
-//					 = (1 - resistanceAmt) / 2;
 					break;
 			}
 
