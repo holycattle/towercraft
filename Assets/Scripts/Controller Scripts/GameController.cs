@@ -35,6 +35,7 @@ public class GameController : MonoBehaviour {
 
 		// Initialize Messenger
 		Messenger = GetComponent<MessageController>();
+		Screen.fullScreen = true; //force fullscreen
 	}
 
 	void Update() {
