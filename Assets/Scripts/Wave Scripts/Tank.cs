@@ -4,7 +4,6 @@ using System.Collections;
 public class Tank : SpawnScheme {
 
 	public Tank (LevelController gameController, GameObject[] mobs, int cost, int waveNumber, int resistanceType) : base(gameController, mobs, cost, waveNumber) {
-		//resistant to slow
 		Debug.Log("Scheme = Tank");
 
 		// Create the Scheme

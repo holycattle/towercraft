@@ -39,7 +39,7 @@ public class WaveController : MonoBehaviour {
 		_timeTillNextWave = 120f;
 		incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
 //		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
-//		incomingWave = CREEPLING;
+		incomingWave = SPEEDSTER;
 		_waveActive = false;
 	}
 

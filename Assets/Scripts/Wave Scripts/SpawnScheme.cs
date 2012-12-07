@@ -15,7 +15,7 @@ public class SpawnScheme {
 
 	// moveSpeed range - to be tweaked later on
 	public const int MIN_SPEED = 6;
-	public const int MAX_SPEED = 14;
+	public const int MAX_SPEED = 13;
 
 	//maxHealth coefficient and multiplier
 	public const int HEALTH_COEFF = 200; 			//this determines the scale of the HP
