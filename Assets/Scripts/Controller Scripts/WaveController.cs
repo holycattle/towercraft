@@ -63,7 +63,8 @@ public class WaveController : MonoBehaviour {
 				CameraController c = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
 				if (c.minimapCam.enabled)
 					c.SetOverviewCamera(false);
-			}
+			} else if(Input.GetKeyDown(KeyCode.N) && !GameObject.Find(" GameController").GetComponent<StageController>().tutorialDone)
+				GameObject.Find(" GameController").GetComponent<StageController>().tutorialDone = true;
 			if (_timeTillNextWave <= 0) {
 				_timeTillNextWave = 0;
 				CameraController c = GameObject.Find("Minimap Camera").GetComponent<CameraController>();
