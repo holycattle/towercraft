@@ -158,7 +158,7 @@ public class StageController : MonoBehaviour {
 	
 	public static void incomingEnemyMessage(Hashtable args) {
 		StageController s = args[0] as StageController;
-		s._game.Messenger.HUDMessage("MULTIPLE UNIDENTIFIED CONTACTS DETECTED.", 5f);
+		if(!s.tutorialDone)s._game.Messenger.HUDMessage("MULTIPLE UNIDENTIFIED CONTACTS DETECTED.", 5f);
 		
 	}
 	
