@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour {
 	public const int LIVES_HEIGHT = 30;
 	public const int TEXT_HEIGHT = 30;
 	private Vector3 DISABLETRANSFORM = new Vector3(0, 100, 0);
-	
 	const float DEATH_TIME = 15f; //set this to how long before character respawns again (in seconds)
 
 	// Game Controllers
@@ -15,7 +14,7 @@ public class PlayerController : MonoBehaviour {
 	private WeaponController _weapon;
 
 	// Player Variables
-	public const int MAX_LIFE = 1;
+	public const int MAX_LIFE = 100;
 	private int _life;
 
 	// GUI
@@ -30,9 +29,7 @@ public class PlayerController : MonoBehaviour {
 	private float timeLeft;
 	private float timeDamage = 0.25f;
 	public float respawnCountdown = 0f;
-	
 	CameraController _overviewCamera;
-	
 	public bool isDead = false;
 
 	void Start() {
@@ -64,11 +61,11 @@ public class PlayerController : MonoBehaviour {
 		}
 
 		if (_life <= 0) {
-			if(respawnCountdown == 0) {
+			if (respawnCountdown == 0) {
 				Die();
-			} else if(respawnCountdown > 0) {
+			} else if (respawnCountdown > 0) {
 				respawnCountdown -= Time.deltaTime;
-			} else if(respawnCountdown <= 0) {
+			} else if (respawnCountdown <= 0) {
 				Respawn();
 			}
 		}

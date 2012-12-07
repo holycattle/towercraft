@@ -67,6 +67,10 @@ public class Builder : GameTool {
 
 			BaseTower currentTower = targettedGrid.Tower;
 
+			if (_displayArray == null) {
+				Debug.Log("DisplayArray = NULL");
+			}
+
 			for (int i = 0; i < _displayArray.Length; i++) {
 				if (GUI.Button(buttonRects[i], new GUIContent(_displayArray[i].componentName, _displayArray[i].GetTooltipString()))) {
 					if (_buildMode) {
@@ -183,11 +187,15 @@ public class Builder : GameTool {
 			_displayArray = _inventory.GetGameObjects(_activeMenu);
 
 			if (_displayArray.Length == 0 || _displayArray == null) {
-				_game.ActiveMenu = Menu.Game;
-				Screen.lockCursor = false;
-				Time.timeScale = 0.0f;
-				_game.Messenger.WarningMessage("No items in your inventory.");
-				return;	
+				if (_activeMenu == BaseTower.TOWER_BASE) {
+					_game.ActiveMenu = Menu.Game;
+					Screen.lockCursor = false;
+					Time.timeScale = 0.0f;
+					_game.Messenger.WarningMessage("No items in your inventory.");
+					return;
+				} else {
+					_displayArray = new TowerComponent[0];
+				}
 			}
 
 			// Generate Rectangles

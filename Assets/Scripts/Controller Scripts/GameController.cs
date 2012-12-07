@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-	public const float NORMAL_TIMESCALE = 1f;
-//	public const float NORMAL_TIMESCALE = 3.0f;
+//	public const float NORMAL_TIMESCALE = 1f;
+	public float NORMAL_TIMESCALE = 4.0f;
 
 	// TOCHANGE
 	public const int MENU_GAME = 0;
