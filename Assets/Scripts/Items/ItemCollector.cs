@@ -95,6 +95,24 @@ public class ItemCollector : MonoBehaviour {
 		Pickup(new TowerItem(0, 1));
 		Pickup(new TowerItem(0, 1));
 		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(1, 1));
+//		Pickup(new TowerItem(1, 1));
+//		Pickup(new TowerItem(1, 1));
+//		Pickup(new TowerItem(1, 1));
+//		Pickup(new TowerItem(1, 1));
+//		Pickup(new TowerItem(1, 1));
 		Pickup(new TowerItem(1, 1));
 		Pickup(new TowerItem(1, 1));
 
