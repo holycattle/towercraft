@@ -214,11 +214,11 @@ public class WeaponController : MonoBehaviour {
 			return;
 
 		foreach (GameObject g in weapons) {
-			g.SetActiveRecursively(false);
+			g.SetActive(false);
 			g.GetComponent<GameTool>().WhenUnequipped();
 		}
 		_activeTool = i;
-		weapons[_activeTool].SetActiveRecursively(true);
+		weapons[_activeTool].SetActive(true);
 		ActiveTool.WhenEquipped();
 	}
 

@@ -11,6 +11,9 @@ public class TowerComponent : MonoBehaviour {
 	protected virtual void Awake() {
 	}
 
+	protected virtual void Start() {
+	}
+
 	public virtual Vector3 NextComponentPosition() {
 		return Vector3.zero;
 	}

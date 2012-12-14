@@ -211,6 +211,6 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public bool DrawGrid {
-		set { rendererParent.SetActiveRecursively(value); }
+		set { rendererParent.SetActive(value); }
 	}
 }

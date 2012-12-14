@@ -186,7 +186,7 @@ public class ComponentGenerator {
 		t.componentType = BaseTower.TOWER_TURRET;
 		t.level = (int)avgLevel;
 
-		g.SetActiveRecursively(false);
+		g.SetActive(false);
 		t.transform.parent = partsRoot;
 		return t;
 	}
@@ -303,7 +303,7 @@ public class ComponentGenerator {
 			t.componentType = BaseTower.TOWER_TURRET;
 			t.level = level;
 
-			g.SetActiveRecursively(false);
+			g.SetActive(false);
 			t.transform.parent = partsRoot;
 			return t;
 		} else if (type == BaseTower.TOWER_BASE) {
@@ -315,7 +315,7 @@ public class ComponentGenerator {
 			t.componentType = BaseTower.TOWER_BASE;
 			t.level = level;
 
-			g.SetActiveRecursively(false);
+			g.SetActive(false);
 			t.transform.parent = partsRoot;
 //			Debug.Log("Base After Count: " + t.attributes.Count);
 			return t;
@@ -324,20 +324,20 @@ public class ComponentGenerator {
 		return null;
 	}
 
-	public TowerComponent TowerClone(TowerComponent t) {
-		// Instantiate the Game Object
-		TowerComponent towerInstance = GameObject.Instantiate(t, buildSpot, Quaternion.identity) as TowerComponent;
-
-		if (t.componentType == BaseTower.TOWER_BASE) {
-			// Do Nothing.
-		} else if (t.componentType == BaseTower.TOWER_TURRET) {
-			// Copy the PREFAB's ModifyingAttributes to the INSTANCE
-			foreach (ModifyingAttribute m in ((TowerTurret) t).attributes) {
-				((TowerTurret)towerInstance).attributes.Add(m);
-			}
-		}
-
-		towerInstance.gameObject.SetActiveRecursively(false);
-		return towerInstance;
-	}
+//	public TowerComponent TowerClone(TowerComponent t) {
+//		// Instantiate the Game Object
+//		TowerComponent towerInstance = GameObject.Instantiate(t, buildSpot, Quaternion.identity) as TowerComponent;
+//
+//		if (t.componentType == BaseTower.TOWER_BASE) {
+//			// Do Nothing.
+//		} else if (t.componentType == BaseTower.TOWER_TURRET) {
+//			// Copy the PREFAB's ModifyingAttributes to the INSTANCE
+//			foreach (ModifyingAttribute m in ((TowerTurret) t).attributes) {
+//				((TowerTurret)towerInstance).attributes.Add(m);
+//			}
+//		}
+//
+//		towerInstance.gameObject.SetActive(false);
+//		return towerInstance;
+//	}
 }

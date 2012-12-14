@@ -196,19 +196,24 @@ public class BaseTower : MonoBehaviour {
 		int next = GetNextComponent();
 
 		// Instantiate the Game Object
-		TowerComponent towerInstance = Instantiate(tPrefab, transform.position + GetNextComponentPosition(), Quaternion.identity) as TowerComponent;
-		towerInstance.transform.parent = transform;
-		_towerComponents[next] = towerInstance;	// Note: You can't use t here because it is the component of the prefab.
+//		TowerComponent towerInstance = Instantiate(tPrefab, transform.position + GetNextComponentPosition(), Quaternion.identity) as TowerComponent;
+		tPrefab.transform.position = transform.position + GetNextComponentPosition();
+		tPrefab.transform.rotation = Quaternion.identity;
+		_towerComponents[next] = tPrefab;	// Note: You can't use t here because it is the component of the prefab.
+
+		tPrefab.gameObject.SetActive(true);
 
 		// Copy the PREFAB's ModifyingAttributes to the INSTANCE
-		if (towerInstance.componentType == TOWER_TURRET) {
-			foreach (ModifyingAttribute m in ((TowerTurret) tPrefab).attributes) {
-				((TowerTurret)towerInstance).attributes.Add(m);
-			}
-		}
+//		if (towerInstance.componentType == TOWER_TURRET) {
+//			foreach (ModifyingAttribute m in ((TowerTurret) tPrefab).attributes) {
+//				((TowerTurret)towerInstance).attributes.Add(m);
+//			}
+//		}
+
+//		towerInstance.gameObject.SetActive(true);
 
 		// Destroy the Prefab (Save on space)
-		Destroy(tPrefab.gameObject);
+//		Destroy(tPrefab.gameObject);
 
 //		if (tPrefab.componentType == TOWER_TURRET) {
 //			Debug.Log("Component PREFAB Count: " + ((TowerTurret)tPrefab).attributes.Count);
@@ -223,7 +228,7 @@ public class BaseTower : MonoBehaviour {
 	public TowerComponent DeactivateComponent(int type) {
 		_towerComponents[type].transform.position = new Vector3(0, 50, 0);	// Move to a far away place
 		_towerComponents[type].transform.parent = null;	// DE-Parent
-		_towerComponents[type].gameObject.SetActiveRecursively(false);
+		_towerComponents[type].gameObject.SetActive(false);
 		TowerComponent t = _towerComponents[type];
 		_towerComponents[type] = null;
 		return t;
@@ -238,16 +243,23 @@ public class BaseTower : MonoBehaviour {
 //		TowerComponent swappedOutComponent = _towerComponents[swapType].GetComponent<TowerComponent>();
 		TowerComponent swappedOutComponent = DeactivateComponent(swapType);
 
-		TowerComponent towerInstance = Instantiate(tPrefab, transform.position + GetNextComponentPosition(swapType), Quaternion.identity) as TowerComponent;
-		towerInstance.transform.parent = transform;
-		_towerComponents[swapType] = towerInstance;	// Note: You can't use t here because it is the component of the prefab.
+		// TODO: Change to SetActive
+		tPrefab.transform.position = transform.position + GetNextComponentPosition();
+		tPrefab.transform.rotation = Quaternion.identity;
+		_towerComponents[swapType] = tPrefab;	// Note: You can't use t here because it is the component of the prefab.
 
-		// Copy the PREFAB's ModifyingAttributes to the INSTANCE
-		if (tPrefab.componentType == TOWER_TURRET) {
-			foreach (ModifyingAttribute m in ((TowerTurret) tPrefab).attributes) {
-				((TowerTurret)towerInstance).attributes.Add(m);
-			}
-		}
+		tPrefab.gameObject.SetActive(true);
+
+//		TowerComponent towerInstance = Instantiate(tPrefab, transform.position + GetNextComponentPosition(swapType), Quaternion.identity) as TowerComponent;
+//		towerInstance.transform.parent = transform;
+//		_towerComponents[swapType] = towerInstance;	// Note: You can't use t here because it is the component of the prefab.
+//
+//		// Copy the PREFAB's ModifyingAttributes to the INSTANCE
+//		if (tPrefab.componentType == TOWER_TURRET) {
+//			foreach (ModifyingAttribute m in ((TowerTurret) tPrefab).attributes) {
+//				((TowerTurret)towerInstance).attributes.Add(m);
+//			}
+//		}
 
 		UpdateStats();
 		return swappedOutComponent;
