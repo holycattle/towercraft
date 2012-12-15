@@ -243,42 +243,44 @@ public class ComponentGenerator {
 			s_range = Mathf.Round(s_range * 10) / 10f;
 
 			// Determine DPS for the current level
-			float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_DPSMULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
+//			float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_DPSMULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
+			float dps = 15;
 			float DPSMULT = 2f;
 
-			// Add Status Ailment
-			if (Random.Range(0, 4) == 0) {
-				dps *= 0.65f;
-
-				int i = Random.Range(0, Ailment.STUN + 1);
-				string[] s = {"Burn", "Slow", "Stun"};
-				GameObject statEffect = Resources.Load("Prefabs/StatusAilments/" + s[i], typeof(GameObject)) as GameObject;
-				t.missile = Resources.Load("Prefabs/Towers/Turret Parts/MissilesStatus/" + s[i] + "Missile", typeof(GameObject)) as GameObject;
-				switch (i) {
-					case Ailment.BURN:
-						//statEffect.GetComponent<Burn>().damage = 2;
-						name += "Incendiary ";
-						break;
-					case Ailment.SLOW:
-						//statEffect.GetComponent<Slow>().slowPercentage = 0.5f;
-						name += "Slowness ";
-						break;
-					case Ailment.STUN:
-						name += "Stunning ";
-						break;
-				}
-				t.statusAilment = statEffect;
-			} else {
-				// No Status Ailment
-				int chMissile = Random.Range(0, missiles.Length);
-				t.missile = (GameObject)missiles[chMissile];
-			}
+//			// Add Status Ailment
+//			if (Random.Range(0, 4) == 0) {
+//				dps *= 0.65f;
+//
+//				int i = Random.Range(0, Ailment.STUN + 1);
+//				string[] s = {"Burn", "Slow", "Stun"};
+//				GameObject statEffect = Resources.Load("Prefabs/StatusAilments/" + s[i], typeof(GameObject)) as GameObject;
+//				t.missile = Resources.Load("Prefabs/Towers/Turret Parts/MissilesStatus/" + s[i] + "Missile", typeof(GameObject)) as GameObject;
+//				switch (i) {
+//					case Ailment.BURN:
+//						//statEffect.GetComponent<Burn>().damage = 2;
+//						name += "Incendiary ";
+//						break;
+//					case Ailment.SLOW:
+//						//statEffect.GetComponent<Slow>().slowPercentage = 0.5f;
+//						name += "Slowness ";
+//						break;
+//					case Ailment.STUN:
+//						name += "Stunning ";
+//						break;
+//				}
+//				t.statusAilment = statEffect;
+//			} else {
+//				// No Status Ailment
+//				int chMissile = Random.Range(0, missiles.Length);
+//				t.missile = (GameObject)missiles[chMissile];
+//			}
 
 			// Damage
 			int s_dmg = Random.Range(1, (int)(dps * DPSMULT));	// Multiply to allow for FiringRate : (0, 1]
 
 			// Firing Rate (# of bullets per second)
-			float s_firingRate = Mathf.Round((dps / s_dmg) * 10f) / 10f;
+//			float s_firingRate = Mathf.Round((dps / s_dmg) * 10f) / 10f;
+			float s_firingRate = dps / s_dmg;
 
 			t.attributes.Add(new ModifyingAttribute(Stat.Damage, s_dmg));
 			t.attributes.Add(new ModifyingAttribute(Stat.Range, s_range));
