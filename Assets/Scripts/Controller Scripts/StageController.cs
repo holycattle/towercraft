@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class StageController : MonoBehaviour {
-	const int FINAL_WAVE = 10; //set to how many waves
+	const int FINAL_WAVE = 20; //set to how many waves
 	const int FIRST_MESSAGE_TIME = 12;
 	const int SECOND_MESSAGE_TIME = FIRST_MESSAGE_TIME + LONG_MESSAGE_DURATION + 1;
 	const int THIRD_MESSAGE_TIME = SECOND_MESSAGE_TIME + LONG_MESSAGE_DURATION + 1;

@@ -4,26 +4,24 @@ using System.Collections.Generic;
 using System;
 
 public class SpawnScheme {
-	// Drop Probabilities
-	public const int BASES_DROP = 4;	// Out of 30
-	public const int TURRET_DROP = 1;	// Out of 30
-	public const int TURRETPART_DROP = 5;	// Out of 30
-	public const int WEAPON_DROP = 2;	// Out of 30
+	// DPS Constant
+	public const float DPS_CONSTANT = 5;
 
 	// Other
 	private const int INTERVAL_COEFF = 7;
 
 	// moveSpeed range - to be tweaked later on
-	public const int MIN_SPEED = 6;
-	public const int MAX_SPEED = 13;
+	public const int MIN_SPEED = 4;
+	public const int MAX_SPEED = 18;
 
 	//maxHealth coefficient and multiplier
 	public const int HEALTH_COEFF = 200; 			//this determines the scale of the HP
 	public const float HEALTH_MULTIPLIER = 0.4f; 	//every wave, health increases by current_health * HEALTH_MULTIPLIER
 	public const int HEALTH_DPSCOEFF = 100;
 	public const float HEALTH_DPSMULTIPLIER = 0.1f;
+
+	//
 	private LevelController _levelController;
-//	private WaveController _waveController;
 	protected List<MobSpawn> _spawnScheme;
 	public float _timeSinceLastSpawn;
 
@@ -31,7 +29,7 @@ public class SpawnScheme {
 	public Hashtable mobTable = new Hashtable();
 	public Transform mobRoot = null;
 
-	public SpawnScheme (LevelController gameController, GameObject[] mobs, int cost, int waveNumber) {
+	public SpawnScheme (LevelController gameController, GameObject[] mobs, float cost, int waveNumber) {
 		//Debug.Log("SpawnScheme mob type 0 = " + mobs[0].ToString());
 		//initialize mobTable - see WaveController parameters in Unity Editor for details of what each "mobs" index represent
 		mobTable["Creepling"] = mobs[1];
@@ -44,7 +42,6 @@ public class SpawnScheme {
 		//
 		_spawnScheme = new List<MobSpawn>();
 
-//		Debug.Log("SpawnScheme moveSpeed : " + moveSpeed);
 		_timeSinceLastSpawn = 0;
 
 		Debug.Log("WAVENUMBER: " + waveNumber);
@@ -99,23 +96,23 @@ public class SpawnScheme {
 	
 	protected class MobSpawn {
 		private GameObject _mobToSpawn; // Mob to spawn at this instance
-		private float _waitTime;		// How much time to wait before spawning this mob
+		private float _spawnInterval;		// How much time to wait before spawning this mob
 
 		// Mob's Stats
+		private Item[] mobDrops;
 		private float mobMoveSpeed;		// Mob's Move Speed
 		private int mobHealth;			// Mob's Health
-		private int mobLevel;			// Mob's Level
 		private int resistanceType;
 		private float resistanceAmt;
 
-		public MobSpawn (GameObject g, float wait, float mspd, int hp, int level, int resistanceType, float resistanceAmt) {
+		public MobSpawn (GameObject g, Item[] items, float spawnInterval, float mspd, int hp, int resistanceType, float resistanceAmt) {
 			_mobToSpawn = g;
-			_waitTime = wait;
+			_spawnInterval = spawnInterval;
 
 			// Set Stats
+			mobDrops = items;
 			mobMoveSpeed = mspd;
 			mobHealth = hp;
-			mobLevel = level;
 			this.resistanceType = resistanceType;
 			this.resistanceAmt = resistanceAmt;
 		}
@@ -127,7 +124,6 @@ public class SpawnScheme {
 			// Set Stats
 			m.MoveSpeed = mobMoveSpeed;
 			m.maxLife = mobHealth;
-			m.level = mobLevel;
 			switch (resistanceType) {
 				case BaseEnemy.BURN_TYPE:
 					m.heatResistance = resistanceAmt;
@@ -143,37 +139,13 @@ public class SpawnScheme {
 					break;
 			}
 
-			// Set items to spawn
-			Item[] toDrop = new Item[4];
-			int i = 0;
-
-			if (UnityEngine.Random.Range(0, 30) < BASES_DROP + TURRET_DROP) {
-				if (UnityEngine.Random.Range(0, BASES_DROP + TURRET_DROP) < BASES_DROP) {
-					toDrop[i] = new TowerItem(BaseTower.TOWER_BASE, mobLevel);
-				} else {
-					toDrop[i] = new TowerItem(BaseTower.TOWER_TURRET, mobLevel);
-				}
-				i++;
-			}
-
-			if (UnityEngine.Random.Range(0, 30) < TURRETPART_DROP) {
-				toDrop[i] = new CraftableItem(mobLevel);
-				i++;
-			}
-			if (UnityEngine.Random.Range(0, 30) < WEAPON_DROP) {
-				toDrop[i] = WeaponItem.RandomItem(mobLevel);
-				i++;
-			}
-			m.drops = new Item[i];
-			for (int o = 0; o < i; o++) {
-				m.drops[o] = toDrop[o];
-			}
+			m.drops = mobDrops;
 
 			return g;
 		}
 	
 		public float WaitTime {
-			get { return _waitTime; }
+			get { return _spawnInterval; }
 		}
 	}
 }

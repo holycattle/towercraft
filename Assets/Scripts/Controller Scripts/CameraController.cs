@@ -57,9 +57,9 @@ public class CameraController : MonoBehaviour {
 	void Update() {
 		// Toggle Camera View
 		if (Input.GetKeyDown(KeyCode.C) && !_player.isDead) {
-			if (_wave._waveActive) {
-				_game.Messenger.WarningMessage("Cannot enter overhead view mode once the wave has started!");
-			} else
+//			if (_wave._waveActive) {
+//				_game.Messenger.WarningMessage("Cannot enter overhead view mode once the wave has started!");
+//			} else
 				SetOverviewCamera(!minimapCam.enabled);
 		}
 		

@@ -16,7 +16,6 @@ public class TowerTurret : TowerComponent {
 		base.Awake();
 
 		attributes = new List<ModifyingAttribute>();
-		Debug.Log("Checkered");
 	}
 
 	public override string GetTooltipString() {

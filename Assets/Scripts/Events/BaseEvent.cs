@@ -18,7 +18,7 @@ public class BaseEvent {
 	}
 	
 	public virtual void doAction() {
-		Debug.Log("done!");
+//		Debug.Log("done!");
 		
 		actionFunction(actionFunctionArgs);
 	}

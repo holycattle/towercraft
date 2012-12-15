@@ -2,14 +2,13 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class BaseEnemy : MonoBehaviour
-{
+public class BaseEnemy : MonoBehaviour {
 	//
 	public const int AMMO_DROP = 3;
 	public const int HEALTH_DROP = 3;
 
 	// Constants
-	public const float MOV_OFFSET = 2f;
+	public const float MOV_OFFSET = 0f;
 	public const int BURN_TYPE = 0;
 	public const int FREEZE_TYPE = 1;
 	public const int STUN_TYPE = 2;
@@ -57,13 +56,12 @@ public class BaseEnemy : MonoBehaviour
 	private int _activePoint;		// Current point in the path
 	private Vector2 _offset;		// Random offset for movement
 
-	void Start ()
-	{
+	void Start() {
 		_activePoint = 1;
-		_offset = new Vector2 (Random.Range (-MOV_OFFSET, MOV_OFFSET), Random.Range (-MOV_OFFSET, MOV_OFFSET));
+		_offset = new Vector2(Random.Range(-MOV_OFFSET, MOV_OFFSET), Random.Range(-MOV_OFFSET, MOV_OFFSET));
 		_life = maxLife;
 
-		UpdateStats ();
+		UpdateStats();
 
 		originalRot = transform.rotation;
 
@@ -71,50 +69,49 @@ public class BaseEnemy : MonoBehaviour
 //		if (ITEM_PREFAB == null)
 //			ITEM_PREFAB = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
 		if (HEALTH_PREFAB == null)
-			HEALTH_PREFAB = Resources.Load ("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
+			HEALTH_PREFAB = Resources.Load("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
 		if (AMMO_PREFAB == null)
-			AMMO_PREFAB = Resources.Load ("Prefabs/Items/Ammo", typeof(GameObject)) as GameObject;
+			AMMO_PREFAB = Resources.Load("Prefabs/Items/Ammo", typeof(GameObject)) as GameObject;
 
-		_player = GameObject.Find ("Player").GetComponent<PlayerController> ();
-		_level = GameObject.Find (" GameController").GetComponent<LevelController> ();
+		_player = GameObject.Find("Player").GetComponent<PlayerController>();
+		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
 
 		// Fix Name
-		if (gameObject.name.EndsWith ("(Clone)")) {
-			gameObject.name = gameObject.name.Substring (0, gameObject.name.Length - 7);
+		if (gameObject.name.EndsWith("(Clone)")) {
+			gameObject.name = gameObject.name.Substring(0, gameObject.name.Length - 7);
 		}
 	}
 
-	void Update ()
-	{
+	void Update() {
 		/*
 		 *	Movement
 		 */
 		if (_activePoint == _path.Count) {
 			// Dont do anything anymore.
-			Destroy (this.gameObject);
+			Destroy(this.gameObject);
 			return;
 		}
 
-		Vector3 targetPos = new Vector3 (_path [_activePoint].x + _offset.x, transform.position.y, _path [_activePoint].y + _offset.y);
-		float dist = Vector3.Distance (targetPos, transform.position);
+		Vector3 targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
+		float dist = Vector3.Distance(targetPos, transform.position);
 
 		if (dist < moveSpeed * Time.deltaTime) {
-			transform.rotation = Quaternion.Slerp (originalRot, Quaternion.LookRotation (targetPos - transform.position), totalTurn);
+			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
 //			iTween.RotateTo(gameObject, iTween.Hash("rotation", Quaternion.LookRotation(targetPos - transform.position).eulerAngles, "time", turnTime));
-			transform.Translate (Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
+			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 
 			// Move the extra
 			_activePoint++;
-			_offset = new Vector2 (Random.Range (-MOV_OFFSET, MOV_OFFSET), Random.Range (-MOV_OFFSET, MOV_OFFSET));
+			_offset = new Vector2(Random.Range(-MOV_OFFSET, MOV_OFFSET), Random.Range(-MOV_OFFSET, MOV_OFFSET));
 			if (_activePoint != _path.Count) {
-				targetPos = new Vector3 (_path [_activePoint].x + _offset.x, transform.position.y, _path [_activePoint].y + _offset.y);
+				targetPos = new Vector3(_path[_activePoint].x + _offset.x, transform.position.y, _path[_activePoint].y + _offset.y);
 				originalRot = transform.rotation;
 			}
 
 			totalTurn = 0;
 		} else {
-			transform.rotation = Quaternion.Slerp (originalRot, Quaternion.LookRotation (targetPos - transform.position), totalTurn);
-			transform.Translate (Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
+			transform.rotation = Quaternion.Slerp(originalRot, Quaternion.LookRotation(targetPos - transform.position), totalTurn);
+			transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.Self);
 		}
 		totalTurn += turnSpeed * Time.deltaTime;
 
@@ -122,25 +119,25 @@ public class BaseEnemy : MonoBehaviour
 			Vector3 p;
 			int i = 0;
 			for (; i < _path.Count - 1; i++) {
-				p = new Vector3 (_path [i].x, 1, _path [i].y);
+				p = new Vector3(_path[i].x, 1, _path[i].y);
 
-				Debug.DrawLine (p, new Vector3 (_path [i + 1].x, 1, _path [i + 1].y), Color.cyan);
-				Debug.DrawLine (p, p + Vector3.up * 5, Color.cyan);
+				Debug.DrawLine(p, new Vector3(_path[i + 1].x, 1, _path[i + 1].y), Color.cyan);
+				Debug.DrawLine(p, p + Vector3.up * 5, Color.cyan);
 //				Debug.DrawLine(p, p + (Vector3.up + new Vector3(Random.Range(-0.5f, 0.5f), 0, Random.Range(-0.5f, 0.5f))) * 5, Color.cyan);
 			}
-			p = new Vector3 (_path [i].x, 1, _path [i].y);
-			Debug.DrawLine (p, p + Vector3.up * 5);
+			p = new Vector3(_path[i].x, 1, _path[i].y);
+			Debug.DrawLine(p, p + Vector3.up * 5);
 		}
 
 
 		/*
 		 *	Attacking the Player
 		 */
-		if (Vector3.Distance (transform.position, _player.transform.position) <= range) {
+		if (Vector3.Distance(transform.position, _player.transform.position) <= range) {
 			if (_timeTillFire <= 0) {
-				if (Random.Range (0, 100) < accuracy) {
+				if (Random.Range(0, 100) < accuracy) {
 					// Hit
-					_player.AddLife (-damage);
+					_player.AddLife(-damage);
 				}
 				_timeTillFire += firingInterval;
 			}
@@ -151,50 +148,43 @@ public class BaseEnemy : MonoBehaviour
 		}
 	}
 
-	public void UpdateStats ()
-	{
+	public void UpdateStats() {
 		// Set Turn Speed
-		turnSpeed = (moveSpeed / ((Mathf.Sqrt (2) / 2) * LevelController.TILE_SIZE)) * 2;
+		turnSpeed = (moveSpeed / ((Mathf.Sqrt(2) / 2) * LevelController.TILE_SIZE)) * 2;
 	}
 
-	public void PathUpdate ()
-	{
-		_path = _level.RecalculatePath (GridPosition);
+	public void PathUpdate() {
+		_path = _level.RecalculatePath(GridPosition);
 		_activePoint = 2;
 	}
 
-	public void AddLife (int amt)
-	{
+	public void AddLife(int amt) {
 		_life += amt;
 		if (_life <= 0)
-			Kill ();
+			Kill();
 	}
 
-	public void Kill ()
-	{
-		Destroy (this.transform.gameObject);
+	public void Kill() {
+		Destroy(this.transform.gameObject);
 		
 		if (drops != null) {
 			foreach (Item i in drops) {
-				if (i != null) {
-					i.ItemInstantiate (transform.position, Quaternion.identity);
-				}
+				i.ItemInstantiate(transform.position, Quaternion.identity);
 			}
 		}
 
-		if (UnityEngine.Random.Range (0, 10) < AMMO_DROP + HEALTH_DROP) {
-			if (Random.Range (0, AMMO_DROP + HEALTH_DROP) < AMMO_DROP) {
-				GameObject g = Instantiate (AMMO_PREFAB, transform.position, Quaternion.identity) as GameObject;
-				g.GetComponent<AmmoScript> ().amount = Random.Range (20, 40);
+		if (UnityEngine.Random.Range(0, 10) < AMMO_DROP + HEALTH_DROP) {
+			if (Random.Range(0, AMMO_DROP + HEALTH_DROP) < AMMO_DROP) {
+				GameObject g = Instantiate(AMMO_PREFAB, transform.position, Quaternion.identity) as GameObject;
+				g.GetComponent<AmmoScript>().amount = Random.Range(20, 40);
 			} else {
-				GameObject g = Instantiate (HEALTH_PREFAB, transform.position, Quaternion.identity) as GameObject;
-				g.GetComponent<HealthScript> ().health = Random.Range (5, 20);
+				GameObject g = Instantiate(HEALTH_PREFAB, transform.position, Quaternion.identity) as GameObject;
+				g.GetComponent<HealthScript>().health = Random.Range(5, 20);
 			}
 		}
 	}
 
-	private int CalculateDirection (float diff)
-	{
+	private int CalculateDirection(float diff) {
 		if (diff > 0)
 			return 1;
 		else if (diff < 0)
@@ -203,7 +193,7 @@ public class BaseEnemy : MonoBehaviour
 	}
 
 	public Vector2 GridPosition {
-		get { return _level.GridConvert (transform.position); }
+		get { return _level.GridConvert(transform.position); }
 	}
 
 	public int Life {
@@ -222,15 +212,14 @@ public class BaseEnemy : MonoBehaviour
 		get { return moveSpeed; }
 		set {
 			this.moveSpeed = value;
-			UpdateStats ();
+			UpdateStats();
 		}
 	}
 	
-	public string GetResistanceTypeAsString ()
-	{
-		if (Mathf.Max (heatResistance, slowResistance, stunResistance) == heatResistance) {
+	public string GetResistanceTypeAsString() {
+		if (Mathf.Max(heatResistance, slowResistance, stunResistance) == heatResistance) {
 			return "Heat";
-		} else if (Mathf.Max (heatResistance, slowResistance, stunResistance) == slowResistance) {
+		} else if (Mathf.Max(heatResistance, slowResistance, stunResistance) == slowResistance) {
 			return "Slow";
 		} else {
 			return "Stun";
@@ -242,8 +231,7 @@ public class BaseEnemy : MonoBehaviour
 	}
 }
 
-public enum MobType
-{
+public enum MobType {
 	//Basic,
 	Creepling,
 	Tank,
