@@ -181,6 +181,30 @@ function Awake () {
 }
 
 private function UpdateFunction () {
+	// Get the input vector from kayboard or analog stick
+	var directionVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+	
+	if (directionVector != Vector3.zero) {
+		// Get the length of the directon vector and then normalize it
+		// Dividing by the length is cheaper than normalizing when we already have the length anyway
+		var directionLength = directionVector.magnitude;
+		directionVector = directionVector / directionLength;
+		
+		// Make sure the length is no bigger than 1
+		directionLength = Mathf.Min(1, directionLength);
+		
+		// Make the input vector more sensitive towards the extremes and less sensitive in the middle
+		// This makes it easier to control slow speeds when using analog sticks
+		directionLength = directionLength * directionLength;
+		
+		// Multiply the normalized direction vector by the modified length
+		directionVector = directionVector * directionLength;
+	}
+	
+	// Apply the direction to the CharacterMotor
+	inputMoveDirection = transform.rotation * directionVector;
+	inputJump = Input.GetButton("Jump");
+
 	// We copy the actual velocity into a temporary variable that we can manipulate.
 	var velocity : Vector3 = movement.velocity;
 	
@@ -199,14 +223,14 @@ private function UpdateFunction () {
 			controller.Move(moveDistance);
 		
 		// Support moving platform rotation as well:
-        var newGlobalRotation : Quaternion = movingPlatform.activePlatform.rotation * movingPlatform.activeLocalRotation;
-        var rotationDiff : Quaternion = newGlobalRotation * Quaternion.Inverse(movingPlatform.activeGlobalRotation);
-        
-        var yRotation = rotationDiff.eulerAngles.y;
-        if (yRotation != 0) {
-	        // Prevent rotation of the local up vector
-	        tr.Rotate(0, yRotation, 0);
-        }
+	        var newGlobalRotation : Quaternion = movingPlatform.activePlatform.rotation * movingPlatform.activeLocalRotation;
+	        var rotationDiff : Quaternion = newGlobalRotation * Quaternion.Inverse(movingPlatform.activeGlobalRotation);
+	        
+	        var yRotation = rotationDiff.eulerAngles.y;
+	        if (yRotation != 0) {
+		        // Prevent rotation of the local up vector
+		        tr.Rotate(0, yRotation, 0);
+	        }
 	}
 	
 	// Save lastPosition for velocity calculation.
@@ -281,7 +305,7 @@ private function UpdateFunction () {
 			movement.velocity += movingPlatform.platformVelocity;
 		}
 		
-		SendMessage("OnFall", SendMessageOptions.DontRequireReceiver);
+		BroadcastMessage("OnFall", SendMessageOptions.DontRequireReceiver);
 		// We pushed the character down to ensure it would stay on the ground if there was any.
 		// But there wasn't so now we cancel the downwards offset to make the fall smoother.
 		tr.position += pushDownOffset * Vector3.up;
@@ -292,7 +316,7 @@ private function UpdateFunction () {
 		jumping.jumping = false;
 		SubtractNewPlatformVelocity();
 		
-		SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
+		BroadcastMessage("OnLand", SendMessageOptions.DontRequireReceiver);
 	}
 	
 	// Moving platforms support
@@ -303,8 +327,8 @@ private function UpdateFunction () {
 		movingPlatform.activeLocalPoint = movingPlatform.activePlatform.InverseTransformPoint(movingPlatform.activeGlobalPoint);
 		
 		// Support moving platform rotation as well:
-        movingPlatform.activeGlobalRotation = tr.rotation;
-        movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation; 
+	        movingPlatform.activeGlobalRotation = tr.rotation;
+	        movingPlatform.activeLocalRotation = Quaternion.Inverse(movingPlatform.activePlatform.rotation) * movingPlatform.activeGlobalRotation; 
 	}
 }
 
@@ -360,11 +384,12 @@ private function ApplyInputVelocityChange (velocity : Vector3) {
 		desiredVelocity.y = 0;
 	}
 	
+	// Changes the velocity vector to point perpendicular to the ground normal
 	if (grounded)
 		desiredVelocity = AdjustGroundVelocityToNormal(desiredVelocity, groundNormal);
 	else
 		velocity.y = 0;
-	
+		
 	// Enforce max velocity change
 	var maxVelocityChange : float = GetMaxAcceleration(grounded) * Time.deltaTime;
 	var velocityChangeVector : Vector3 = (desiredVelocity - velocity);
@@ -393,8 +418,9 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 		jumping.lastButtonDownTime = -100;
 	}
 	
-	if (inputJump && jumping.lastButtonDownTime < 0 && canControl)
+	if (inputJump && jumping.lastButtonDownTime < 0 && canControl) {
 		jumping.lastButtonDownTime = Time.time;
+	}
 	
 	if (grounded)
 		velocity.y = Mathf.Min(0, velocity.y) - movement.gravity * Time.deltaTime;
@@ -448,7 +474,7 @@ private function ApplyGravityAndJumping (velocity : Vector3) {
 				velocity += movingPlatform.platformVelocity;
 			}
 			
-			SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
+			BroadcastMessage("OnJump", SendMessageOptions.DontRequireReceiver);
 		}
 		else {
 			jumping.holdingJumpButton = false;

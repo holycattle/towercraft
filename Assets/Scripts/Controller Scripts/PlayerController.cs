@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour {
 	private GameController _game;
 	private WaveController _wave;
 	private WeaponController _weapon;
+	private CharacterMotor _motor;
 
 	// Player Variables
 	public const int MAX_LIFE = 100;
@@ -20,17 +21,20 @@ public class PlayerController : MonoBehaviour {
 	// GUI
 	public Texture2D menu;
 	public Texture2D item;
-	
+
 	// Damage bars
 	private MyTexture2D leftDamage;
 	private MyTexture2D rightDamage;
-//	private Rect leftDmgBox;
-//	private Rect rightDmgBox;
 	private float timeLeft;
 	private float timeDamage = 0.25f;
 	public float respawnCountdown = 0f;
 	CameraController _overviewCamera;
 	public bool isDead = false;
+
+	// Audio
+	private AudioClip[] footsteps;
+	private float footstepInterval = 0.30f;
+	private float footstepTimer;
 
 	void Start() {
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
@@ -50,7 +54,12 @@ public class PlayerController : MonoBehaviour {
 
 		// Player Variables
 		_life = MAX_LIFE;
-		
+
+		_motor = GetComponent<CharacterMotor>();
+		footsteps = new AudioClip[3];
+		footsteps[0] = Resources.Load("Sound/Player/Footstep_Gravel_1") as AudioClip;
+		footsteps[1] = Resources.Load("Sound/Player/Footstep_Gravel_3") as AudioClip;
+		footsteps[2] = Resources.Load("Sound/Player/Footstep_Gravel_4") as AudioClip;
 	}
 
 	void Update() {
@@ -68,6 +77,21 @@ public class PlayerController : MonoBehaviour {
 			} else if (respawnCountdown <= 0) {
 				Respawn();
 			}
+		}
+
+//		Debug.Log("Velocity: " + _motor.movement.velocity.magnitude);
+		Debug.Log("Velocity: " + _motor.movement.velocity.x + ", " + _motor.movement.velocity.y + ", " + _motor.movement.velocity.z);
+
+		if (_motor.grounded && (_motor.movement.velocity.x != 0 || _motor.movement.velocity.z != 0)) {
+			if (footstepTimer <= 0) {
+				audio.clip = footsteps[Random.Range(0, footsteps.Length)];
+				audio.Play();
+				footstepTimer = footstepInterval;
+			} else {
+				footstepTimer -= Time.deltaTime;
+			}
+		} else {
+			footstepTimer = 0;
 		}
 	}
 	
@@ -99,7 +123,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void SetEnabled(bool b) {
-		(GetComponent("NewCharacterMotor") as MonoBehaviour).enabled = b;
+		GetComponent<CharacterMotor>().enabled = b;
 		MouseLook[] mLook = GetComponentsInChildren<MouseLook>();
 		foreach (MouseLook m in mLook) {
 			m.enabled = b;
