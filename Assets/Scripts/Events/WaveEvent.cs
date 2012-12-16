@@ -1,10 +1,19 @@
 using UnityEngine;
 using System.Collections;
 
-//to-do: implement an Interface perhaps?
-public class WaveEvent : BaseEvent {
+/*@implements
+	bool eventSatisfied();
+	bool evalCondition();
+	void addCondition();
+*/
+
+public class WaveEvent : BaseEvent, IEvent {
+	
 	public int waveFlag;
-	private WaveController waveController;
+	public int mode = 0; //BEFORE, DURING
+	public WaveController waveController;
+	
+	public float timeInSeconds;
 	
 	public WaveEvent(int waveNumber) {
 		waveController = GameObject.Find(" GameController").GetComponentInChildren<WaveController>();
@@ -15,14 +24,13 @@ public class WaveEvent : BaseEvent {
 		waveFlag = waveNumber;
 	}
 	
-	public bool waveSatisfied() {
-		isSatisfied = true;
+	public override bool eventSatisfied() {
 		return waveFlag == waveController.waveNumber;
 	}
 	
-	public bool evalCondition() {
+	public override bool evalCondition() {
 		if(!isSatisfied) {
-			isSatisfied = waveSatisfied();
+			isSatisfied = eventSatisfied();
 			//Debug.Log(isSatisfied.ToString());
 			if(isSatisfied)
 				doAction();

@@ -1,11 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
-//to-do: implement an Interface perhaps?
-public class TimeEvent : BaseEvent {
-	public float timeInSeconds;
+/*@implements
+	bool eventSatisfied();
+	bool evalCondition();
+	void addCondition();
+*/
+
+public class BeforeWaveEvent : WaveEvent, IEvent {
 	
-	public TimeEvent (float t) : base() {
+	public BeforeWaveEvent (int waveNumber, float t) : base(waveNumber) {
 		timeInSeconds = t;
 		isSatisfied = false;
 	}
@@ -14,10 +18,14 @@ public class TimeEvent : BaseEvent {
 		timeInSeconds = t;
 	}
 	
+	public bool eventSatisfied() {
+		return timeInSeconds <= Time.timeSinceLevelLoad && waveFlag == waveController.waveNumber;
+	}
+	
 	public bool evalCondition() {
 		if (!isSatisfied) {
 //			Debug.Log(timeInSeconds.ToString() + " = " + Time.timeSinceLevelLoad);
-			isSatisfied = (timeInSeconds <= Time.timeSinceLevelLoad);
+			isSatisfied = eventSatisfied();
 //			Debug.Log(isSatisfied.ToString());
 			if (isSatisfied)
 				doAction();
