@@ -9,8 +9,9 @@ public class BeforeWaveEvent : WaveEvent {
 		isSatisfied = false;
 	}
 	
-	public void addCondition(float t) {
+	public void addCondition(int waveNumber, float t) {
 		timeInSeconds = t;
+		base.waveFlag = waveNumber;
 	}
 	
 	public override bool eventSatisfied() {
