@@ -18,10 +18,6 @@ public class PlayerController : MonoBehaviour {
 	public const int MAX_LIFE = 100;
 	private int _life;
 
-	// GUI
-	public Texture2D menu;
-	public Texture2D item;
-
 	// Damage bars
 	private MyTexture2D leftDamage;
 	private MyTexture2D rightDamage;
@@ -32,7 +28,11 @@ public class PlayerController : MonoBehaviour {
 	public bool isDead = false;
 
 	// Audio
+	private AudioSource footstepsAudio;
+	private AudioSource jumpingAudio;
 	private AudioClip[] footsteps;
+	private AudioClip onJumpAudio;
+	private AudioClip onLandAudio;
 	private float footstepInterval = 0.30f;
 	private float footstepTimer;
 
@@ -55,11 +55,18 @@ public class PlayerController : MonoBehaviour {
 		// Player Variables
 		_life = MAX_LIFE;
 
+		AudioSource[] a = GetComponents<AudioSource>();
+		footstepsAudio = a[0];
+		footstepsAudio.volume = 0.25f;
+		jumpingAudio = a[1];
+		
 		_motor = GetComponent<CharacterMotor>();
 		footsteps = new AudioClip[3];
 		footsteps[0] = Resources.Load("Sound/Player/Footstep_Gravel_1") as AudioClip;
 		footsteps[1] = Resources.Load("Sound/Player/Footstep_Gravel_3") as AudioClip;
 		footsteps[2] = Resources.Load("Sound/Player/Footstep_Gravel_4") as AudioClip;
+		onJumpAudio = Resources.Load("Sound/Player/Lilith_jump") as AudioClip;
+		onLandAudio = Resources.Load("Sound/Player/Lilith_land") as AudioClip;
 	}
 
 	void Update() {
@@ -79,22 +86,35 @@ public class PlayerController : MonoBehaviour {
 			}
 		}
 
-//		Debug.Log("Velocity: " + _motor.movement.velocity.magnitude);
-		Debug.Log("Velocity: " + _motor.movement.velocity.x + ", " + _motor.movement.velocity.y + ", " + _motor.movement.velocity.z);
-
-		if (_motor.grounded && (_motor.movement.velocity.x != 0 || _motor.movement.velocity.z != 0)) {
-			if (footstepTimer <= 0) {
-				audio.clip = footsteps[Random.Range(0, footsteps.Length)];
-				audio.Play();
-				footstepTimer = footstepInterval;
+		if (_motor.enabled) {
+			if (_motor.grounded && (_motor.movement.velocity.x != 0 || _motor.movement.velocity.z != 0)) {
+				if (footstepTimer <= 0) {
+					footstepsAudio.clip = footsteps[Random.Range(0, footsteps.Length)];
+					footstepsAudio.Play();
+					footstepTimer = footstepInterval;
+				} else {
+					footstepTimer -= Time.deltaTime;
+				}
 			} else {
-				footstepTimer -= Time.deltaTime;
+				footstepTimer = 0;
 			}
-		} else {
-			footstepTimer = 0;
 		}
 	}
-	
+
+	public void OnJump() {
+		jumpingAudio.PlayOneShot(onJumpAudio);
+	}
+
+	public void OnFall() {
+
+	}
+
+	public void OnLand() {
+		Debug.Log("On Land");
+		jumpingAudio.PlayOneShot(onLandAudio);
+		Debug.Log("Lander");
+	}
+
 	void Die() {
 		respawnCountdown = DEATH_TIME;
 		//transform.rotation = Quaternion.LookRotation(Vector3.up);
@@ -123,7 +143,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void SetEnabled(bool b) {
-		GetComponent<CharacterMotor>().enabled = b;
+		_motor.enabled = b;
 		MouseLook[] mLook = GetComponentsInChildren<MouseLook>();
 		foreach (MouseLook m in mLook) {
 			m.enabled = b;

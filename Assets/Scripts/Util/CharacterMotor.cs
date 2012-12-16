@@ -340,7 +340,7 @@ public class CharacterMotor : MonoBehaviour
                 movement.velocity += movingPlatform.platformVelocity;
             }
 
-            SendMessage("OnFall", SendMessageOptions.DontRequireReceiver);
+            BroadcastMessage("OnFall", SendMessageOptions.DontRequireReceiver);
             // We pushed the character down to ensure it would stay on the ground ifthere was any.
             // But there wasn't so now we cancel the downwards offset to make the fall smoother.
             tr.position += pushDownOffset * Vector3.up;
@@ -352,7 +352,7 @@ public class CharacterMotor : MonoBehaviour
             jumping.jumping = false;
             SubtractNewPlatformVelocity();
 
-            SendMessage("OnLand", SendMessageOptions.DontRequireReceiver);
+            BroadcastMessage("OnLand", SendMessageOptions.DontRequireReceiver);
         }
 
         // Moving platforms support
@@ -528,7 +528,7 @@ public class CharacterMotor : MonoBehaviour
                     velocity += movingPlatform.platformVelocity;
                 }
 
-                SendMessage("OnJump", SendMessageOptions.DontRequireReceiver);
+                BroadcastMessage("OnJump", SendMessageOptions.DontRequireReceiver);
             }
             else
             {
