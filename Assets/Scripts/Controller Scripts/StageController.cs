@@ -19,7 +19,7 @@ public class StageController : MonoBehaviour {
 	private Hashtable bossStages = new Hashtable();
 	private WaveController waveController;
 	private GameController _game;
-	public List<TimeEvent> timeEvents;
+	public List<BeforeWaveEvent> timeEvents;
 	public List<WaveEvent> waveEvents;
 	public int finalWave;
 	
@@ -53,63 +53,63 @@ public class StageController : MonoBehaviour {
 		tenthMessage = false;
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 		waveController = GameObject.Find(" GameController").GetComponentInChildren<WaveController>();
-		timeEvents = new List<TimeEvent>();
+		timeEvents = new List<BeforeWaveEvent>();
 		waveEvents = new List<WaveEvent>();
 		
 		//initialize events here
-		TimeEvent messageEvent = new TimeEvent((float)FIRST_MESSAGE_TIME);
+		/*BeforeWaveEvent messageEvent = new BeforeWaveEvent((float)FIRST_MESSAGE_TIME);
 		Hashtable args = new Hashtable();
 		args[0] = this;
 		messageEvent.addAction(receiveFirstMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//second event
-		messageEvent = new TimeEvent((float)SECOND_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)SECOND_MESSAGE_TIME);
 		messageEvent.addAction(receiveSecondMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//third event
-		messageEvent = new TimeEvent((float)THIRD_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)THIRD_MESSAGE_TIME);
 		messageEvent.addAction(receiveThirdMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//fourth-a event
-		messageEvent = new TimeEvent((float)FOURTH_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)FOURTH_MESSAGE_TIME);
 		messageEvent.addAction(incomingEnemyMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//fourth-b event
-		messageEvent = new TimeEvent((float)FOURTH_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)FOURTH_MESSAGE_TIME);
 		messageEvent.addAction(receiveFourthMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//fifth event
-		messageEvent = new TimeEvent((float)FIFTH_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)FIFTH_MESSAGE_TIME);
 		messageEvent.addAction(receiveFifthMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 
 		//sixth event
-		messageEvent = new TimeEvent((float)SIXTH_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)SIXTH_MESSAGE_TIME);
 		messageEvent.addAction(receiveSixthMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//seventh event
-		messageEvent = new TimeEvent((float)SEVENTH_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)SEVENTH_MESSAGE_TIME);
 		messageEvent.addAction(receiveSeventhMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//eigth event
-		messageEvent = new TimeEvent((float)EIGTH_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)EIGTH_MESSAGE_TIME);
 		messageEvent.addAction(receiveEigthMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//ninth event
-		messageEvent = new TimeEvent((float)NINTH_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)NINTH_MESSAGE_TIME);
 		messageEvent.addAction(receiveNinthMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
 		//tenth event
-		messageEvent = new TimeEvent((float)TENTH_MESSAGE_TIME);
+		messageEvent = new BeforeWaveEvent((float)TENTH_MESSAGE_TIME);
 		messageEvent.addAction(receiveTenthMessage, args);
 		timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		
@@ -121,7 +121,7 @@ public class StageController : MonoBehaviour {
 		//change skybox when you're halfway through the game
 		waveEvent = new WaveEvent(FINAL_WAVE / 2);
 		waveEvent.addAction(newSkybox, args);
-		waveEvents.Add(waveEvent);
+		waveEvents.Add(waveEvent);*/
 		
 	}
 	
@@ -136,7 +136,7 @@ public class StageController : MonoBehaviour {
 		s.material = Resources.Load("Skyboxes/Skybox5", typeof(Material)) as Material;
 	}
 	
-	public static void receiveFirstMessage(Hashtable args) {
+	/*public static void receiveFirstMessage(Hashtable args) {
 		StageController s = args[0] as StageController;
 		s.firstMessage = true;
 	}
@@ -202,7 +202,7 @@ public class StageController : MonoBehaviour {
 	public static void receive11thMessage(Hashtable args) {
 		StageController s = args[0] as StageController;
 		s.eleventhMessage = true;
-	}
+	}*/
 	
 	public void OnGUI() {
 		GUI.skin = Resources.Load("Skins/DialogSkin") as GUISkin;
@@ -211,7 +211,7 @@ public class StageController : MonoBehaviour {
 		const float DIALOG_BOX_HEIGHT = 128;
 		Rect upperCenterRect = new Rect((Screen.width - DIALOG_BOX_WIDTH) / 2, (Screen.height - DIALOG_BOX_HEIGHT) / 2 - 50, DIALOG_BOX_WIDTH, DIALOG_BOX_HEIGHT);
 		
-		if (!tutorialDone) {
+		/*if (!tutorialDone) {
 			if (firstMessage) {
 				GUI.Box(upperCenterRect, "Dr. Pierce:\n" + "Good morning. I see you're taking well to the new suit." +
 					"You'll notice some changes to the UI since you last stepped into it," +
@@ -368,7 +368,7 @@ public class StageController : MonoBehaviour {
 
 	}
 
-	public void endMessage() {
+	/*public void endMessage() {
 		_game.Messenger.HUDMessage("PRIORITY TRANSMISSION.", 3f);
 		showFinalTransmission = true;
 	}
@@ -381,17 +381,17 @@ public class StageController : MonoBehaviour {
 		waveHasStarted = false;
 		lastMessageTime = Time.timeSinceLevelLoad + 5f;
 		if (lastMessageTime > 0) {
-			TimeEvent messageEvent = new TimeEvent((float)lastMessageTime + 2);
+			BeforeWaveEvent messageEvent = new BeforeWaveEvent((float)lastMessageTime + 2);
 			Hashtable args = new Hashtable();
 			args[0] = this;
 			messageEvent.addAction(receive11thMessage, args);
 			timeEvents.Add(messageEvent); //don't forget to add it to the list!
 		}
-	}
+	}*/
 	
 	public void listenForEvents() {
 		//this needs garbage collection
-		foreach (TimeEvent t in timeEvents) {
+		foreach (BeforeWaveEvent t in timeEvents) {
 			if (!t.isSatisfied) { //minor optimization... I really need to find a way to really optimize this
 				t.evalCondition();
 			}
