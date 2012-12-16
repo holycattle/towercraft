@@ -6,9 +6,13 @@ public class Tank : SpawnScheme {
 	// -Doesnt seem to make much of a difference.
 	public const int DIST_TO_KILL = 64;
 
+	//
+	public const float LEVELCONST_MULT = 1.0f;
+
 	// Number of mobs to spawn
 	public const int MOBCOUNT_MIN = 12;
 	public const int MOBCOUNT_MAX = 40;
+	public const int MOBCOUNT_MEDIAN = (int)((MOBCOUNT_MIN + MOBCOUNT_MAX) / 2);
 
 	// Health Multiplier
 	public const float HEALTHMULT_MIN = 0.6f;
@@ -16,15 +20,15 @@ public class Tank : SpawnScheme {
 
 	// Number of Bases to Drop Per Wave
 	public const int BASESDROP_MIN = 2;
-	public const int BASESDROP_MAX = 6;
+	public const int BASESDROP_MAX = 4;
 
 	// Number of Turrets to Drop Per Wave
 	public const int TURRETDROP_MIN = 1;
-	public const int TURRETDROP_MAX = 3;
+	public const int TURRETDROP_MAX = 1;
 
 	// Number of Weapons to Drop Per Wave
 	public const int WEAPONDROP_MIN = 1;
-	public const int WEAPONDROP_MAX = 2;
+	public const int WEAPONDROP_MAX = 1;
 
 	// Number of Craftable Parts to Drop Per Wave
 	public const int CRAFTDROP_MIN = 4;
@@ -83,22 +87,24 @@ public class Tank : SpawnScheme {
 		Debug.Log("Drops: " + droppables[0] + "/" + droppables[1] + "/" + droppables[2] + "/" + droppables[3]);
 		Item[][] drops = new Item[numMobs][];
 
+		float itemLevel = waveNumber * LEVELCONST_MULT + WaveController.WAVESTART_PERMOB_COST;
+
 		int mobNumber;	// Which mob is going to drop the item
 		for (int dropCounter = 0; dropCounter < droppables.Length; dropCounter++) {
 			for (int i = 0; i < droppables[dropCounter]; i++) {
 				Item toDrop = null;
 				switch (dropCounter) {
 					case BASEDROP:
-						toDrop = new TowerItem(BaseTower.TOWER_BASE, waveNumber);
+						toDrop = new TowerItem(BaseTower.TOWER_BASE, itemLevel);
 						break;
 					case TURRETDROP:
-						toDrop = new TowerItem(BaseTower.TOWER_TURRET, waveNumber);
+						toDrop = new TowerItem(BaseTower.TOWER_TURRET, itemLevel);
 						break;
 					case WEAPONDROP:
-						toDrop = WeaponItem.RandomItem(waveNumber);
+						toDrop = WeaponItem.RandomItem(itemLevel);
 						break;
 					case CRAFTDROP:
-						toDrop = new CraftableItem(waveNumber);
+						toDrop = new CraftableItem(itemLevel);
 						break;
 				}
 

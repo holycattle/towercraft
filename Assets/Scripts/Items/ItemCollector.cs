@@ -91,30 +91,33 @@ public class ItemCollector : MonoBehaviour {
 
 		// Deactivate Messenger: So there aren't any messages
 		_game.Messenger.enabled = false;
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(1, 1));
-		Pickup(new TowerItem(1, 1));
-		Pickup(new TowerItem(1, 1));
-		Pickup(new TowerItem(1, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
-		Pickup(new TowerItem(0, 1));
+		float level = ((float)WaveController.WAVESTART_COST / Tank.MOBCOUNT_MEDIAN) * 1.5f;
+		Pickup(new TowerItem(0, level));
+		Pickup(new TowerItem(0, level));
+		Pickup(new TowerItem(0, level));
+		Pickup(new TowerItem(0, level));
+		Pickup(new TowerItem(0, level));
+		Pickup(new TowerItem(0, level));
+		Pickup(new TowerItem(1, level));
+		Pickup(new TowerItem(1, level));
+//		Pickup(new TowerItem(1, 1));
+//		Pickup(new TowerItem(1, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
+//		Pickup(new TowerItem(0, 1));
 
 //		Pickup(new CraftableItem(0, 1));
 //		Pickup(new CraftableItem(1, 1));
@@ -159,6 +162,33 @@ public class ItemCollector : MonoBehaviour {
 				SetInventoryOpen(_game.ActiveMenu == Menu.Inventory);
 
 				SetActiveInventory(INV_TOWER);
+			}
+
+			if (Input.GetKeyDown(KeyCode.F8)) {
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(1, 1));
+				Pickup(new TowerItem(1, 1));
+				Pickup(new TowerItem(1, 1));
+				Pickup(new TowerItem(1, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
+				Pickup(new TowerItem(0, 1));
 			}
 		}
 	}
@@ -286,7 +316,7 @@ public class ItemCollector : MonoBehaviour {
 			s += "\n";
 		}
 
-		int level = craftingRecipe[0].Level;
+		float level = craftingRecipe[0].Level;
 		foreach (CraftableItem i in craftingRecipe) {
 			if (i.Level != level) {
 				s += "Varying Levels in Parts Detected.\nStats may vary.";

@@ -191,7 +191,7 @@ public class ComponentGenerator {
 		return t;
 	}
 
-	public TowerComponent GenerateComponent(int type, int level) {
+	public TowerComponent GenerateComponent(int type, float level) {
 		if (type < 0 || type >= BaseTower.TOWER_COMPLETE)
 			return null;
 
@@ -244,7 +244,8 @@ public class ComponentGenerator {
 
 			// Determine DPS for the current level
 //			float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_DPSMULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);
-			float dps = 15;
+//			float dps = 15;
+			float dps = SpawnScheme.DPS_CONSTANT * level;
 			float DPSMULT = 2f;
 
 //			// Add Status Ailment

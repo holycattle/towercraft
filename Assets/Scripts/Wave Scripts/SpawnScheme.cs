@@ -7,12 +7,9 @@ public class SpawnScheme {
 	// DPS Constant
 	public const float DPS_CONSTANT = 5;
 
-	// Other
-	private const int INTERVAL_COEFF = 7;
-
-	// moveSpeed range - to be tweaked later on
-	public const int MIN_SPEED = 4;
-	public const int MAX_SPEED = 18;
+	// Movespeed Range
+	public const int MIN_SPEED = 8;
+	public const int MAX_SPEED = 24;
 
 	//maxHealth coefficient and multiplier
 	public const int HEALTH_COEFF = 200; 			//this determines the scale of the HP
@@ -82,14 +79,6 @@ public class SpawnScheme {
 			return MobType.Speedster;
 	}
 
-	public int GetINTERVAL_COEFF {
-		get { return INTERVAL_COEFF; }
-	}
-	
-	public float GetTimeSinceLastSpawn {
-		get { return _timeSinceLastSpawn; }
-	}
-	
 	public LevelController getLevelController() {
 		return _levelController;
 	}

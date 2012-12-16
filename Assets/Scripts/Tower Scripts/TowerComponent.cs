@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class TowerComponent : MonoBehaviour {
 	public string componentName;
 	public int componentType;
-	public int level;
+	public float level;
 
 	protected virtual void Awake() {
 	}

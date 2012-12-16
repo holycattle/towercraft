@@ -11,7 +11,7 @@ public class TowerItem : Item {
 		_tc = ComponentGenerator.Get().GenerateComponent(Random.Range(0, BaseTower.TOWER_COMPLETE), 0);
 	}
 
-	public TowerItem (int i, int cost) : base(ITEM_TOWER) {
+	public TowerItem (int i, float cost) : base(ITEM_TOWER) {
 		_tc = ComponentGenerator.Get().GenerateComponent(i, cost);
 	}
 

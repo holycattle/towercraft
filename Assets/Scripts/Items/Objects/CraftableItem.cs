@@ -12,14 +12,14 @@ public class CraftableItem : Item {
 	// Values
 	public string craftableName;
 	private int _type;		// Type of Craftable Item
-	private int _level;
+	private float _level;
 	private float _stat = 0;	// Modifier Value
 	private string _tooltip;
 
-	public CraftableItem (int level) : this(Random.Range(0, PART_MAX), level) {
+	public CraftableItem (float level) : this(Random.Range(0, PART_MAX), level) {
 	}
 
-	public CraftableItem (int type, int level) : base(ITEM_CRAFT) {
+	public CraftableItem (int type, float level) : base(ITEM_CRAFT) {
 		_type = type;
 		_level = level;
 
@@ -70,7 +70,7 @@ public class CraftableItem : Item {
 		get { return _stat; }
 	}
 
-	public int Level {
+	public float Level {
 		get { return _level; }
 	}
 

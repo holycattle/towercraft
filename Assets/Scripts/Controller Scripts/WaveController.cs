@@ -14,12 +14,11 @@ public class WaveController : MonoBehaviour {
 	private const string SPEEDSTER_NAME = "Speedster";
 	private const string CREEPLING_NAME = "Creepling";
 	private const string TANK_NAME = "Tank";
-	private const int MIN_SPEED = 2;
-	private const int MAX_SPEED = 12;
-	private const int WAVESTART_COST = 128;
-	private const float WAVE_INCREASE = 1.0f;
-	private const int WAVE_INTERVAL = 60; // In seconds
-	
+	public const float WAVESTART_COST = 64;
+	public const float WAVESTART_PERMOB_COST = (float)WAVESTART_COST / Tank.MOBCOUNT_MEDIAN;
+	public const float WAVE_INCREASE = 1.25f;
+	public const int WAVE_INTERVAL = 60; // In seconds
+
 	public int incomingWave;
 	public int incomingWaveResistanceType;
 	public GameObject[] mobs; // Mobs to choose from.
@@ -28,7 +27,7 @@ public class WaveController : MonoBehaviour {
 	private LevelController _gameController;
 	private SpawnScheme _spawnScheme;		// Current Wave Scheme
 	public int _waveNumber;
-	private int _nextWaveCost;
+	private float _nextWaveCost;
 	public float _timeTillNextWave;
 	public bool _waveActive;
 
@@ -76,34 +75,19 @@ public class WaveController : MonoBehaviour {
 		}
 	}
 	
-	public int GetMIN_SPEED {
-		get { return MIN_SPEED;}
-	}
-	
-	public int GetMAX_SPEED {
-		get { return MAX_SPEED;}
-	}
-	
-	public int GetMED_SPEED { //get median speed
-		get { return MAX_SPEED / MIN_SPEED;}
-	}
-	
-	private int determineEnemyType(int moveSpeed) {
-		if (moveSpeed >= GetMIN_SPEED && moveSpeed < GetMIN_SPEED + 3) {
-			return TANK;
-		} else if (moveSpeed >= GetMIN_SPEED + 3 && moveSpeed < GetMIN_SPEED + 6) {
-			return CREEPLING;
-		} else
-			return SPEEDSTER;
-	}
+//	private int determineEnemyType(int moveSpeed) {
+//		if (moveSpeed >= GetMIN_SPEED && moveSpeed < GetMIN_SPEED + 3) {
+//			return TANK;
+//		} else if (moveSpeed >= GetMIN_SPEED + 3 && moveSpeed < GetMIN_SPEED + 6) {
+//			return CREEPLING;
+//		} else
+//			return SPEEDSTER;
+//	}
 
 	private void NextWave() {
 //		Debug.Log("Creating new: P2K = " + ComponentGenerator.Get().PASSESTOKILL);
 
 		_waveNumber++;
-		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
-		_waveActive = true;
-
 		// Create the Spawn Scheme
 		switch (incomingWave) {
 			case TANK:
@@ -122,13 +106,14 @@ public class WaveController : MonoBehaviour {
 		ComponentGenerator.Get().PASSESTOKILL += PASSESTOKILL_ADDER;
 		PASSESTOKILL_ADDER *= PASSESTOKILL_ADDER_GROWVALUE;
 
+		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
+		_waveActive = true;
 
 		// Clear all items from the stage
 		GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
 		foreach (GameObject i in items) {
 			Destroy(i);
 		}
-
 	}
 	
 	public int waveNumber {

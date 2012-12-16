@@ -11,7 +11,7 @@ public class WeaponDPSItem : WeaponItem {
 	public int energyConsumption;
 	public GameObject statusEffect;
 
-	public WeaponDPSItem (int level) : base(DPS) {
+	public WeaponDPSItem (float level) : base(DPS) {
 		weaponName = "";
 
 		float dps = (SpawnScheme.HEALTH_COEFF * (1 + level * SpawnScheme.HEALTH_MULTIPLIER)) / ((BaseTower.BASE_RANGE * 2) * PASSESTOKILL);

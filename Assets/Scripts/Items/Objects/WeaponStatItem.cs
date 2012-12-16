@@ -9,8 +9,8 @@ public class WeaponStatItem : WeaponItem {
 	public float range;
 	public float reloadTime;
 
-	public WeaponStatItem (int cost) : base(STAT) {
-		magSize = Random.Range(16, 16 + cost * 10);
+	public WeaponStatItem (float cost) : base(STAT) {
+		magSize = (int)Random.Range(16, 16 + cost * 10);
 		reloadTime = ((magSize - 14f) / (cost * 10f)) * 4f;
 		range = 64;
 

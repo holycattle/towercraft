@@ -22,7 +22,7 @@ public class WeaponItem : Item {
 		return weaponName;
 	}
 
-	public static WeaponItem RandomItem(int level) {
+	public static WeaponItem RandomItem(float level) {
 		if (Random.Range(0, 2) == 0) {
 			return new WeaponDPSItem(level);
 		} else {

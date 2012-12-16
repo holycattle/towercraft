@@ -227,6 +227,8 @@ public class Weapon : GameTool {
 		}
 		// Start Reload Timer
 		_reloadCounter = reloadTime;
+
+		SendMessageUpwards("OnReload", SendMessageOptions.DontRequireReceiver);
 	}
 	
 	public int Ammo {

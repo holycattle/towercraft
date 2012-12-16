@@ -30,9 +30,11 @@ public class PlayerController : MonoBehaviour {
 	// Audio
 	private AudioSource footstepsAudio;
 	private AudioSource jumpingAudio;
+	private AudioSource voiceAudio;
 	private AudioClip[] footsteps;
 	private AudioClip onJumpAudio;
 	private AudioClip onLandAudio;
+	private AudioClip onOutOfAmmo;
 	private float footstepInterval = 0.30f;
 	private float footstepTimer;
 
@@ -59,14 +61,17 @@ public class PlayerController : MonoBehaviour {
 		footstepsAudio = a[0];
 		footstepsAudio.volume = 0.25f;
 		jumpingAudio = a[1];
+		voiceAudio = a[2];
+
 		
 		_motor = GetComponent<CharacterMotor>();
 		footsteps = new AudioClip[3];
-		footsteps[0] = Resources.Load("Sound/Player/Footstep_Gravel_1") as AudioClip;
-		footsteps[1] = Resources.Load("Sound/Player/Footstep_Gravel_3") as AudioClip;
-		footsteps[2] = Resources.Load("Sound/Player/Footstep_Gravel_4") as AudioClip;
+		footsteps[0] = Resources.Load("Sound/Player/foot_1") as AudioClip;
+		footsteps[1] = Resources.Load("Sound/Player/foot_2") as AudioClip;
+		footsteps[2] = Resources.Load("Sound/Player/foot_3") as AudioClip;
 		onJumpAudio = Resources.Load("Sound/Player/Lilith_jump") as AudioClip;
 		onLandAudio = Resources.Load("Sound/Player/Lilith_land") as AudioClip;
+		onOutOfAmmo = Resources.Load("Sound/Player/Lilith_outofammo") as AudioClip;
 	}
 
 	void Update() {
@@ -110,9 +115,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void OnLand() {
-		Debug.Log("On Land");
 		jumpingAudio.PlayOneShot(onLandAudio);
-		Debug.Log("Lander");
+	}
+
+	public void OnReload() {
+		voiceAudio.PlayOneShot(onOutOfAmmo);
 	}
 
 	void Die() {
