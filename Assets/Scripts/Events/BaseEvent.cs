@@ -2,13 +2,29 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-public class BaseEvent {	
+public interface IEvent {
+	bool eventSatisfied();
+	bool evalCondition();
+	void addCondition();
+}
+
+public class BaseEvent : IEvent {	
 	public Action<Hashtable> actionFunction;
 	Hashtable actionFunctionArgs = new Hashtable();
 	public bool isSatisfied;
 	
 	public BaseEvent() {
 		isSatisfied = false;
+	}
+	
+	public virtual void addCondition() {}
+	
+	public virtual bool eventSatisfied() {
+		return false;
+	}
+	
+	public virtual bool evalCondition() {
+		return false;
 	}
 	
 	public virtual void addAction(Action<Hashtable> actionFunction, Hashtable actArg) {
