@@ -15,6 +15,6 @@ public class BeforeWaveEvent : WaveEvent {
 	}
 	
 	public override bool eventSatisfied() {
-		return timeInSeconds <= Time.timeSinceLevelLoad && waveFlag == waveController.waveNumber;
+		return waveController._timeTillNextWave <= waveController._timeTillNextWave - timeInSeconds && waveFlag == waveController.waveNumber;
 	}
 }
