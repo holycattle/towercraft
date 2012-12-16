@@ -28,6 +28,7 @@ public class WaveController : MonoBehaviour {
 	private SpawnScheme _spawnScheme;		// Current Wave Scheme
 	public int _waveNumber;
 	private float _nextWaveCost;
+	private float _maxWaveCost; //used to calculate percentage of waveCost left
 	public float _timeTillNextWave;
 	public bool _waveActive;
 
@@ -107,6 +108,7 @@ public class WaveController : MonoBehaviour {
 		PASSESTOKILL_ADDER *= PASSESTOKILL_ADDER_GROWVALUE;
 
 		_nextWaveCost = (int)(_nextWaveCost * WAVE_INCREASE);
+		_maxWaveCost = _nextWaveCost;
 		_waveActive = true;
 
 		// Clear all items from the stage
@@ -154,5 +156,9 @@ public class WaveController : MonoBehaviour {
 	
 	public int TimeTillNextWavex100 {
 		get { return (int)(_timeTillNextWave * 100); }
+	}
+	
+	public float waveCostPercentage() {
+		return _nextWaveCost / _maxWaveCost;
 	}
 }
