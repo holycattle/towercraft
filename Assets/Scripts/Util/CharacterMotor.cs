@@ -212,17 +212,26 @@ public class CharacterMotor : MonoBehaviour
 		//	- Modified by Josh
 
 		if (Input.GetButtonDown("Sprint")) {
-			_movementType = MOVE_SPRINT;
-			movement.maxSpeedMultiplier = SPRINT_MULT;
+			if (_movementType != MOVE_SPRINT) {
+				_movementType = MOVE_SPRINT;
+				movement.maxSpeedMultiplier = SPRINT_MULT;
+				BroadcastMessage("OnStartSprint", SendMessageOptions.DontRequireReceiver);
+			}
 		} else if (Input.GetButtonDown("Crouch")) {
-			_movementType = MOVE_CROUCH;
-			movement.maxSpeedMultiplier = CROUCH_MULT;
+			if (_movementType != MOVE_CROUCH) {
+				_movementType = MOVE_CROUCH;
+				movement.maxSpeedMultiplier = CROUCH_MULT;
+				BroadcastMessage("OnStartCrouch", SendMessageOptions.DontRequireReceiver);
+			}
 		}
 
 		if (Input.GetButton("Vertical") || Input.GetButton("Horizontal")) {
 		} else {
-			_movementType = MOVE_RUN;
-			movement.maxSpeedMultiplier = 1.0f;
+			if (_movementType != MOVE_RUN) {
+				_movementType = MOVE_RUN;
+				movement.maxSpeedMultiplier = 1.0f;
+				BroadcastMessage("OnStartRun", SendMessageOptions.DontRequireReceiver);
+			}
 		}
 
 		// Get the input vector from kayboard or analog stick

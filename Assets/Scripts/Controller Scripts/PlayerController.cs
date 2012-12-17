@@ -106,6 +106,18 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	public void OnStartSprint() {
+		Debug.Log("SPRINT");
+	}
+
+	public void OnStartRun() {
+		Debug.Log("RUN");
+	}
+
+	public void OnStartCrouch() {
+		Debug.Log("CROUCH");
+	}
+
 	public void OnJump() {
 		jumpingAudio.PlayOneShot(onJumpAudio);
 	}
@@ -124,8 +136,6 @@ public class PlayerController : MonoBehaviour {
 
 	void Die() {
 		respawnCountdown = DEATH_TIME;
-		//transform.rotation = Quaternion.LookRotation(Vector3.up);
-		//move to minimap camera mode
 		_overviewCamera.SetOverviewCamera(true);
 		isDead = true;
 	}
@@ -144,8 +154,6 @@ public class PlayerController : MonoBehaviour {
 		if (timeLeft > 0) {
 			leftDamage.DrawMe();
 			rightDamage.DrawMe();
-//			GUI.DrawTexture(leftDmgBox, leftDamage);
-//			GUI.DrawTexture(rightDmgBox, rightDamage);
 		}
 	}
 
