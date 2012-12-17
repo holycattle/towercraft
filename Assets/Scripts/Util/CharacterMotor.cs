@@ -25,6 +25,14 @@ public class CharacterMotor : MonoBehaviour
     [System.NonSerialized]
     public bool inputJump = false;
 
+	// [JOSH] Movement Variables
+	public const int MOVE_RUN = 0;
+	public const int MOVE_SPRINT = 1;
+	public const int MOVE_CROUCH = 2;
+	public const float SPRINT_MULT = 1.4f;
+	public const float CROUCH_MULT = 0.6f;
+	private int _movementType = 0;
+
     [System.Serializable]
     public class CharacterMotorMovement
     {
@@ -33,7 +41,10 @@ public class CharacterMotor : MonoBehaviour
         public float maxSidewaysSpeed = 2.0f;
         public float maxBackwardsSpeed = 2.0f;
 
-        // Curve for multiplying speed based on slope(negative = downwards)
+		// [JOSH ADDED] Speed Multiplier
+		public float maxSpeedMultiplier = 1.0f;
+
+		// Curve for multiplying speed based on slope(negative = downwards)
         public AnimationCurve slopeSpeedMultiplier = new AnimationCurve(new Keyframe(-90, 1), new Keyframe(0, 1), new Keyframe(90, 0));
 
         // How fast does the character change speeds?  Higher is faster.
@@ -196,9 +207,23 @@ public class CharacterMotor : MonoBehaviour
         tr = transform;
     }
 
-    private void UpdateFunction()
-    {
+    private void UpdateFunction() {
 		// ---- From FPSInputController ----
+		//	- Modified by Josh
+
+		if (Input.GetButtonDown("Sprint")) {
+			_movementType = MOVE_SPRINT;
+			movement.maxSpeedMultiplier = SPRINT_MULT;
+		} else if (Input.GetButtonDown("Crouch")) {
+			_movementType = MOVE_CROUCH;
+			movement.maxSpeedMultiplier = CROUCH_MULT;
+		}
+
+		if (Input.GetButton("Vertical") || Input.GetButton("Horizontal")) {
+		} else {
+			_movementType = MOVE_RUN;
+			movement.maxSpeedMultiplier = 1.0f;
+		}
 
 		// Get the input vector from kayboard or analog stick
         Vector3 directionVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -224,8 +249,7 @@ public class CharacterMotor : MonoBehaviour
         // Apply the direction to the CharacterMotor
         inputMoveDirection = transform.rotation * directionVector;
         inputJump = Input.GetButton("Jump");
-		
-		
+
 		// ---- Original Character Motor ----
 		
 		
@@ -613,9 +637,15 @@ public class CharacterMotor : MonoBehaviour
     {
         // Maximum acceleration on ground and in air
         if(grounded)
-            return movement.maxGroundAcceleration;
+			// [JOSH ADDED]
+			//	Ground Acceleration must be scaled with movescale, otherwise you will slide.
+            return movement.maxGroundAcceleration * movement.maxSpeedMultiplier;
+//            return movement.maxGroundAcceleration;
         else
-            return movement.maxAirAcceleration;
+			// [JOSH ADDED]
+			//	Ground Acceleration must be scaled with movescale, otherwise you will slide.
+            return movement.maxAirAcceleration * movement.maxSpeedMultiplier;
+//            return movement.maxAirAcceleration;
     }
 
     float CalculateJumpVerticalSpeed(float targetJumpHeight)
@@ -671,6 +701,9 @@ public class CharacterMotor : MonoBehaviour
             float zAxisEllipseMultiplier = (desiredMovementDirection.z > 0 ? movement.maxForwardSpeed : movement.maxBackwardsSpeed) / movement.maxSidewaysSpeed;
             Vector3 temp = new Vector3(desiredMovementDirection.x, 0, desiredMovementDirection.z / zAxisEllipseMultiplier).normalized;
             float length = new Vector3(temp.x, 0, temp.z * zAxisEllipseMultiplier).magnitude * movement.maxSidewaysSpeed;
+
+			// [JOSH ADDED] Speed Multiplier
+			length *= movement.maxSpeedMultiplier;
             return length;
         }
     }

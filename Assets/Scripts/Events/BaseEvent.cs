@@ -7,7 +7,7 @@ public class BaseEvent {
 	Hashtable actionFunctionArgs = new Hashtable();
 	public bool isSatisfied;
 	
-	public BaseEvent() {
+	public BaseEvent () {
 		isSatisfied = false;
 	}
 	
@@ -16,10 +16,10 @@ public class BaseEvent {
 	}
 	
 	public virtual bool evalCondition() {
-		if(!isSatisfied) {
+		if (!isSatisfied) {
 			isSatisfied = eventSatisfied();
 			
-			if(isSatisfied)
+			if (isSatisfied)
 				doAction();
 		}
 			

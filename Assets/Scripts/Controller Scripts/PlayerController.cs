@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour {
 				if (footstepTimer <= 0) {
 					footstepsAudio.clip = footsteps[Random.Range(0, footsteps.Length)];
 					footstepsAudio.Play();
-					footstepTimer = footstepInterval;
+					footstepTimer = footstepInterval / _motor.movement.maxSpeedMultiplier;
 				} else {
 					footstepTimer -= Time.deltaTime;
 				}
