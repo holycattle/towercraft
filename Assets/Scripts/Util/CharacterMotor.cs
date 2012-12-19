@@ -29,9 +29,10 @@ public class CharacterMotor : MonoBehaviour
 	public const int MOVE_RUN = 0;
 	public const int MOVE_SPRINT = 1;
 	public const int MOVE_CROUCH = 2;
-	public const float SPRINT_MULT = 1.4f;
-	public const float CROUCH_MULT = 0.6f;
-	private int _movementType = 0;
+	private static string[] MOVE_STARTFUNC = {"OnStartRun", "OnStartSprint", "OnStartCrouch"};
+	private static string[] MOVE_ENDFUNC = {"OnEndRun", "OnEndSprint", "OnEndCrouch"};
+	private static float[] MOVE_MULTIPLIERS = {1, 1.8f, 0.4f};
+	private int _movementMode = 0;
 
     [System.Serializable]
     public class CharacterMotorMovement
@@ -42,7 +43,7 @@ public class CharacterMotor : MonoBehaviour
         public float maxBackwardsSpeed = 2.0f;
 
 		// [JOSH ADDED] Speed Multiplier
-		public float maxSpeedMultiplier = 1.0f;
+		public float speedMultiplier = 1.0f;
 
 		// Curve for multiplying speed based on slope(negative = downwards)
         public AnimationCurve slopeSpeedMultiplier = new AnimationCurve(new Keyframe(-90, 1), new Keyframe(0, 1), new Keyframe(90, 0));
@@ -207,38 +208,46 @@ public class CharacterMotor : MonoBehaviour
         tr = transform;
     }
 
+	public void SwitchMovementMode(int mode) {
+		if (!(mode >= MOVE_RUN && mode <= MOVE_CROUCH))
+			return;
+
+		if (_movementMode == mode) {
+		} else {
+			BroadcastMessage(MOVE_ENDFUNC[_movementMode], SendMessageOptions.DontRequireReceiver);
+			BroadcastMessage(MOVE_STARTFUNC[mode], SendMessageOptions.DontRequireReceiver);
+			_movementMode = mode;
+			movement.speedMultiplier = MOVE_MULTIPLIERS[mode];
+		}
+	}
+
     private void UpdateFunction() {
 		// ---- From FPSInputController ----
 		//	- Modified by Josh
 
 		if (Input.GetButtonDown("Sprint")) {
-			if (_movementType != MOVE_SPRINT) {
-				_movementType = MOVE_SPRINT;
-				movement.maxSpeedMultiplier = SPRINT_MULT;
-				BroadcastMessage("OnStartSprint", SendMessageOptions.DontRequireReceiver);
+			if (_movementMode == MOVE_SPRINT) {
+				SwitchMovementMode(MOVE_RUN);
+			} else {
+				SwitchMovementMode(MOVE_SPRINT);
 			}
 		} else if (Input.GetButtonDown("Crouch")) {
-			if (_movementType != MOVE_CROUCH) {
-				_movementType = MOVE_CROUCH;
-				movement.maxSpeedMultiplier = CROUCH_MULT;
-				BroadcastMessage("OnStartCrouch", SendMessageOptions.DontRequireReceiver);
+			if (_movementMode == MOVE_CROUCH) {
+				SwitchMovementMode(MOVE_RUN);
+			} else {
+				SwitchMovementMode(MOVE_CROUCH);
 			}
 		}
 
 		if (Input.GetButton("Vertical") || Input.GetButton("Horizontal")) {
 		} else {
-			if (_movementType != MOVE_RUN) {
-				_movementType = MOVE_RUN;
-				movement.maxSpeedMultiplier = 1.0f;
-				BroadcastMessage("OnStartRun", SendMessageOptions.DontRequireReceiver);
-			}
+			SwitchMovementMode(MOVE_RUN);
 		}
 
 		// Get the input vector from kayboard or analog stick
         Vector3 directionVector = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        if (directionVector != Vector3.zero)
-        {
+        if (directionVector != Vector3.zero) {
             // Get the length of the directon vector and then normalize it
             // Dividing by the length is cheaper than normalizing when we already have the length anyway
             float directionLength = directionVector.magnitude;
@@ -260,7 +269,7 @@ public class CharacterMotor : MonoBehaviour
         inputJump = Input.GetButton("Jump");
 
 		// ---- Original Character Motor ----
-		
+
 		
         // We copy the actual velocity into a temporary variable that we can manipulate.
         Vector3 velocity = movement.velocity;
@@ -648,12 +657,12 @@ public class CharacterMotor : MonoBehaviour
         if(grounded)
 			// [JOSH ADDED]
 			//	Ground Acceleration must be scaled with movescale, otherwise you will slide.
-            return movement.maxGroundAcceleration * movement.maxSpeedMultiplier;
+            return movement.maxGroundAcceleration * movement.speedMultiplier;
 //            return movement.maxGroundAcceleration;
         else
 			// [JOSH ADDED]
 			//	Ground Acceleration must be scaled with movescale, otherwise you will slide.
-            return movement.maxAirAcceleration * movement.maxSpeedMultiplier;
+            return movement.maxAirAcceleration * movement.speedMultiplier;
 //            return movement.maxAirAcceleration;
     }
 
@@ -712,7 +721,7 @@ public class CharacterMotor : MonoBehaviour
             float length = new Vector3(temp.x, 0, temp.z * zAxisEllipseMultiplier).magnitude * movement.maxSidewaysSpeed;
 
 			// [JOSH ADDED] Speed Multiplier
-			length *= movement.maxSpeedMultiplier;
+			length *= movement.speedMultiplier;
             return length;
         }
     }

@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour {
 				if (footstepTimer <= 0) {
 					footstepsAudio.clip = footsteps[Random.Range(0, footsteps.Length)];
 					footstepsAudio.Play();
-					footstepTimer = footstepInterval / _motor.movement.maxSpeedMultiplier;
+					footstepTimer = footstepInterval / _motor.movement.speedMultiplier;
 				} else {
 					footstepTimer -= Time.deltaTime;
 				}
@@ -107,15 +107,15 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void OnStartSprint() {
-		Debug.Log("SPRINT");
+//		Debug.Log("SPRINT");
 	}
 
 	public void OnStartRun() {
-		Debug.Log("RUN");
+//		Debug.Log("RUN");
 	}
 
 	public void OnStartCrouch() {
-		Debug.Log("CROUCH");
+//		Debug.Log("CROUCH");
 	}
 
 	public void OnJump() {

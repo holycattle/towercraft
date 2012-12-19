@@ -10,11 +10,11 @@ public class GameTool : MonoBehaviour {
 	protected const float DEFAULT_recoilRecovery = 0.025f;	 			// 0 = Instant Recovery, 1 = No Recovery. Domain: [0, 1]
 	protected const float DEFAULT_recoilAmount = 0.4f;				// 0 = No Recoil, 1 = Instant Max Recoil. Domain: [0, 1]
 
-
 	// Objects
 	protected GameController _game;
 	protected WeaponController _weapon;
 	protected LevelController _level;
+	protected CharacterMotor _motor;
 
 	// GUI Elements
 	private int[] X_OFFSET = {-1, 1, 1, -1};
@@ -35,9 +35,10 @@ public class GameTool : MonoBehaviour {
 	private Vector3 basePosition;
 
 	protected virtual void Awake() {
-		_weapon = GameObject.Find("Player").GetComponentInChildren<WeaponController>();
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
+		_weapon = transform.root.GetComponentInChildren<WeaponController>();
+		_motor = transform.root.GetComponentInChildren<CharacterMotor>();
 	}
 
 	protected virtual void Start() {

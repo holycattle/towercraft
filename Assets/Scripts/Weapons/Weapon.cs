@@ -158,6 +158,9 @@ public class Weapon : GameTool {
 		}
 
 		if (_timeTillFire <= 0) {
+			// Stop Sprinting
+			_motor.SwitchMovementMode(CharacterMotor.MOVE_RUN);
+
 			// Raycast
 			int maxInaccuracy = (int)(CurrentRecoil * crosshairOffset);
 			Ray ray = Camera.main.ScreenPointToRay(SCREEN_CENTER +

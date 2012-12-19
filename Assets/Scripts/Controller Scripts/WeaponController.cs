@@ -66,9 +66,6 @@ public class WeaponController : MonoBehaviour {
 
 		drawCrosshair = true;
 
-//		iTween.Init(gameObject);
-//		iTween.ShakePosition(gameObject, iTween.Hash("amount", new Vector3(1, 1, 1), "time", 20));
-
 		// Idle Movement
 //		Vector3[] idlePath = new Vector3[4];
 //		idlePath[0] = transform.localPosition + new Vector3(0, -1, 0);
@@ -79,16 +76,6 @@ public class WeaponController : MonoBehaviour {
 //			"islocal", true,
 //			"looptype", iTween.LoopType.loop, "easetype", iTween.EaseType.linear));
 	}
-
-//	void OnGUI() {
-//		if (!drawCrosshair)
-//			return;
-
-//		GUI.DrawTexture(crosshairRect[0], crosshair0);
-//		GUI.DrawTexture(crosshairRect[1], crosshair1);
-//		GUI.DrawTexture(crosshairRect[2], crosshair2);
-//		GUI.DrawTexture(crosshairRect[3], crosshair3);
-//	}
 
 	void FixedUpdate() {
 		if (_game.ActiveMenu == Menu.Game) {
@@ -111,6 +98,27 @@ public class WeaponController : MonoBehaviour {
 			ImpulseUpdate();		// Affects localPosition (should affect localRotation eventually)
 			WeaponRotation();	// Affects localRotation
 		}
+	}
+
+	public void OnStartSprint() {
+		Animation a = GetComponent<Animation>();
+		foreach (AnimationState st in a) {
+			st.speed = 1f;
+			st.time = 0;
+		}
+		a.Play("Gun_fronttoside");
+	}
+
+	public void OnEndSprint() {
+		Animation a = GetComponent<Animation>();
+		foreach (AnimationState st in a) {
+			st.speed = -1f;
+			st.time = st.length;
+		}
+		a.Play("Gun_fronttoside");
+	}
+
+	void Update() {
 	}
 
 	void LateUpdate() {

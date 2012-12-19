@@ -4,7 +4,7 @@ using System.Collections;
 public class CameraBop : MonoBehaviour {
 //	private float impulseAmount = 0.4f;
 	private Vector3 originalLocalPosition;
-	private float recoverySpeed = 1;
+	private float recoverySpeed = 1 / 0.0125f;
 	private bool _positiveTransform;
 	private float _currentVelocity;
 	private float _currentPosition;
@@ -16,8 +16,6 @@ public class CameraBop : MonoBehaviour {
 	}
 
 	void Update() {
-		Debug.Log("VelPos: " + _currentPosition + " > " + _currentVelocity);
-
 		if (_currentVelocity == 0) {
 		} else {
 			if (_positiveTransform) {
@@ -25,13 +23,12 @@ public class CameraBop : MonoBehaviour {
 			} else {
 				_currentVelocity += recoverySpeed * Time.deltaTime;
 			}
-			Debug.Log("VelPos2: " + _currentPosition + " > " + _currentVelocity);
-
-			if (Mathf.Sign(_currentPosition + _currentVelocity) != Mathf.Sign(_currentPosition)) {
+			float deltaPos = _currentVelocity * Time.deltaTime;
+			if (_currentPosition == 0 || Mathf.Sign(_currentPosition + deltaPos) == Mathf.Sign(_currentPosition)) {
+				_currentPosition += deltaPos;
+			} else {
 				_currentPosition = 0;
 				_currentVelocity = 0;
-			} else {
-				_currentPosition += _currentVelocity * Time.deltaTime;
 			}
 
 			transform.localPosition = new Vector3(transform.localPosition.x, originalLocalPosition.y + _currentPosition, transform.localPosition.z);
@@ -40,9 +37,7 @@ public class CameraBop : MonoBehaviour {
 
 	public void OnLand() {
 		_positiveTransform = false;
-		_currentVelocity = -1f;
-		Debug.Log("Maxtor");
-
+		_currentVelocity = -12f;
 //		_currentImpulse = -1;
 //		iTween.PunchPosition(gameObject, iTween.Hash("amount", new Vector3(0, -verticalImpulse, 0), "time", 1f, "space", Space.Self));
 //		iTween.MoveFrom(gameObject,
@@ -51,6 +46,7 @@ public class CameraBop : MonoBehaviour {
 	}
 
 	public void OnJump() {
+//		_positiveTransform = true;
 //		_currentImpulse = 1;
 //		iTween.PunchPosition(gameObject, iTween.Hash("amount", new Vector3(0, verticalImpulse, 0), "time", 1f, "space", Space.Self));
 //		iTween.MoveFrom(gameObject,
