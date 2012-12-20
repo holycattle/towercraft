@@ -8,7 +8,6 @@ public class Stun : Ailment {
 
 	protected override void Start() {
 		base.Start();
-		Interval = LENGTH * (1 - _enemy.stunResistance);
 	}
 
 	protected override void BeginStatus() {

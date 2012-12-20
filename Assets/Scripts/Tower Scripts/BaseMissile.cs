@@ -5,6 +5,7 @@ public class BaseMissile : MonoBehaviour {
 	
 	public float moveSpeed;
 	public int damage;
+	public int damageType;
 	public float splashRadius;
 	public GameObject explosionEffect;
 	public GameObject statusAilment;
@@ -54,7 +55,7 @@ public class BaseMissile : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		if (_target != null) {
 			if (collision.gameObject.tag == "Enemy") {
-				collision.transform.gameObject.GetComponent<BaseEnemy>().AddLife(-damage);
+				collision.transform.gameObject.GetComponent<BaseEnemy>().Damage(damage, damageType);
 
 				// Add Status Effect
 				if (statusAilment != null) {

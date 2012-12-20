@@ -19,10 +19,10 @@ public class WaveController : MonoBehaviour {
 	public const float WAVE_INCREASE = 1.25f;
 	public const int WAVE_INTERVAL = 60; // In seconds
 
-	public int incomingWave;
-	public int incomingWaveResistanceType;
+	public int incomingWaveType;
+	public int incomingWaveArmorType;
 	public GameObject[] mobs; // Mobs to choose from.
-	//public Hashtable mobTable; 
+	//public Hashtable mobTable;
 
 	private LevelController _gameController;
 	private SpawnScheme _spawnScheme;		// Current Wave Scheme
@@ -37,9 +37,9 @@ public class WaveController : MonoBehaviour {
 		_nextWaveCost = WAVESTART_COST;
 		_waveNumber = 0;
 		_timeTillNextWave = 120f;
-		incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
-		incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
-		incomingWave = TANK;
+		incomingWaveArmorType = UnityEngine.Random.Range(0, DamageType.COUNT_DMGTYPES);
+		incomingWaveType = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+		incomingWaveType = TANK;
 		_waveActive = false;
 	}
 
@@ -48,11 +48,11 @@ public class WaveController : MonoBehaviour {
 			if (!_spawnScheme.Update()) {
 				// Check if there are still enemies on the board.
 				if (GameObject.FindGameObjectWithTag("Enemy") == null) {
-					_waveActive = false;
-					_timeTillNextWave = WAVE_INTERVAL;
-					incomingWaveResistanceType = UnityEngine.Random.Range(BaseEnemy.BURN_TYPE, BaseEnemy.STUN_TYPE + 1);
-					incomingWave = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
-					incomingWave = TANK;
+					_waveActive = false;	// Stop the wave
+					_timeTillNextWave = WAVE_INTERVAL;	// Start the countdown timer for the next wave
+					incomingWaveArmorType = UnityEngine.Random.Range(0, DamageType.COUNT_DMGTYPES);
+					incomingWaveType = UnityEngine.Random.Range(SPEEDSTER, ASSORTED + 1);
+					incomingWaveType = TANK;
 //					Debug.Log("incoming resistance = " + incomingWaveResistanceType.ToString());
 				}
 			}
@@ -75,24 +75,15 @@ public class WaveController : MonoBehaviour {
 			}
 		}
 	}
-	
-//	private int determineEnemyType(int moveSpeed) {
-//		if (moveSpeed >= GetMIN_SPEED && moveSpeed < GetMIN_SPEED + 3) {
-//			return TANK;
-//		} else if (moveSpeed >= GetMIN_SPEED + 3 && moveSpeed < GetMIN_SPEED + 6) {
-//			return CREEPLING;
-//		} else
-//			return SPEEDSTER;
-//	}
 
 	private void NextWave() {
 //		Debug.Log("Creating new: P2K = " + ComponentGenerator.Get().PASSESTOKILL);
 
 		_waveNumber++;
 		// Create the Spawn Scheme
-		switch (incomingWave) {
+		switch (incomingWaveType) {
 			case TANK:
-				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, _waveNumber, incomingWaveResistanceType);
+				_spawnScheme = new Tank(_gameController, mobs, _nextWaveCost, _waveNumber, incomingWaveArmorType);
 				break;
 //			case CREEPLING:
 //				_spawnScheme = new Creepling(_gameController, mobs, _nextWaveCost, _waveNumber, incomingWaveResistanceType);
@@ -124,20 +115,20 @@ public class WaveController : MonoBehaviour {
 	
 	public string getNextWave() {
 		string nw = "";
-		
-		switch (incomingWaveResistanceType) {
-			case BaseEnemy.BURN_TYPE:
-				nw += "Burn-resistant";
+
+		switch (incomingWaveArmorType) {
+			case DamageType.DMG_PLASMA:
+				nw += "Human";
 				break;
-			case BaseEnemy.STUN_TYPE:
-				nw += "Stun-resistant";
+			case DamageType.DMG_LASER:
+				nw += "Alien";
 				break;
-			case BaseEnemy.FREEZE_TYPE:
-				nw += "Slow-resistant";
+			case DamageType.DMG_BALLISTIC:
+				nw += "Vehicle";
 				break;
 		}
 		
-		switch (incomingWave) {
+		switch (incomingWaveType) {
 			case TANK:
 				nw += " " + TANK_NAME + "s";
 				break;

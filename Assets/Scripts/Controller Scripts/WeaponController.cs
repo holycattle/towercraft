@@ -94,9 +94,6 @@ public class WeaponController : MonoBehaviour {
 					SetActiveWeapon(1);
 				}
 			}
-
-			ImpulseUpdate();		// Affects localPosition (should affect localRotation eventually)
-			WeaponRotation();	// Affects localRotation
 		}
 	}
 
@@ -149,6 +146,9 @@ public class WeaponController : MonoBehaviour {
 			} else if (Input.GetMouseButtonUp(0)) {
 				ActiveTool.MouseUpOn(rayCastedObject);
 			}
+
+			ImpulseUpdate();		// Affects localPosition (should affect localRotation eventually)
+			WeaponRotation();	// Affects localRotation
 		}
 	}
 

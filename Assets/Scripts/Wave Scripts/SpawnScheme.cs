@@ -91,10 +91,9 @@ public class SpawnScheme {
 		private Item[] mobDrops;
 		private float mobMoveSpeed;		// Mob's Move Speed
 		private int mobHealth;			// Mob's Health
-		private int resistanceType;
-		private float resistanceAmt;
+		private int armorType;
 
-		public MobSpawn (GameObject g, Item[] items, float spawnInterval, float mspd, int hp, int resistanceType, float resistanceAmt) {
+		public MobSpawn (GameObject g, Item[] items, float spawnInterval, float mspd, int hp, int armor) {
 			_mobToSpawn = g;
 			_spawnInterval = spawnInterval;
 
@@ -102,8 +101,7 @@ public class SpawnScheme {
 			mobDrops = items;
 			mobMoveSpeed = mspd;
 			mobHealth = hp;
-			this.resistanceType = resistanceType;
-			this.resistanceAmt = resistanceAmt;
+			armorType = armor;
 		}
 
 		public GameObject Spawn(Vector3 v, Quaternion q) {
@@ -113,23 +111,8 @@ public class SpawnScheme {
 			// Set Stats
 			m.MoveSpeed = mobMoveSpeed;
 			m.maxLife = mobHealth;
-			switch (resistanceType) {
-				case BaseEnemy.BURN_TYPE:
-					m.heatResistance = resistanceAmt;
-					m.slowResistance = m.stunResistance = (1 - resistanceAmt) / 2;
-					break;
-				case BaseEnemy.FREEZE_TYPE:
-					m.slowResistance = resistanceAmt;
-					m.stunResistance = m.heatResistance = (1 - resistanceAmt) / 2;
-					break;
-				case BaseEnemy.STUN_TYPE:
-					m.stunResistance = resistanceAmt;
-					m.heatResistance = m.slowResistance = (1 - resistanceAmt) / 2;
-					break;
-			}
-
+			m.armorType = armorType;
 			m.drops = mobDrops;
-
 			return g;
 		}
 	

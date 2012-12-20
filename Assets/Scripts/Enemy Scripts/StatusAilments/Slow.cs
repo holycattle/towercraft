@@ -9,8 +9,6 @@ public class Slow : Ailment {
 	protected override void Start() {
 		base.Start();
 		Interval = 10;
-		
-		slowPercentage *= (1 - _enemy.slowResistance);
 	}
 
 	protected override void BeginStatus() {

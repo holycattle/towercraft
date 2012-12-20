@@ -77,12 +77,14 @@ public class MessageController : MonoBehaviour {
 		messages.Insert(0, m);
 
 		int numMessagesOfType = 1;
-		foreach (Message tm in messages) {
+		for (int i = 0; i < messages.Count; i++) {
+			Message tm = messages[i];
 			if (tm.msgType == m.msgType) {
 				numMessagesOfType++;
 
 				if (numMessagesOfType > MAX_NUM_MSG) {
 					messages.Remove(tm);
+					i--;
 					continue;
 				}
 
@@ -162,6 +164,7 @@ public class MessageController : MonoBehaviour {
 					posY = Screen.height * HUD_STARTPOSY;
 					break;
 				case MSG_DIALOG:
+					anchor = TextAnchor.MiddleLeft;
 					skin = m.dialogSkin;
 					skin.box.fontSize = 21;
 					c = new Color(1f, 1f, 1f, 1f);		// White

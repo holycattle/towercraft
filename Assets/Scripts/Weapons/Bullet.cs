@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour {
 
 	// Bullet Stats
 	public int damage;
+	public int damageType = DamageType.DMG_PURE;
 	public float range;
 	public GameObject statusAilment;
 
@@ -30,7 +31,7 @@ public class Bullet : MonoBehaviour {
 	void OnCollisionEnter(Collision collision) {
 		BaseEnemy b = collision.gameObject.GetComponent<BaseEnemy>();
 		if (b != null) {
-			b.AddLife(-damage);
+			b.Damage(damage, damageType);
 
 			if (statusAilment != null)
 				Ailment.AddStatusAilment(b, statusAilment);

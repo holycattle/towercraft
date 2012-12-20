@@ -117,7 +117,7 @@ public class HUDController : MonoBehaviour {
 		GUI.Label(ammoBarRect, "Energy: " + _weapon.Ammo + " / " + _weapon.TotalAmmo);
 
 		if (_weapon.TargettedEnemy != null) {
-			GUI.Label(enemyDataRect, _weapon.TargettedEnemy.GetResistanceTypeAsString() + "-resistant " + _weapon.TargettedEnemy.Name);
+			GUI.Label(enemyDataRect, _weapon.TargettedEnemy.GetHUDName());
 			GUI.BeginGroup(eLifeBarRect);
 			GUI.DrawTexture(new Rect(0, 0, ENEMY_LIFE_WIDTH, ENEMY_LIFE_HEIGHT), eLifeEmpty);
 			GUI.BeginGroup(new Rect(0, 0, ENEMY_LIFE_WIDTH * ((float)_weapon.TargettedEnemy.Life / _weapon.TargettedEnemy.maxLife), ENEMY_LIFE_HEIGHT));

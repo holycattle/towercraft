@@ -185,6 +185,7 @@ public class ComponentGenerator {
 		t.componentName = name + "Turret";
 		t.componentType = BaseTower.TOWER_TURRET;
 		t.level = (int)avgLevel;
+		t.damageType = Random.Range(0, DamageType.COUNT_DMGTYPES);
 
 		g.SetActive(false);
 		t.transform.parent = partsRoot;
@@ -305,6 +306,7 @@ public class ComponentGenerator {
 			t.componentName = name;
 			t.componentType = BaseTower.TOWER_TURRET;
 			t.level = level;
+			t.damageType = Random.Range(0, DamageType.COUNT_DMGTYPES);
 
 			g.SetActive(false);
 			t.transform.parent = partsRoot;

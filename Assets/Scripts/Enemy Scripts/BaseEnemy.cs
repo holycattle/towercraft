@@ -7,18 +7,28 @@ public class BaseEnemy : MonoBehaviour {
 	public const int AMMO_DROP = 3;
 	public const int HEALTH_DROP = 3;
 
+	// Damage Types
+//	public const int COUNT_DMGTYPES = 4;		// Only used for Iteration
+//	public static readonly string[] NAME_ARMORTYPES = {"Human", "Alien", "Vehicle", "Pure"};
+//	public static readonly string[] NAME_DMGTYPES = {"Plasma", "Laser", "Ballistic", "Pure"};
+//	public static readonly float[][] DMG_MATRIX = {new float[] {1   , 2   , 0.5f, 1},
+//											new float[] {0.5f, 1   , 2   , 1},
+//											new float[] {2   , 0.5f, 1   , 1},
+//											new float[] {1   , 1   , 1   , 1}};
+//	public const int DMG_PLASMA = 0;
+//	public const int DMG_LASER = 1;
+//	public const int DMG_BALLISTIC = 2;
+//	public const int DMG_PURE = 3;
+
 	// Constants
 	public const float MOV_OFFSET = 0f;
-	public const int BURN_TYPE = 0;
-	public const int FREEZE_TYPE = 1;
-	public const int STUN_TYPE = 2;
 //	public static Vector3 LIFE_OFFSET = new Vector3(0, 2f, 0);
 
 	// References
 	private LevelController _level;
 	private PlayerController _player;
-	private static GameObject AMMO_PREFAB;
-	private static GameObject HEALTH_PREFAB;
+	private readonly GameObject AMMO_PREFAB = Resources.Load("Prefabs/Items/Ammo", typeof(GameObject)) as GameObject;
+	private readonly GameObject HEALTH_PREFAB = Resources.Load("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
 
 	// Enemy Stats (Given Default values, but you have to set it in the game object.)
 	public MobType type;
@@ -26,16 +36,12 @@ public class BaseEnemy : MonoBehaviour {
 	public int maxLife;
 	public int waveCost;
 	public int level;
+	public int armorType;
 	public Item[] drops;
 	private int damage = 2;
 	private int accuracy = (int)(0.16f * 100);
 	private float firingInterval = 1f;
 	private float range = 32;
-
-	//ailment resistance; domain = [0, 1]
-	public float heatResistance;
-	public float slowResistance;
-	public float stunResistance;
 
 	// Vary-ables
 	private int _life;					// Current Life
@@ -64,14 +70,6 @@ public class BaseEnemy : MonoBehaviour {
 		UpdateStats();
 
 		originalRot = transform.rotation;
-
-		// TODO: Make this more optimal
-//		if (ITEM_PREFAB == null)
-//			ITEM_PREFAB = Resources.Load("Prefabs/Items/Item", typeof(GameObject)) as GameObject;
-		if (HEALTH_PREFAB == null)
-			HEALTH_PREFAB = Resources.Load("Prefabs/Items/Health", typeof(GameObject)) as GameObject;
-		if (AMMO_PREFAB == null)
-			AMMO_PREFAB = Resources.Load("Prefabs/Items/Ammo", typeof(GameObject)) as GameObject;
 
 		_player = GameObject.Find("Player").GetComponent<PlayerController>();
 		_level = GameObject.Find(" GameController").GetComponent<LevelController>();
@@ -158,7 +156,13 @@ public class BaseEnemy : MonoBehaviour {
 		_activePoint = 2;
 	}
 
-	public void AddLife(int amt) {
+	public void Damage(int amt, int damageType) {
+		AddLife(-Mathf.Max(1, (int)(amt * DamageType.DMG_MATRIX[damageType][armorType])));
+	}
+
+	private void AddLife(int amt) {
+		Debug.Log("Adding Life:" + amt);
+
 		_life += amt;
 		if (_life <= 0)
 			Kill();
@@ -216,14 +220,8 @@ public class BaseEnemy : MonoBehaviour {
 		}
 	}
 	
-	public string GetResistanceTypeAsString() {
-		if (Mathf.Max(heatResistance, slowResistance, stunResistance) == heatResistance) {
-			return "Heat";
-		} else if (Mathf.Max(heatResistance, slowResistance, stunResistance) == slowResistance) {
-			return "Slow";
-		} else {
-			return "Stun";
-		}
+	public string GetHUDName() {
+		return DamageType.NAME_ARMORTYPES[armorType] + " " + Name;
 	}
 
 	public List<Vector2> MotionPath {
@@ -231,8 +229,22 @@ public class BaseEnemy : MonoBehaviour {
 	}
 }
 
+public class DamageType {
+	public const int COUNT_DMGTYPES = 4;		// Only used for Iteration
+	public static readonly string[] NAME_ARMORTYPES = {"Human", "Alien", "Vehicle", "Pure"};
+	public static readonly string[] NAME_DMGTYPES = {"Plasma", "Laser", "Ballistic", "Pure"};
+	public static readonly float[][] DMG_MATRIX = {new float[] {1   , 2   , 0.5f, 1},
+											new float[] {0.5f, 1   , 2   , 1},
+											new float[] {2   , 0.5f, 1   , 1},
+											new float[] {1   , 1   , 1   , 1}};
+	public const int DMG_PLASMA = 0;
+	public const int DMG_LASER = 1;
+	public const int DMG_BALLISTIC = 2;
+	public const int DMG_PURE = 3;
+}
+
 public enum MobType {
-	//Basic,
+//	Basic,
 	Creepling,
 	Tank,
 	Speedster

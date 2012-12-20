@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class TowerTurret : TowerComponent {
 
 	// Turret Stats
+	public int damageType;
 	public List<ModifyingAttribute> attributes;
 	public GameObject missile;
 	public GameObject statusAilment;
@@ -25,7 +26,7 @@ public class TowerTurret : TowerComponent {
 
 		string s = "---" + componentName + "---\n";
 		s += "Level: " + level + "\n";
-
+		s += "Dmg Type: " + DamageType.NAME_DMGTYPES[damageType] + "\n";
 		// Add Stat Messages
 		for (int i = 0; i < System.Enum.GetValues(typeof(Stat)).Length; i++) {
 			s += ((Stat)i).ToString() + ": ";

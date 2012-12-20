@@ -74,7 +74,7 @@ public class Tank : SpawnScheme {
 		for (int i = 0; i < numberOfMobs; i++) {
 			// Choose which mob to spawn.
 			GameObject g = (GameObject)mobTable[enemyType.ToString()]; // Optimized assigning of new mob by using a Hashtable
-			_spawnScheme.Add(new MobSpawn(g, itemDrops[i], interval, moveSpeed, health, resistanceType, UnityEngine.Random.Range(0.5f, 1f)));
+			_spawnScheme.Add(new MobSpawn(g, itemDrops[i], interval, moveSpeed, health, resistanceType));
 		}
 	}
 
