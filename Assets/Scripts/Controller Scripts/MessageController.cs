@@ -13,6 +13,8 @@ public class MessageController : MonoBehaviour {
 	public const float PICKUP_STARTPOSX = 0.025f;	// [0, 1] How far down in the screen you start drawing
 	public const float PICKUP_STARTPOSY = 0.2f;
 	public const float HUD_STARTPOSY = 0.2f;
+	public const float DIALOG_BOX_WIDTH = 512;
+	public const float DIALOG_BOX_HEIGHT = 128;
 	public const int BOX_WIDTH = 512;
 	public const int BOX_HEIGHT = 40;
 
@@ -26,6 +28,7 @@ public class MessageController : MonoBehaviour {
 
 	//
 	public GUISkin messageSkin;
+	public GUISkin dialogSkin;
 	private List<Message> messages;		// Houses the list of ALL messages.
 
 	// User Defined
@@ -33,6 +36,8 @@ public class MessageController : MonoBehaviour {
 
 	void Start() {
 		messageSkin = Resources.Load("Fonts/AnonymousSkin", typeof(GUISkin)) as GUISkin;
+		dialogSkin = Resources.Load("Skins/DialogSkin") as GUISkin;
+
 		messages = new List<Message>();
 	}
 	
@@ -64,7 +69,7 @@ public class MessageController : MonoBehaviour {
 
 	public void AddMessage(string s, int type, float duration) {
 		if (this.enabled == true)
-			AddMessage(new Message(s, type, duration));
+			AddMessage(new Message(this, s, type, duration));
 	}
 
 	private void AddMessage(Message m) {
@@ -100,6 +105,10 @@ public class MessageController : MonoBehaviour {
 		AddMessage(msg, MSG_HUD, duration);
 	}
 
+	public void DialogMessage(string msg, float duration) {
+		AddMessage(msg, MSG_DIALOG, duration);
+	}
+
 	public class Message {
 		public int msgType;
 		public string msg;
@@ -113,11 +122,12 @@ public class MessageController : MonoBehaviour {
 		protected int move;
 
 		// Drawing Info
+		protected GUISkin skin;
 		protected TextAnchor anchor;
 		protected Rect r;
 		protected Color c;
 
-		public Message (string mess, int type, float duration) {
+		public Message (MessageController m, string mess, int type, float duration) {
 //			int pos = 0; //TOREMOVE
 			msg = mess;
 			msgType = type;
@@ -126,6 +136,8 @@ public class MessageController : MonoBehaviour {
 			float posY = 0;
 			float width = BOX_WIDTH;
 			float height = BOX_HEIGHT;
+
+			skin = m.messageSkin;
 
 			// Set Message Specific Variables
 			switch (msgType) {
@@ -148,6 +160,16 @@ public class MessageController : MonoBehaviour {
 					height = BOX_HEIGHT / 2;
 					posX = (Screen.width - width) / 2;
 					posY = Screen.height * HUD_STARTPOSY;
+					break;
+				case MSG_DIALOG:
+					skin = m.dialogSkin;
+					skin.box.fontSize = 21;
+					c = new Color(1f, 1f, 1f, 1f);		// White
+
+					width = DIALOG_BOX_WIDTH;
+					height = DIALOG_BOX_HEIGHT;
+					posX = (Screen.width - width) / 2;
+					posY = (Screen.height - height) / 2 - 50;
 					break;
 			}
 			move = 0;
@@ -181,9 +203,10 @@ public class MessageController : MonoBehaviour {
 		}
 
 		public void DrawToGUI() {
+			GUI.skin = skin;
 			GUI.skin.label.alignment = anchor;
 			GUI.color = c;
-			GUI.Label(r, msg);
+			GUI.Box(r, msg);
 		}
 	}
 }

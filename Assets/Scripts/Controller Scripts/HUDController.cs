@@ -61,6 +61,9 @@ public class HUDController : MonoBehaviour {
 
 		_game.Messenger.HUDMessage("Stand by for suit initialization...", 3f);
 		yield return new WaitForSeconds(3);
+		_game.Messenger.DialogMessage("Dr. Pierce:\n" + "Good morning. I see you're taking well to the new suit." +
+					"You'll notice some changes to the UI since you last stepped into it," +
+					"so I'll just run you down through the basics before we get you up to speed on the situation.", 10f);
 		_game.Messenger.HUDMessage("Reactor online.", 2f);
 		yield return new WaitForSeconds(2);
 		_game.Messenger.HUDMessage("Sensors online.", 2f);
