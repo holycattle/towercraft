@@ -225,7 +225,7 @@ public class Weapon : GameTool {
 		if (_totalBullets > 0) {
 			_game.Messenger.WarningMessage("Reloading!");
 		} else {
-			_game.Messenger.WarningMessage("No more ammo left.");
+//			_game.Messenger.WarningMessage("No more ammo left.");
 			return;
 		}
 		// Start Reload Timer
