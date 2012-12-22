@@ -154,9 +154,9 @@ public class WeaponController : MonoBehaviour {
 
 	private void ImpulseUpdate() {
 		_currentImpulse *= impulseRecovery;
-		transform.localPosition = new Vector3(basePosition.x,
-												basePosition.y + _currentImpulse * verticalImpulse,
-												basePosition.z);
+//		transform.localPosition = new Vector3(basePosition.x,
+//												basePosition.y + _currentImpulse * verticalImpulse,
+//												basePosition.z);
 //		transform.localRotation = Quaternion.Euler(transform.localRotation.x - currentRecoil * upwardRecoil, transform.localRotation.y, transform.localRotation.z);
 	}
 

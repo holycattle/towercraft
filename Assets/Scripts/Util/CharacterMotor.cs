@@ -7,8 +7,7 @@ using System.Collections.Generic;
 [AddComponentMenu("Character/Character Motor")]
 
 
-public class CharacterMotor : MonoBehaviour
-{
+public class CharacterMotor : MonoBehaviour {
     // Does this script currently respond to input?
     bool canControl = true;
     bool useFixedUpdate = true;
@@ -29,14 +28,14 @@ public class CharacterMotor : MonoBehaviour
 	public const int MOVE_RUN = 0;
 	public const int MOVE_SPRINT = 1;
 	public const int MOVE_CROUCH = 2;
-	private static string[] MOVE_STARTFUNC = {"OnStartRun", "OnStartSprint", "OnStartCrouch"};
-	private static string[] MOVE_ENDFUNC = {"OnEndRun", "OnEndSprint", "OnEndCrouch"};
-	private static float[] MOVE_MULTIPLIERS = {1, 1.8f, 0.4f};
+	private static readonly string[] MOVE_STARTFUNC = {"OnStartRun", "OnStartSprint", "OnStartCrouch"};
+	private static readonly string[] MOVE_ENDFUNC = {"OnEndRun", "OnEndSprint", "OnEndCrouch"};
+	private static readonly float[] MOVE_MULTIPLIERS = {1, 2.5f, 0.4f};
 	private int _movementMode = 0;
+	public bool sprintLock = false;
 
     [System.Serializable]
-    public class CharacterMotorMovement
-    {
+    public class CharacterMotorMovement {
         // The maximum horizontal speed when moving
         public float maxForwardSpeed = 3.0f;
         public float maxSidewaysSpeed = 2.0f;
@@ -80,8 +79,7 @@ public class CharacterMotor : MonoBehaviour
 
     public CharacterMotorMovement movement = new CharacterMotorMovement();
 
-    public enum MovementTransferOnJump
-    {
+    public enum MovementTransferOnJump {
         None, // The jump is not affected by velocity of floor at all.
         InitTransfer, // Jump gets its initial velocity from the floor, then gradualy comes to a stop.
         PermaTransfer, // Jump gets its initial velocity from the floor, and keeps that velocity until landing.
@@ -225,7 +223,7 @@ public class CharacterMotor : MonoBehaviour
 		// ---- From FPSInputController ----
 		//	- Modified by Josh
 
-		if (Input.GetButtonDown("Sprint")) {
+		if (Input.GetButtonDown("Sprint") && !sprintLock) {
 			if (_movementMode == MOVE_SPRINT) {
 				SwitchMovementMode(MOVE_RUN);
 			} else {
@@ -688,8 +686,7 @@ public class CharacterMotor : MonoBehaviour
         return (movement.collisionFlags & CollisionFlags.CollidedAbove) != 0;
     }
 
-    bool IsGrounded()
-    {
+    public bool IsGrounded() {
         return grounded;
     }
 

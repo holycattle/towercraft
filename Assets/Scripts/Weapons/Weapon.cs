@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class Weapon : GameTool {
-	private Vector3 SCREEN_CENTER = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+	private static readonly Vector3 SCREEN_CENTER = new Vector3(Screen.width / 2, Screen.height / 2, 0);
 	private const int NUM_WEAPONEQUIPS = 2;
 
 	// Default Constants
@@ -121,19 +121,12 @@ public class Weapon : GameTool {
 		}
 	}
 
-	protected override void OnGUI() {
-		base.OnGUI();
-
-		if (_targetted != null) {
-
-		}
-	}
-
 	public override void WhenEquipped() {
 		_weapon.RaycastLayer = 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Mob");
 	}
 
 	public override void MouseClickOn(GameObject g) {
+		_motor.sprintLock = true;
 		TryToFire(g);
 	}
 
@@ -142,6 +135,7 @@ public class Weapon : GameTool {
 	}
 
 	public override void MouseUpOn(GameObject g) {
+		_motor.sprintLock = false;
 	}
 
 	private void TryToFire(GameObject g) {

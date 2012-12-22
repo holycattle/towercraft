@@ -36,7 +36,7 @@ public class MessageController : MonoBehaviour {
 
 	void Start() {
 		messageSkin = Resources.Load("Fonts/AnonymousSkin", typeof(GUISkin)) as GUISkin;
-		dialogSkin = Resources.Load("Skins/DialogSkin") as GUISkin;
+		dialogSkin = Resources.Load("Fonts/DialogSkin") as GUISkin;
 
 		messages = new List<Message>();
 	}
@@ -127,10 +127,11 @@ public class MessageController : MonoBehaviour {
 		protected GUISkin skin;
 		protected TextAnchor anchor;
 		protected Rect r;
-		protected Color c;
+		protected Color textColor;
+		protected bool drawOutline = true;
+		protected Color outlineColor = new Color(0, 0, 0);
 
 		public Message (MessageController m, string mess, int type, float duration) {
-//			int pos = 0; //TOREMOVE
 			msg = mess;
 			msgType = type;
 
@@ -145,20 +146,20 @@ public class MessageController : MonoBehaviour {
 			switch (msgType) {
 				case MSG_PICKUP:
 					anchor = TextAnchor.MiddleLeft;
-					c = new Color(0f, 0.8f, 0f, 1f);	// Light Green
+					textColor = new Color(0f, 0.8f, 0f, 1f);	// Light Green
 					height = BOX_HEIGHT / 2;
 					posX = Screen.width * PICKUP_STARTPOSX;
 					posY = Screen.height * PICKUP_STARTPOSY;
 					break;
 				case MSG_WARNING:
 					anchor = TextAnchor.MiddleCenter;
-					c = new Color(1f, 0f, 0f, 1f);		// Red
+					textColor = new Color(1f, 0f, 0f, 1f);		// Red
 					posX = (Screen.width - width) / 2;
 					posY = 0;
 					break;
 				case MSG_HUD:
 					anchor = TextAnchor.MiddleCenter;
-					c = new Color(1f, 0f, 0f, 1f);		// Red
+					textColor = new Color(1f, 0f, 0f, 1f);		// Red
 					height = BOX_HEIGHT / 2;
 					posX = (Screen.width - width) / 2;
 					posY = Screen.height * HUD_STARTPOSY;
@@ -167,7 +168,8 @@ public class MessageController : MonoBehaviour {
 					anchor = TextAnchor.MiddleLeft;
 					skin = m.dialogSkin;
 					skin.box.fontSize = 21;
-					c = new Color(1f, 1f, 1f, 1f);		// White
+					drawOutline = false;
+					textColor = new Color(1f, 1f, 1f, 1f);		// White
 
 					width = DIALOG_BOX_WIDTH;
 					height = DIALOG_BOX_HEIGHT;
@@ -185,7 +187,9 @@ public class MessageController : MonoBehaviour {
 		public void Update() {
 			if (Time.time >= startTime + STARTCOLORCHANGE * interval + ((1 - STARTCOLORCHANGE) * interval / COLORCHANGES) * move) {
 				move++;
-				c.a = c.a - (1.0f / COLORCHANGES) * move;
+				textColor.a = textColor.a - (1.0f / COLORCHANGES) * move;
+				if (drawOutline)
+					outlineColor.a = outlineColor.a - (1.0f / COLORCHANGES) * move;
 			}
 
 			if (Time.time >= startTime + interval) {
@@ -208,7 +212,21 @@ public class MessageController : MonoBehaviour {
 		public void DrawToGUI() {
 			GUI.skin = skin;
 			GUI.skin.label.alignment = anchor;
-			GUI.color = c;
+			if (drawOutline) {
+				GUI.color = outlineColor;
+				r.x--;
+				GUI.Box(r, msg);
+				r.x += 2;
+				GUI.Box(r, msg);
+				r.x--;
+				r.y--;
+				GUI.Box(r, msg);
+				r.y += 2;
+				GUI.Box(r, msg);
+				r.y--;
+			}
+
+			GUI.color = textColor;
 			GUI.Box(r, msg);
 		}
 	}

@@ -35,10 +35,14 @@ public class PlayerController : MonoBehaviour {
 	private AudioClip onJumpAudio;
 	private AudioClip onLandAudio;
 	private AudioClip onOutOfAmmo;
-	private float footstepInterval = 0.30f;
+	public float footstepInterval = 1f;
+	[HideInInspector]
+	public float footstepMultiplier = 1;
 	private float footstepTimer;
 
 	void Start() {
+		Debug.Log("START: " + footstepInterval);
+
 		_game = GameObject.Find(" GameController").GetComponent<GameController>();
 		_wave = GameObject.Find(" GameController").GetComponent<WaveController>();
 		_weapon = GetComponentInChildren<WeaponController>();
@@ -63,8 +67,10 @@ public class PlayerController : MonoBehaviour {
 		jumpingAudio = a[1];
 		voiceAudio = a[2];
 
-		
+
 		_motor = GetComponent<CharacterMotor>();
+//		footsteps = new AudioClip[1];
+//		footsteps[0] = Resources.Load("Sound/Player/jump") as AudioClip;
 		footsteps = new AudioClip[3];
 		footsteps[0] = Resources.Load("Sound/Player/foot_1") as AudioClip;
 		footsteps[1] = Resources.Load("Sound/Player/foot_2") as AudioClip;
@@ -95,8 +101,10 @@ public class PlayerController : MonoBehaviour {
 			if (_motor.grounded && (_motor.movement.velocity.x != 0 || _motor.movement.velocity.z != 0)) {
 				if (footstepTimer <= 0) {
 					footstepsAudio.clip = footsteps[Random.Range(0, footsteps.Length)];
+//					footstepsAudio.pitch = _motor.movement.speedMultiplier;
 					footstepsAudio.Play();
-					footstepTimer = footstepInterval / _motor.movement.speedMultiplier;
+//					footstepTimer = footstepInterval / _motor.movement.speedMultiplier;
+					footstepTimer = (footstepInterval * footstepMultiplier) - footstepTimer;
 				} else {
 					footstepTimer -= Time.deltaTime;
 				}
@@ -107,7 +115,11 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void OnStartSprint() {
-//		Debug.Log("SPRINT");
+		footstepMultiplier = 0.75f;
+	}
+
+	public void OnEndSprint() {
+		footstepMultiplier = 1f;
 	}
 
 	public void OnStartRun() {

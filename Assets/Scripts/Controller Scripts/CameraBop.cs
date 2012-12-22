@@ -38,19 +38,8 @@ public class CameraBop : MonoBehaviour {
 	public void OnLand() {
 		_positiveTransform = false;
 		_currentVelocity = -12f;
-//		_currentImpulse = -1;
-//		iTween.PunchPosition(gameObject, iTween.Hash("amount", new Vector3(0, -verticalImpulse, 0), "time", 1f, "space", Space.Self));
-//		iTween.MoveFrom(gameObject,
-//			iTween.Hash("position", transform.localPosition + new Vector3(0, -impulseAmount, 0),
-//			"time", 0.5f, "islocal", true, "easetype", iTween.EaseType.easeOutCubic));
 	}
 
 	public void OnJump() {
-//		_positiveTransform = true;
-//		_currentImpulse = 1;
-//		iTween.PunchPosition(gameObject, iTween.Hash("amount", new Vector3(0, verticalImpulse, 0), "time", 1f, "space", Space.Self));
-//		iTween.MoveFrom(gameObject,
-//			iTween.Hash("position", transform.localPosition + new Vector3(0, impulseAmount, 0),
-//			"time", 1f, "islocal", true, "easetype", iTween.EaseType.easeOutCubic));
 	}
 }
