@@ -1,7 +1,7 @@
 towercraft
 ==========
 
-Alpha version of a first-person tower defense game that won second place in the Game On! 2013 game development competition in the Philippines.
+Alpha version of a first-person tower defense game that won second place in the Game On! 2012 game development competition in the Philippines.
 
 Copyright 2013 Joniel Ibasco and Joshua Castaneda
 
